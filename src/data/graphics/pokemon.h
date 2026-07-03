@@ -27503,3 +27503,10 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
     const u32 gMonFrontPic_Egg[] = INCGFX_U32("graphics/pokemon/egg/anim_front.png", ".4bpp.smol");
     const u16 gMonPalette_Egg[] = INCGFX_U16("graphics/pokemon/egg/normal.pal", ".gbapal");
     const u8 gMonIcon_Egg[] = INCGFX_U8("graphics/pokemon/egg/icon.png", ".4bpp");
+
+    const u32 gMonFrontPic_Cinderf[] = INCGFX_U32("graphics/pokemon/cinderf/anim_front.png", ".4bpp.lz");
+    const u32 gMonBackPic_Cinderf[] = INCGFX_U32("graphics/pokemon/cinderf/back.png", ".4bpp.lz");
+    const u16 gMonPalette_Cinderf[] = INCGFX_U16("graphics/pokemon/cinderf/normal.pal", ".gbapal");
+    const u16 gMonShinyPalette_Cinderf[] = INCGFX_U16("graphics/pokemon/cinderf/shiny.pal", ".gbapal");
+    const u8 gMonIcon_Cinderf[] = INCGFX_U8("graphics/pokemon/cinderf/icon.png", ".4bpp");
+    const u8 gMonFootprint_Cinderf[] = INCGFX_U8("graphics/pokemon/cinderf/footprint.png", ".1bpp");

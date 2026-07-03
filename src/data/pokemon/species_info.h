@@ -195,6 +195,19 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .bodyColor     = BODY_COLOR_BLACK,
         .speciesName   = _("Cinderf"),
         .cryId         = CRY_CINDERF,
+        .natDexNum     = NATIONAL_DEX_CINDERF,
+        .categoryName  = _("Soul Guard"),
+        .height        = 5,
+        .weight        = 95,
+        .description = COMPOUND_STRING(
+        "Young and full of energy, its tender gums\n"
+        "cause it to fiercely teethe on anything.\n"
+        "Its playful nibbles drain a miniscule\n"
+        "amount of soul energy, which soon regrows."),
+        .pokemonScale = 489,
+        .pokemonOffset = 19,
+        .trainerScale = 256,
+        .trainerOffset = 0,
     },
 
     /* You may add any custom species below this point based on the following structure: */

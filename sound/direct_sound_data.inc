@@ -8739,9 +8739,9 @@ Cry_Pecharunt::
 .endif
 .endif @ P_FAMILY_PECHARUNT
   .align 2
-Cry_Cynderf::
+Cry_Cinderf::
 .if TESTING == FALSE
-  .incbin "sound/direct_sound_samples/cries/cynderf.bin"
+  .incbin "sound/direct_sound_samples/cries/cinderf.bin"
 .endif
 .endif @ P_CRIES_ENABLED
 
