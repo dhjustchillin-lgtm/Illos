@@ -22314,3 +22314,20 @@ static const struct LevelUpMove sPecharuntLevelUpLearnset[] = {
 };
 #endif //P_FAMILY_PECHARUNT
 
+static const struct LevelUpMove sCinderfLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
+    LEVEL_UP_MOVE( 1, MOVE_LEER),
+    LEVEL_UP_MOVE( 4, MOVE_EMBER),
+    LEVEL_UP_MOVE( 7, MOVE_BITE),        // First Strong Jaw boost!
+    LEVEL_UP_MOVE(10, MOVE_HOWL),        // Boosts its Attack stat
+    LEVEL_UP_MOVE(13, MOVE_SMOG),
+    LEVEL_UP_MOVE(16, MOVE_ASSURANCE),
+    LEVEL_UP_MOVE(19, MOVE_FIRE_FANG),   // Fire + Biting move
+    LEVEL_UP_MOVE(22, MOVE_ROAR),
+    LEVEL_UP_MOVE(25, MOVE_CRUNCH),      // Big Dark-type STAB bite
+    LEVEL_UP_MOVE(28, MOVE_FLAMETHROWER),
+    LEVEL_UP_MOVE(32, MOVE_SCARY_FACE),
+    LEVEL_UP_MOVE(36, MOVE_PSYCH_UP),    // Fun nod to its soul-draining lore!
+    LEVEL_UP_MOVE(40, MOVE_FLARE_BLITZ),
+    LEVEL_UP_END
+};
