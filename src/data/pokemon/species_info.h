@@ -174,6 +174,29 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .iconPalIndex = 1,
     },
 
+    [SPECIES_CINDERF] =
+    {
+        .baseHP        = 45,
+        .baseAttack    = 65,
+        .baseDefense   = 50,
+        .baseSpeed     = 60,
+        .baseSpAttack  = 40,
+        .baseSpDefense = 50,
+        .types         = MON_TYPES(TYPE_FIRE, TYPE_DARK),
+        .catchRate     = 45, // Standard starter catch rate
+        .expYield      = 62,
+        .evYield_Attack = 1,
+        .genderRatio   = PERCENT_FEMALE(12.5), // Standard starter ratio
+        .eggCycles     = 20,
+        .friendship    = 70,
+        .growthRate    = GROWTH_MEDIUM_SLOW,
+        .eggGroups     = MON_EGG_GROUPS(EGG_GROUP_FIELD),
+        .abilities     = { ABILITY_INTIMIDATE, ABILITY_STRONG_JAW, ABILITY_NONE },
+        .bodyColor     = BODY_COLOR_BLACK,
+        .speciesName   = _("Cinderf"),
+        .cryId         = CRY_CINDERF,
+    },
+
     /* You may add any custom species below this point based on the following structure: */
 
     /*
