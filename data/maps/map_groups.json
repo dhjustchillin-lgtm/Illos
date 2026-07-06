@@ -1,6 +1,7 @@
 {
   "group_order": [
     "gMapGroup_TownsAndRoutes",
+    "gMapGroup_IndoorDadsFarm",
     "gMapGroup_IndoorLittleroot",
     "gMapGroup_IndoorOldale",
     "gMapGroup_IndoorDewford",
@@ -77,6 +78,7 @@
     "gMapGroup_IndoorSevenIslandRoute_Frlg"
   ],
   "gMapGroup_TownsAndRoutes": [
+    "DadsFarm",
     "PetalburgCity",
     "SlateportCity",
     "MauvilleCity",
@@ -134,6 +136,10 @@
     "Underwater_Route129",
     "Underwater_Route105",
     "Underwater_Route125"
+  ],
+  "gMapGroup_IndoorDadsFarm": [
+    "DadsFarm_House_1F",
+    "DadsFarm_House_2F"
   ],
   "gMapGroup_IndoorLittleroot": [
     "LittlerootTown_BrendansHouse_1F",
