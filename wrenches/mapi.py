@@ -76,7 +76,6 @@ def inject_script_into_event_scripts(root_dir, map_name):
 def create_blank_map_structure(root_dir, map_name):
     print(f"[INFO] Initializing new map files from template for: {map_name}")
 
-    # Kept underscores out of the clean_name logic to avoid casing collisions
     clean_name = map_name.replace(" ", "")
     layout_id = f"LAYOUT_{map_name.upper()}"
     map_id = f"MAP_{map_name.upper()}"
@@ -247,7 +246,6 @@ def stage_map_into_studio(root_dir, map_name):
         create_blank_map_structure(root_dir, map_name)
 
     try:
-        # Load object structures from map data to pipe directly into UI client
         with open(map_json_path, "r", encoding="utf-8") as f:
             map_config = json.load(f)
             layout_id = map_config.get("layout", "")
@@ -255,6 +253,9 @@ def stage_map_into_studio(root_dir, map_name):
             warp_events = map_config.get("warp_events", [])
             coord_events = map_config.get("coord_events", [])
             bg_events = map_config.get("bg_events", [])
+            
+            # Carry over configuration headers so rewrite cycles do not dump map configurations
+            map_headers = {k: v for k, v in map_config.items() if k not in ["object_events", "warp_events", "coord_events", "bg_events"]}
 
         width, height, p_ts, s_ts = 20, 20, "gTileset_General", "gTileset_Petalburg"
         blockdata_filepath, border_filepath = "", ""
@@ -311,7 +312,8 @@ def stage_map_into_studio(root_dir, map_name):
             "primary_metatiles_bin": os.path.join(root_dir, "data", "tilesets", "primary", p_folder, "metatiles.bin"),
             "secondary_tiles_png": os.path.join(root_dir, "data", "tilesets", "secondary", s_folder, "tiles.png"),
             "secondary_metatiles_bin": os.path.join(root_dir, "data", "tilesets", "secondary", s_folder, "metatiles.bin"),
-            "object_events": object_events, "warp_events": warp_events, "coord_events": coord_events, "bg_events": bg_events
+            "object_events": object_events, "warp_events": warp_events, "coord_events": coord_events, "bg_events": bg_events,
+            "map_headers": map_headers
         }
         return True
     except Exception as e:
@@ -321,6 +323,7 @@ def stage_map_into_studio(root_dir, map_name):
 def force_disk_commit(map_name, map_data):
     root = STUDIO["root_dir"]
     layouts_json = os.path.join(root, "data", "layouts", "layouts.json")
+    map_json_path = os.path.join(root, "data", "maps", map_name, "map.json")
 
     if os.path.exists(layouts_json):
         try:
@@ -336,6 +339,17 @@ def force_disk_commit(map_name, map_data):
             print(f"[ERROR] Layout JSON config update failed: {e}")
 
     try:
+        # Commit updated event listings and headers back to the decomp structure files
+        full_json = dict(map_data.get("map_headers", {}))
+        full_json.update({
+            "object_events": map_data.get("object_events", []),
+            "warp_events": map_data.get("warp_events", []),
+            "coord_events": map_data.get("coord_events", []),
+            "bg_events": map_data.get("bg_events", [])
+        })
+        with open(map_json_path, "w", encoding="utf-8") as f:
+            json.dump(full_json, f, indent=4)
+
         with open(map_data["map_bin_path"], "wb") as f:
             for entry in map_data["metatiles"]:
                 f.write(int(entry).to_bytes(2, byteorder='little'))
@@ -343,7 +357,7 @@ def force_disk_commit(map_name, map_data):
             with open(map_data["border_bin_path"], "wb") as f:
                 for entry in map_data["border_blocks"]:
                     f.write(int(entry).to_bytes(2, byteorder='little'))
-        print(f"[SUCCESS] Saved '{map_name}' files directly to decomp repository.")
+        print(f"[SUCCESS] Saved '{map_name}' binary data and map JSON properties directly to repository.")
         return True
     except Exception as e:
         print(f"[ERROR] IO Write breakdown on {map_name}: {e}")
@@ -389,11 +403,10 @@ class PoorymapWebBackend(BaseHTTPRequestHandler):
 
             grid_positions = [(0, 0), (8, 0), (0, 8), (8, 8)]
             for layer in range(2):
-                # Determine layer ghosting states based on active layer selections
                 ghost_layer = False
-                if render_layer == 0 and layer == 1: # Only below is targeted, ghost above
+                if render_layer == 0 and layer == 1:
                     ghost_layer = True
-                elif render_layer == 1 and layer == 0: # Only above is targeted, ghost below
+                elif render_layer == 1 and layer == 0:
                     ghost_layer = True
 
                 for i in range(4):
@@ -433,7 +446,6 @@ class PoorymapWebBackend(BaseHTTPRequestHandler):
                                         alpha_val = 76 if ghost_layer else 255
                                         pixels[x_px, y_px] = (r, g, b, alpha_val)
                     elif ghost_layer:
-                        # Apply fallback ghosting factor if pal entry layout fails
                         for y_px in range(8):
                             for x_px in range(8):
                                 r, g, b, a = pixels[x_px, y_px]
@@ -483,11 +495,16 @@ class PoorymapWebBackend(BaseHTTPRequestHandler):
                     .tile.active { border-color: #ffffff !important; box-shadow: 0 0 6px #ffffff; z-index: 3; }
                     .tile.selected-range { background-color: #002244; border-color: #0088ff; opacity: 0.8; }
                     
-                    /* Object/JSON Event Highlighting States */
-                    .tile.evt-object { border: 2px solid #3399ff !important; box-shadow: inset 0 0 4px #3399ff; }
-                    .tile.evt-warp { border: 2px solid #ff3333 !important; box-shadow: inset 0 0 4px #ff3333; }
-                    .tile.evt-coord { border: 2px solid #ffcc00 !important; box-shadow: inset 0 0 4px #ffcc00; }
-                    .tile.evt-bg { border: 2px solid #cc33ff !important; box-shadow: inset 0 0 4px #cc33ff; }
+                    /* Inline structural indicators for events */
+                    .evt-badge { position: absolute; font-size: 9px; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #000; z-index: 5; pointer-events: none; }
+                    .tile.evt-object { border: 1px dashed #3399ff !important; }
+                    .tile.evt-object .evt-badge { background: #3399ff; top: 2px; left: 2px; }
+                    .tile.evt-warp { border: 1px dashed #ff3333 !important; }
+                    .tile.evt-warp .evt-badge { background: #ff3333; top: 2px; right: 2px; color: #fff; }
+                    .tile.evt-coord { border: 1px dashed #ffcc00 !important; }
+                    .tile.evt-coord .evt-badge { background: #ffcc00; bottom: 2px; left: 2px; }
+                    .tile.evt-bg { border: 1px dashed #cc33ff !important; }
+                    .tile.evt-bg .evt-badge { background: #cc33ff; bottom: 2px; right: 2px; color: #fff; }
                     
                     .atlas-visual-matrix { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; padding: 2px; overflow-y: auto; flex-grow: 1; }
                     .atlas-cell { background: #181818; border: 1px solid #002208; padding: 2px; text-align: center; cursor: pointer; box-sizing: border-box; position: relative; aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -502,10 +519,11 @@ class PoorymapWebBackend(BaseHTTPRequestHandler):
                     .tabs { display: flex; gap: 4px; margin-bottom: -1px; z-index: 2; position: relative; overflow-x: auto; }
                     .tab { background: #1c1c1c; color: #888; border: 1px solid #003311; padding: 6px 12px; border-radius: 4px 4px 0 0; cursor: pointer; font-size: 11px; white-space: nowrap; }
                     .tab.active { background: #121212; color: #00ff66; border-bottom: 1px solid #121212; font-weight: bold; }
-                    .meta-readout { background: #000; padding: 10px; border-radius: 2px; border: 1px solid #002208; font-size: 11px; margin-top: 8px; line-height: 1.5; color: #00ff66; overflow-y: auto; max-height: 300px; }
+                    .meta-readout { background: #000; padding: 10px; border-radius: 2px; border: 1px solid #002208; font-size: 11px; margin-top: 8px; line-height: 1.5; color: #00ff66; overflow-y: auto; max-height: 220px; }
                     .section-title { font-weight: bold; color: #fff; border-bottom: 1px solid #002208; margin-bottom: 4px; padding-bottom: 2px; }
                     .property-row { display: flex; gap: 4px; margin-top: 6px; align-items: center; }
-                    select, input[type="number"] { background: #000; color: #00ff66; border: 1px solid #00ff66; font-family: monospace; font-size: 11px; padding: 2px; border-radius: 2px; }
+                    select, input[type="number"], input[type="text"], textarea { background: #000; color: #00ff66; border: 1px solid #00ff66; font-family: monospace; font-size: 11px; padding: 2px; border-radius: 2px; box-sizing: border-box; }
+                    .editor-box { background: #070707; border: 1px solid #ffcc00; border-radius: 2px; margin-top: 8px; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
                 </style>
             </head>
             <body>
@@ -561,6 +579,25 @@ class PoorymapWebBackend(BaseHTTPRequestHandler):
                     </div>
                     <div class="grid-container" style="display: flex; flex-direction: column;"><div id="atlas-container" class="atlas-visual-matrix"></div></div>
                     <div class="meta-readout" id="readout-box">Select elements to initialize tracking properties.</div>
+                    
+                    <div class="editor-box" id="event-editor-pane">
+                        <div class="section-title" style="color: #ffcc00; border-bottom: 1px solid #ffcc00;">EVENT MANAGER</div>
+                        <div class="property-row" style="margin-top:0;">
+                            <label>Add New Template:</label>
+                            <select id="event-template-select" onchange="loadSelectedTemplate()">
+                                <option value="">-- Choose Event Template --</option>
+                                <option value="warp">Warp Event</option>
+                                <option value="object">Object Event</option>
+                                <option value="coord">Coordinate Event</option>
+                                <option value="bg">Background / Sign Event</option>
+                            </select>
+                        </div>
+                        <textarea id="event-json-editor" rows="6" style="width:100%; height:90px; resize:vertical; font-size:10px; color:#ffcc00; border-color:#ffcc00;"></textarea>
+                        <div style="display:flex; gap:6px;">
+                            <button id="btn-commit-event" onclick="commitTargetEvent()" style="flex:1; border-color:#ffcc00; color:#ffcc00;">Inject / Apply Update</button>
+                            <button id="btn-delete-event" onclick="dropTargetEvent()" style="border-color:#ff3333; color:#ff3333; display:none;">Drop</button>
+                        </div>
+                    </div>
                 </div>
 
                 <script>
@@ -572,7 +609,16 @@ class PoorymapWebBackend(BaseHTTPRequestHandler):
                         borderMode: false, selectionActive: false, selectionStart: null,
                         cursorIdx: 0, clipboard: null, atlasView: 'primary', currentTool: 'hand',
                         lastActiveTool: 'hand', selectedPaletteBlock: 0, layerFilter: 2,
-                        showEvents: false // Toggles drawing custom event containers
+                        showEvents: true,
+                        activeEditingEvent: null // Tracks active reference for edits
+                    };
+
+                    // Factory template patterns reflecting architecture parameters 
+                    const TEMPLATES = {
+                        warp: { x: 0, y: 0, elevation: 0, dest_map: "MAP_LITTLEROOT_TOWN", dest_warp_id: 0 },
+                        object: { graphics_id: "OBJ_EVENT_GFX_BOY_1", x: 0, y: 0, elevation: 0, movement_type: "MOVEMENT_TYPE_LOOK_AROUND", movement_range_x: 0, movement_range_y: 0, trainer_type: "TRAINER_TYPE_NONE", trainer_sight_or_berry_tree_id: "0", script: "NULL", flag: "0" },
+                        coord: { type: "trigger", x: 0, y: 0, elevation: 0, variable: "VAR_TEMP_0", value: 0, script: "NULL" },
+                        bg: { type: "sign", x: 0, y: 0, elevation: 0, player_facing_dir: "BG_EVENT_PLAYER_FACING_ANY", script: "NULL" }
                     };
 
                     function parseMetatile(val) {
@@ -603,6 +649,7 @@ class PoorymapWebBackend(BaseHTTPRequestHandler):
                         state.cursorIdx = 0;
                         state.selectionActive = false;
                         state.selectionStart = null;
+                        state.activeEditingEvent = null;
 
                         let m = STUDIO.maps[activeMapName];
                         if(m) {
@@ -614,6 +661,7 @@ class PoorymapWebBackend(BaseHTTPRequestHandler):
                         renderMatrixGrid();
                         buildVisualAtlas();
                         updateReadout();
+                        resetEditorForm();
                     }
 
                     function setTool(toolName) {
@@ -676,16 +724,26 @@ class PoorymapWebBackend(BaseHTTPRequestHandler):
                             let cX = idx % width;
                             let cY = Math.floor(idx / width);
 
-                            // Apply distinct color border tags based on JSON event arrays at specific grid space indices
                             if (state.showEvents && !state.borderMode) {
                                 if (m.warp_events && m.warp_events.some(e => e.x === cX && e.y === cY)) {
                                     cell.classList.add("evt-warp");
-                                } else if (m.object_events && m.object_events.some(e => e.x === cX && e.y === cY)) {
+                                    let badge = document.createElement("div"); badge.className = "evt-badge"; badge.innerText = "W";
+                                    cell.appendChild(badge);
+                                }
+                                if (m.object_events && m.object_events.some(e => e.x === cX && e.y === cY)) {
                                     cell.classList.add("evt-object");
-                                } else if (m.coord_events && m.coord_events.some(e => e.x === cX && e.y === cY)) {
+                                    let badge = document.createElement("div"); badge.className = "evt-badge"; badge.innerText = "O";
+                                    cell.appendChild(badge);
+                                }
+                                if (m.coord_events && m.coord_events.some(e => e.x === cX && e.y === cY)) {
                                     cell.classList.add("evt-coord");
-                                } else if (m.bg_events && m.bg_events.some(e => e.x === cX && e.y === cY)) {
+                                    let badge = document.createElement("div"); badge.className = "evt-badge"; badge.innerText = "C";
+                                    cell.appendChild(badge);
+                                }
+                                if (m.bg_events && m.bg_events.some(e => e.x === cX && e.y === cY)) {
                                     cell.classList.add("evt-bg");
+                                    let badge = document.createElement("div"); badge.className = "evt-badge"; badge.innerText = "B";
+                                    cell.appendChild(badge);
                                 }
                             }
 
@@ -707,9 +765,103 @@ class PoorymapWebBackend(BaseHTTPRequestHandler):
                                     applyTileToSelection(state.selectedPaletteBlock);
                                 }
                                 renderMatrixGrid(); updateReadout();
+                                resetEditorForm();
                             };
+
+                            // Double click handler triggers traversal tracking sequences on wrap layouts
+                            cell.ondblclick = () => {
+                                if (state.borderMode) return;
+                                if (m.warp_events) {
+                                    let foundWarp = m.warp_events.find(e => e.x === cX && e.y === cY);
+                                    if (foundWarp && foundWarp.dest_map) {
+                                        // Standardize layout format references (e.g., MAP_LITTLEROOT_TOWN -> littleroot_town)
+                                        let cleanDest = foundWarp.dest_map.replace(/^MAP_/, "").toLowerCase();
+                                        fetch(`/open_map?name=${cleanDest}`).then(res => res.json()).then(data => {
+                                            if (data.status === "success") {
+                                                STUDIO.maps[cleanDest] = data.payload;
+                                                switchMapTab(cleanDest);
+                                            } else {
+                                                alert("Destination configuration could not be tracked: data/maps/" + cleanDest);
+                                            }
+                                        });
+                                    }
+                                }
+                            };
+
                             grid.appendChild(cell);
                         });
+                    }
+
+                    // Interactive Event Modification Controls
+                    function loadSelectedTemplate() {
+                        const type = document.getElementById("event-template-select").value;
+                        if (!type) { resetEditorForm(); return; }
+                        
+                        let m = STUDIO.maps[activeMapName];
+                        let width = state.borderMode ? 2 : m.width;
+                        let cX = state.cursorIdx % width;
+                        let cY = Math.floor(state.cursorIdx / width);
+                        let tileValue = state.borderMode ? m.border_blocks[state.cursorIdx] : m.metatiles[state.cursorIdx];
+                        let meta = parseMetatile(tileValue || 0);
+
+                        let payload = Object.assign({}, TEMPLATES[type]);
+                        payload.x = cX;
+                        payload.y = cY;
+                        payload.elevation = meta.elevation;
+
+                        document.getElementById("event-json-editor").value = JSON.stringify(payload, null, 4);
+                        state.activeEditingEvent = { category: type, index: -1 };
+                        document.getElementById("btn-delete-event").style.display = "none";
+                    }
+
+                    function loadTargetEventForEditing(category, index, data) {
+                        state.activeEditingEvent = { category: category, index: index };
+                        document.getElementById("event-template-select").value = category;
+                        document.getElementById("event-json-editor").value = JSON.stringify(data, null, 4);
+                        document.getElementById("btn-delete-event").style.display = "inline-block";
+                    }
+
+                    function resetEditorForm() {
+                        document.getElementById("event-template-select").value = "";
+                        document.getElementById("event-json-editor").value = "";
+                        document.getElementById("btn-delete-event").style.display = "none";
+                        state.activeEditingEvent = null;
+                    }
+
+                    function commitTargetEvent() {
+                        if (!state.activeEditingEvent) { alert("Please select an event template or active structural component first."); return; }
+                        try {
+                            let parsed = JSON.parse(document.getElementById("event-json-editor").value);
+                            let m = STUDIO.maps[activeMapName];
+                            let arrKey = state.activeEditingEvent.category + "_events";
+                            
+                            if (!m[arrKey]) m[arrKey] = [];
+
+                            if (state.activeEditingEvent.index === -1) {
+                                // New injection sequence
+                                m[arrKey].push(parsed);
+                            } else {
+                                // Apply update to existing array slot
+                                m[arrKey][state.activeEditingEvent.index] = parsed;
+                            }
+                            renderMatrixGrid();
+                            updateReadout();
+                            resetEditorForm();
+                        } catch(err) {
+                            alert("Syntax error in manifest formatting: " + err.message);
+                        }
+                    }
+
+                    function dropTargetEvent() {
+                        if (!state.activeEditingEvent || state.activeEditingEvent.index === -1) return;
+                        let m = STUDIO.maps[activeMapName];
+                        let arrKey = state.activeEditingEvent.category + "_events";
+                        if (m[arrKey]) {
+                            m[arrKey].splice(state.activeEditingEvent.index, 1);
+                        }
+                        renderMatrixGrid();
+                        updateReadout();
+                        resetEditorForm();
                     }
 
                     function buildVisualAtlas() {
@@ -819,20 +971,22 @@ class PoorymapWebBackend(BaseHTTPRequestHandler):
                             <strong>Behavior Match:</strong> ${match ? match.behavior : "UNKNOWN"}
                         `;
 
-                        // Evaluate structured data match arrays if overlay tracking state is active
                         if (state.showEvents && !state.borderMode) {
                             let matchObj = [];
-                            if (m.warp_events) m.warp_events.forEach(e => { if (e.x === cX && e.y === cY) matchObj.push({type: "WARP EVENT", data: e}); });
-                            if (m.object_events) m.object_events.forEach(e => { if (e.x === cX && e.y === cY) matchObj.push({type: "OBJECT EVENT", data: e}); });
-                            if (m.coord_events) m.coord_events.forEach(e => { if (e.x === cX && e.y === cY) matchObj.push({type: "COORD EVENT", data: e}); });
-                            if (m.bg_events) m.bg_events.forEach(e => { if (e.x === cX && e.y === cY) matchObj.push({type: "BG / SIGN EVENT", data: e}); });
+                            if (m.warp_events) m.warp_events.forEach((e, idx) => { if (e.x === cX && e.y === cY) matchObj.push({type: "WARP", key: "warp", index: idx, data: e}); });
+                            if (m.object_events) m.object_events.forEach((e, idx) => { if (e.x === cX && e.y === cY) matchObj.push({type: "OBJECT", key: "object", index: idx, data: e}); });
+                            if (m.coord_events) m.coord_events.forEach((e, idx) => { if (e.x === cX && e.y === cY) matchObj.push({type: "COORD", key: "coord", index: idx, data: e}); });
+                            if (m.bg_events) m.bg_events.forEach((e, idx) => { if (e.x === cX && e.y === cY) matchObj.push({type: "BG / SIGN", key: "bg", index: idx, data: e}); });
 
                             if (matchObj.length > 0) {
                                 outputHtml += `<div class="section-title" style="margin-top:12px;">JSON OBJECT MANIFEST (${matchObj.length})</div>`;
                                 matchObj.forEach(obj => {
                                     outputHtml += `
-                                        <span style="color:#fff; font-weight:bold;">[${obj.type}]</span>
-                                        <pre style="margin:4px 0 8px 0; background:#050505; border:1px solid #003311; padding:6px; color:#00ff88; font-size:10px;">${JSON.stringify(obj.data, null, 2)}</pre>
+                                        <div style="display:flex; justify-content:space-between; align-items:center; background:#151515; padding:2px 4px; border:1px solid #00441a;">
+                                            <span style="color:#fff; font-weight:bold; font-size:10px;">[${obj.type}]</span>
+                                            <button onclick='loadTargetEventForEditing("${obj.key}", ${obj.index}, ${JSON.stringify(obj.data)})' style="font-size:9px; padding:1px 4px;">Edit</button>
+                                        </div>
+                                        <pre style="margin:0 0 8px 0; background:#050505; border:1px solid #002208; border-top:none; padding:6px; color:#00ff88; font-size:10px;">${JSON.stringify(obj.data, null, 2)}</pre>
                                     `;
                                 });
                             }
@@ -844,7 +998,7 @@ class PoorymapWebBackend(BaseHTTPRequestHandler):
                     function toggleBorderMode() {
                         state.borderMode = !state.borderMode; state.cursorIdx = 0; state.selectionActive = false;
                         document.getElementById("btn-border").classList.toggle("active-toggle", state.borderMode);
-                        renderMatrixGrid(); updateReadout();
+                        renderMatrixGrid(); updateReadout(); resetEditorForm();
                     }
                     function toggleSelectionMode() { state.selectionActive = !state.selectionActive; state.selectionStart = state.selectionActive ? state.cursorIdx : null; document.getElementById("btn-select").classList.toggle("active-toggle", state.selectionActive); renderMatrixGrid(); }
 
@@ -891,11 +1045,27 @@ class PoorymapWebBackend(BaseHTTPRequestHandler):
 
                     function saveCurrentMap() {
                         let m = STUDIO.maps[activeMapName];
-                        fetch('/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ map_name: activeMapName, width: m.width, height: m.height, metatiles: m.metatiles, border_blocks: m.border_blocks }) })
+                        fetch('/save', { 
+                            method: 'POST', 
+                            headers: { 'Content-Type': 'application/json' }, 
+                            body: JSON.stringify({ 
+                                map_name: activeMapName, 
+                                width: m.width, 
+                                height: m.height, 
+                                metatiles: m.metatiles, 
+                                border_blocks: m.border_blocks,
+                                object_events: m.object_events,
+                                warp_events: m.warp_events,
+                                coord_events: m.coord_events,
+                                bg_events: m.bg_events
+                            }) 
+                        })
                         .then(res => res.json()).then(data => alert(data.message));
                     }
 
                     window.addEventListener("keydown", (e) => {
+                        // Prevent movement keys from drifting if editing raw script elements
+                        if (document.activeElement.tagName === "TEXTAREA" || document.activeElement.tagName === "INPUT") return;
                         let m = STUDIO.maps[activeMapName]; if(!m) return;
                         let width = state.borderMode ? 2 : m.width;
                         let maxLen = (state.borderMode ? m.border_blocks : m.metatiles).length;
@@ -915,7 +1085,7 @@ class PoorymapWebBackend(BaseHTTPRequestHandler):
                         else if (e.key.toLowerCase() === "p") { changeAtlasView('primary'); return; }
                         else if (e.key.toLowerCase() === "o") { toggleEventsOverlay(); return; }
                         else return;
-                        renderMatrixGrid(); updateReadout();
+                        renderMatrixGrid(); updateReadout(); resetEditorForm();
                     });
 
                     switchMapTab(activeMapName);
@@ -938,7 +1108,6 @@ class PoorymapWebBackend(BaseHTTPRequestHandler):
             id_params = re.findall(r'id=(\d+)', self.path)
             global_id = int(id_params[0]) if id_params else 0
             
-            # Read layer parameter from query
             layer_params = re.findall(r'layer=(\d+)', self.path)
             render_layer = int(layer_params[0]) if layer_params else 2
 
@@ -982,6 +1151,12 @@ class PoorymapWebBackend(BaseHTTPRequestHandler):
                 m["height"] = data.get("height", m["height"])
                 m["metatiles"] = data.get("metatiles", m["metatiles"])
                 m["border_blocks"] = data.get("border_blocks", m["border_blocks"])
+                
+                # Append the structural elements back down to memory variables prior to workspace flush
+                m["object_events"] = data.get("object_events", m["object_events"])
+                m["warp_events"] = data.get("warp_events", m["warp_events"])
+                m["coord_events"] = data.get("coord_events", m["coord_events"])
+                m["bg_events"] = data.get("bg_events", m["bg_events"])
 
                 if force_disk_commit(name, m):
                     res_msg = json.dumps({"message": f"Successfully committed updates for '{name}' straight to file system paths."}).encode('utf-8')
@@ -1019,3 +1194,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
