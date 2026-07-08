@@ -1,69 +1,69 @@
 {
-    "id": "MAP_DADSFARM_HOUSE_2F",
-    "name": "DadsFarm_House_2F",
-    "layout": "LAYOUT_DADSFARM_HOUSE_2F",
-    "music": "MUS_LITTLEROOT",
-    "region_map_section": "MAPSEC_LITTLEROOT_TOWN",
-    "requires_flash": false,
-    "weather": "WEATHER_NONE",
-    "map_type": "MAP_TYPE_INDOOR",
-    "allow_cycling": false,
-    "allow_escaping": false,
-    "allow_running": false,
-    "show_map_name": false,
-    "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-    "connections": null,
-    "object_events": [],
-    "warp_events": [
-        {
-            "x": 8,
-            "y": 1,
-            "elevation": 0,
-            "dest_map": "MAP_DADSFARM_HOUSE_1F",
-            "dest_warp_id": "0"
-        }
-    ],
-    "coord_events": [],
-    "bg_events": [
-        {
-            "type": "sign",
-            "x": 0,
-            "y": 1,
-            "elevation": 0,
-            "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
-            "script": "DadsFarm_House_2F_EventScript_PC"
-        },
-        {
-            "type": "sign",
-            "x": 1,
-            "y": 1,
-            "elevation": 0,
-            "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-            "script": "DadsFarm_House_2F_EventScript_Notebook"
-        },
-        {
-            "type": "sign",
-            "x": 3,
-            "y": 1,
-            "elevation": 0,
-            "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-            "script": "DadsFarm_House_2F_EventScript_YourDresser"
-        },
-        {
-            "type": "sign",
-            "x": 4,
-            "y": 1,
-            "elevation": 0,
-            "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-            "script": "DadsFarm_House_2F_EventScript_MarkosDresser"
-        },
-        {
-            "type": "sign",
-            "x": 5,
-            "y": 1,
-            "elevation": 0,
-            "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-            "script": "DadsFarm_House_2F_EventScript_WallClock"
-        }
-    ]
+  "id": "MAP_DADSFARM_HOUSE_2F",
+  "name": "DadsFarm_House_2F",
+  "layout": "LAYOUT_DADSFARM_HOUSE_2F",
+  "music": "MUS_LITTLEROOT",
+  "region_map_section": "MAPSEC_LITTLEROOT_TOWN",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_INDOOR",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": null,
+  "object_events": [],
+  "warp_events": [
+    {
+      "x": 8,
+      "y": 1,
+      "elevation": 0,
+      "dest_map": "MAP_DADSFARM_HOUSE_1F",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": [
+    {
+      "type": "sign",
+      "x": 0,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+      "script": "DadsFarm_House_2F_EventScript_PC"
+    },
+    {
+      "type": "sign",
+      "x": 1,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "DadsFarm_House_2F_EventScript_Notebook"
+    },
+    {
+      "type": "sign",
+      "x": 3,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "DadsFarm_House_2F_EventScript_YourDresser"
+    },
+    {
+      "type": "sign",
+      "x": 4,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "DadsFarm_House_2F_EventScript_MarkosDresser"
+    },
+    {
+      "type": "sign",
+      "x": 5,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+      "script": "DadsFarm_House_2F_EventScript_WallClock"
+    }
+  ]
 }

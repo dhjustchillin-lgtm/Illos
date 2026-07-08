@@ -5,24 +5,81 @@
     "music": "MUS_LITTLEROOT",
     "region_map_section": "MAPSEC_LITTLEROOT_TOWN",
     "requires_flash": false,
-    "weather": "WEATHER_SUNNY",
-    "map_type": "MAP_TYPE_TOWN",
-    "allow_cycling": true,
+    "weather": "WEATHER_NONE",
+    "map_type": "MAP_TYPE_INDOOR",
+    "allow_cycling": false,
     "allow_escaping": false,
-    "allow_running": true,
-    "show_map_name": true,
+    "allow_running": false,
+    "show_map_name": false,
     "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
     "connections": null,
     "object_events": [],
     "warp_events": [
-        {
-            "x": 8,
-            "y": 2,
-            "elevation": 0,
-            "dest_map": "MAP_DADSFARM_HOUSE_2F",
-            "dest_warp_id": "0"
-        }
+      {
+        "x": 8,
+        "y": 2,
+        "elevation": 0,
+        "dest_map": "MAP_DADSFARM_HOUSE_2F",
+        "dest_warp_id": "0"
+      }
     ],
     "coord_events": [],
-    "bg_events": []
+    "bg_events": [
+      {
+        "type": "sign",
+        "x": 0,
+        "y": 2,
+        "elevation": 0,
+        "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+        "script": "DadsFarm_House_1F_EventScript_Fridge"
+      },
+      {
+        "type": "sign",
+        "x": 1,
+        "y": 2,
+        "elevation": 0,
+        "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+        "script": "DadsFarm_House_1F_EventScript_Sink"
+      },
+      {
+        "type": "sign",
+        "x": 2,
+        "y": 2,
+        "elevation": 0,
+        "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+        "script": "DadsFarm_House_1F_EventScript_Window"
+      },
+      {
+        "type": "sign",
+        "x": 3,
+        "y": 2,
+        "elevation": 0,
+        "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+        "script": "DadsFarm_House_1F_EventScript_DryingMeats"
+      },
+      {
+        "type": "sign",
+        "x": 4,
+        "y": 2,
+        "elevation": 0,
+        "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+        "script": "DadsFarm_House_1F_EventScript_DryingMeats"
+      },
+      {
+        "type": "sign",
+        "x": 5,
+        "y": 1,
+        "elevation": 0,
+        "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+        "script": "DadsFarm_House_1F_EventScript_Pantry"
+      },
+      {
+        "type": "sign",
+        "x": 6,
+        "y": 2,
+        "elevation": 0,
+        "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+        "script": "DadsFarm_House_1F_EventScript_Pantry"
+      }
+    ]
 }

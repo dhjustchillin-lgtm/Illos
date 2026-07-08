@@ -3,8 +3,8 @@ DadsFarm_House_2F_MapScripts::
 	.byte 0
 
 DadsFarm_House_2F_OnTransition:
-	@ Blocks the player from leaving until they set the wall clock at the start of the game
-	call_if_eq VAR_LITTLEROOT_INTRO_STATE, 4, PlayersHouse_2F_EventScript_BlockStairsUntilClockIsSet
+	compare VAR_LITTLEROOT_INTRO_STATE, 4
+	call_if_eq PlayersHouse_2F_EventScript_BlockStairsUntilClockIsSet
 	end
 
 @ --- Object & Tile Interactions ---
@@ -33,7 +33,21 @@ DadsFarm_House_2F_EventScript_MarkosDresser::
 
 DadsFarm_House_2F_EventScript_WallClock::
 	lockall
+	compare VAR_LITTLEROOT_INTRO_STATE, 4
+	goto_if_eq DadsFarm_House_2F_EventScript_SetWallClock
+	@ Bypassing special macro for getting clock
+	callnative StartWallClock
+	waitstate
+	releaseall
+	end
+
+DadsFarm_House_2F_EventScript_SetWallClock::
 	msgbox DadsFarm_House_2F_Text_ClockIsStopped, MSGBOX_DEFAULT
+	@ Bypassing special macro for setting clock
+	callnative StartWallClock
+	waitstate
+	delay 30
+	setvar VAR_LITTLEROOT_INTRO_STATE, 5
 	releaseall
 	end
 
@@ -45,7 +59,7 @@ DadsFarm_House_2F_Text_YourDresser:
 
 DadsFarm_House_2F_Text_MarkosDresser:
 	.string "It's Markos' dresser!\n"
-	.string "It's a bit disorganized...$"
+	.string "It a bit disorganized...$"
 
 DadsFarm_House_2F_Text_ClockIsStopped:
 	.string "The clock is stopped…\p"
