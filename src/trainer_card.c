@@ -97,7 +97,6 @@ struct TrainerCardData
 EWRAM_DATA struct TrainerCard gTrainerCards[4] = {0};
 EWRAM_DATA static struct TrainerCardData *sData = NULL;
 static EWRAM_DATA u8 spriteIdData[PARTY_SIZE] = {};
-static EWRAM_DATA u16 spriteIdPalette[PARTY_SIZE] = {};
 
 //this file's functions
 static void VblankCb_TrainerCard(void);
@@ -1875,16 +1874,16 @@ static void UpdateTrainerCardMonIcons(void)
     u32 personality;
     s16 x = 32;
 
+    // 1. Load the shared Pokémon icon palettes into OBJ RAM
+    LoadMonIconPalettes();
+
     for (i = 0; i < gPartiesCount[B_TRAINER_PLAYER]; i++, x += 32)
     {
         species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES);
         personality = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_PERSONALITY);
 
+        // 2. CreateMonIcon automatically resolves and assigns the correct hardware palette slot
         spriteIdData[i] = CreateMonIcon(species, SpriteCB_MonIcon, x, 124, 1, personality);
-        spriteIdPalette[i] = GetValidMonIconPalIndex(species);
-
-        // Apply the fetched palette index to the sprite's OAM settings
-        gSprites[spriteIdData[i]].oam.paletteNum = spriteIdPalette[i];
     }
 }
 static void DestroyTrainerCardMonIcons(void)

@@ -1331,14 +1331,12 @@ static void Task_NewGameOliveSpeech_Init(u8 taskId)
 void CB2_NewGameOliveSpeech_FromNewMainMenu(void) // Combination of the function above and another to properly load the new game olive speech from a separate menu
 {
     u8 taskId;
-    u8 spriteId;
-    u16 savedIme;
 
     ResetBgsAndClearDma3BusyFlags(0);
     SetGpuReg(REG_OFFSET_DISPCNT, 0);
     SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);
     InitBgsFromTemplates(0, sMainMenuBgTemplates, ARRAY_COUNT(sMainMenuBgTemplates));
-    InitBgFromTemplate(&sBirchBgTemplate);
+    InitBgFromTemplate(&sOliveBgTemplate);
     SetVBlankCallback(NULL);
     SetGpuReg(REG_OFFSET_BG2CNT, 0);
     SetGpuReg(REG_OFFSET_BG1CNT, 0);
@@ -1353,13 +1351,12 @@ void CB2_NewGameOliveSpeech_FromNewMainMenu(void) // Combination of the function
     DmaFill32(3, 0, OAM, OAM_SIZE);
     DmaFill16(3, 0, PLTT, PLTT_SIZE);
     ResetPaletteFade();
-    LZ77UnCompVram(sBirchSpeechShadowGfx, (u8 *)VRAM);
-    LZ77UnCompVram(sBirchSpeechBgMap, (u8 *)(BG_SCREEN_ADDR(7)));
-    LoadPalette(sBirchSpeechBgPals, BG_PLTT_ID(0), 2 * PLTT_SIZE_4BPP);
-    LoadPalette(sBirchSpeechPlatformBlackPal, BG_PLTT_ID(0) + 1, PLTT_SIZEOF(8));
-    ResetTasks();
+    LZ77UnCompVram(sOliveSpeechShadowGfx, (u8 *)VRAM);
+    LZ77UnCompVram(sOliveSpeechBgMap, (u8 *)(BG_SCREEN_ADDR(7)));
+    LoadPalette(sOliveSpeechBgPals, BG_PLTT_ID(0), 2 * PLTT_SIZE_4BPP);
+    LoadPalette(&sOliveSpeechBgGradientPal[8], BG_PLTT_ID(0) + 1, PLTT_SIZEOF(8));
     
-    // Updated to point to your Olive task instead of Birch
+    // Updated to point to your Olive task instead of Olive
     taskId = CreateTask(Task_NewGameOliveSpeech_WaitToShowOlive, 0);
     
     gTasks[taskId].tBG1HOFS = 0;
@@ -1370,7 +1367,7 @@ void CB2_NewGameOliveSpeech_FromNewMainMenu(void) // Combination of the function
     ResetSpriteData();
     FreeAllSpritePalettes();
     ResetAllPicSprites();
-    AddBirchSpeechObjects(taskId);
+    AddOliveSpeechObjects(taskId);
     PlayBGM(MUS_ROUTE122);
     BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
     SetGpuReg(REG_OFFSET_WIN0H, 0);
@@ -1384,7 +1381,7 @@ void CB2_NewGameOliveSpeech_FromNewMainMenu(void) // Combination of the function
     ShowBg(1);
     SetVBlankCallback(VBlankCB_MainMenu);
     SetMainCallback2(CB2_MainMenu);
-    InitWindows(sNewGameBirchSpeechTextWindows);
+    InitWindows(sNewGameOliveSpeechTextWindows);
     LoadMainMenuWindowFrameTiles(0, 0xF3);
     LoadMessageBoxGfx(0, 0xFC, BG_PLTT_ID(15));
     PutWindowTilemap(0);
