@@ -119,8 +119,8 @@
  *  - When the text is done printing, spawns Task_NewGameOliveSpeechSub_InitPokeball
  * Task_NewGameOliveSpeech_MainSpeech
  * Task_NewGameOliveSpeech_AndYouAre
- * Task_NewGameOliveSpeech_StartOliveLotadPlatformFade
- * Task_NewGameOliveSpeech_StartOliveLotadPlatformFade
+ * Task_NewGameOliveSpeech_StartOliveCINDERFPlatformFade
+ * Task_NewGameOliveSpeech_StartOliveCINDERFPlatformFade
  * Task_NewGameOliveSpeech_SlidePlatformAway
  * Task_NewGameOliveSpeech_StartPlayerFadeIn
  * Task_NewGameOliveSpeech_WaitForPlayerFadeIn
@@ -150,7 +150,7 @@
  *  - Otherwise, return to Task_NewGameOliveSpeech_BoyOrGirl.
  *
  * Task_NewGameOliveSpeech_SlidePlatformAway2
- * Task_NewGameOliveSpeech_ReshowOliveLotad
+ * Task_NewGameOliveSpeech_ReshowOliveCINDERF
  * Task_NewGameOliveSpeech_WaitForSpriteFadeInAndTextPrinter
  * Task_NewGameOliveSpeech_AreYouReady
  * Task_NewGameOliveSpeech_ShrinkPlayer
@@ -160,8 +160,8 @@
  *  - Advances to CB2_NewGame.
  *
  * Task_NewGameOliveSpeechSub_InitPokeball
- *  - Advances to Task_NewGameOliveSpeechSub_WaitForLotad
- * Task_NewGameOliveSpeechSub_WaitForLotad
+ *  - Advances to Task_NewGameOliveSpeechSub_WaitForCINDERF
+ * Task_NewGameOliveSpeechSub_WaitForCINDERF
  *  - Destroys itself when done.
  */
 
@@ -203,8 +203,8 @@ static void Task_NewGameOliveSpeech_ThisIsAPokemon(u8);
 static void Task_NewGameOliveSpeech_MainSpeech(u8);
 static void NewGameOliveSpeech_WaitForThisIsPokemonText(struct TextPrinterTemplate *, u16);
 static void Task_NewGameOliveSpeech_AndYouAre(u8);
-static void Task_NewGameOliveSpeechSub_WaitForLotad(u8);
-static void Task_NewGameOliveSpeech_StartOliveLotadPlatformFade(u8);
+static void Task_NewGameOliveSpeechSub_WaitForCINDERF(u8);
+static void Task_NewGameOliveSpeech_StartOliveCINDERFPlatformFade(u8);
 static void NewGameOliveSpeech_StartFadeOutTarget1InTarget2(u8, u8);
 static void NewGameOliveSpeech_StartFadePlatformIn(u8, u8);
 static void Task_NewGameOliveSpeech_SlidePlatformAway(u8);
@@ -230,7 +230,7 @@ static void Task_NewGameOliveSpeech_CreateNameYesNo(u8);
 static void Task_NewGameOliveSpeech_ProcessNameYesNoMenu(u8);
 void CreateYesNoMenuParameterized(u8, u8, u16, u16, u8, u8);
 static void Task_NewGameOliveSpeech_SlidePlatformAway2(u8);
-static void Task_NewGameOliveSpeech_ReshowOliveLotad(u8);
+static void Task_NewGameOliveSpeech_ReshowOliveCINDERF(u8);
 static void Task_NewGameOliveSpeech_WaitForSpriteFadeInAndTextPrinter(u8);
 static void Task_NewGameOliveSpeech_AreYouReady(u8);
 static void Task_NewGameOliveSpeech_ShrinkPlayer(u8);
@@ -1290,7 +1290,7 @@ static void HighlightSelectedMainMenuItem(enum PartyMenuType menuType, u8 select
 #define tPlayerGender data[6]
 #define tTimer data[7]
 #define tOliveSpriteId data[8]
-#define tLotadSpriteId data[9]
+#define tCINDERFSpriteId data[9]
 #define tBrendanSpriteId data[10]
 #define tMaySpriteId data[11]
 
@@ -1399,22 +1399,22 @@ static void Task_NewGameOliveSpeech_MainSpeech(u8 taskId)
 
 static void Task_NewGameOliveSpeechSub_InitPokeBall(u8 taskId)
 {
-    u8 spriteId = gTasks[sOliveSpeechMainTaskId].tLotadSpriteId;
+    u8 spriteId = gTasks[sOliveSpeechMainTaskId].tCINDERFSpriteId;
 
     gSprites[spriteId].x = 100;
     gSprites[spriteId].y = 75;
     gSprites[spriteId].invisible = FALSE;
     gSprites[spriteId].data[0] = 0;
 
-    CreatePokeballSpriteToReleaseMon(spriteId, gSprites[spriteId].oam.paletteNum, 112, 58, 0, 0, 32, PALETTES_BG, SPECIES_LOTAD);
-    gTasks[taskId].func = Task_NewGameOliveSpeechSub_WaitForLotad;
+    CreatePokeballSpriteToReleaseMon(spriteId, gSprites[spriteId].oam.paletteNum, 112, 58, 0, 0, 32, PALETTES_BG, SPECIES_CINDERF);
+    gTasks[taskId].func = Task_NewGameOliveSpeechSub_WaitForCINDERF;
     gTasks[sOliveSpeechMainTaskId].tTimer = 0;
 }
 
-static void Task_NewGameOliveSpeechSub_WaitForLotad(u8 taskId)
+static void Task_NewGameOliveSpeechSub_WaitForCINDERF(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    struct Sprite *sprite = &gSprites[gTasks[sOliveSpeechMainTaskId].tLotadSpriteId];
+    struct Sprite *sprite = &gSprites[gTasks[sOliveSpeechMainTaskId].tCINDERFSpriteId];
 
     switch (tState)
     {
@@ -1446,16 +1446,16 @@ static void Task_NewGameOliveSpeech_AndYouAre(u8 taskId)
         sStartedPokeBallTask = FALSE;
         StringExpandPlaceholders(gStringVar4, gText_Olive_AndYouAre);
         AddTextPrinterForMessage(TRUE);
-        gTasks[taskId].func = Task_NewGameOliveSpeech_StartOliveLotadPlatformFade;
+        gTasks[taskId].func = Task_NewGameOliveSpeech_StartOliveCINDERFPlatformFade;
     }
 }
 
-static void Task_NewGameOliveSpeech_StartOliveLotadPlatformFade(u8 taskId)
+static void Task_NewGameOliveSpeech_StartOliveCINDERFPlatformFade(u8 taskId)
 {
     if (!RunTextPrintersAndIsPrinter0Active())
     {
         gSprites[gTasks[taskId].tOliveSpriteId].oam.objMode = ST_OAM_OBJ_BLEND;
-        gSprites[gTasks[taskId].tLotadSpriteId].oam.objMode = ST_OAM_OBJ_BLEND;
+        gSprites[gTasks[taskId].tCINDERFSpriteId].oam.objMode = ST_OAM_OBJ_BLEND;
         NewGameOliveSpeech_StartFadeOutTarget1InTarget2(taskId, 2);
         NewGameOliveSpeech_StartFadePlatformIn(taskId, 1);
         gTasks[taskId].tTimer = 64;
@@ -1482,7 +1482,7 @@ static void Task_NewGameOliveSpeech_StartPlayerFadeIn(u8 taskId)
     if (gTasks[taskId].tIsDoneFadingSprites)
     {
         gSprites[gTasks[taskId].tOliveSpriteId].invisible = TRUE;
-        gSprites[gTasks[taskId].tLotadSpriteId].invisible = TRUE;
+        gSprites[gTasks[taskId].tCINDERFSpriteId].invisible = TRUE;
         if (gTasks[taskId].tTimer)
         {
             gTasks[taskId].tTimer--;
@@ -1633,7 +1633,7 @@ static void Task_NewGameOliveSpeech_StartNamingScreen(u8 taskId)
     if (!gPaletteFade.active)
     {
         FreeAllWindowBuffers();
-        FreeAndDestroyMonPicSprite(gTasks[taskId].tLotadSpriteId);
+        FreeAndDestroyMonPicSprite(gTasks[taskId].tCINDERFSpriteId);
         NewGameOliveSpeech_SetDefaultPlayerName(Random() % NUM_PRESET_NAMES);
         DestroyTask(taskId);
         DoNamingScreen(NAMING_SCREEN_PLAYER, gSaveBlock2Ptr->playerName, gSaveBlock2Ptr->playerGender, 0, 0, CB2_NewGameOliveSpeech_ReturnFromNamingScreen);
@@ -1684,11 +1684,11 @@ static void Task_NewGameOliveSpeech_SlidePlatformAway2(u8 taskId)
     }
     else
     {
-        gTasks[taskId].func = Task_NewGameOliveSpeech_ReshowOliveLotad;
+        gTasks[taskId].func = Task_NewGameOliveSpeech_ReshowOliveCINDERF;
     }
 }
 
-static void Task_NewGameOliveSpeech_ReshowOliveLotad(u8 taskId)
+static void Task_NewGameOliveSpeech_ReshowOliveCINDERF(u8 taskId)
 {
     u8 spriteId;
 
@@ -1701,7 +1701,7 @@ static void Task_NewGameOliveSpeech_ReshowOliveLotad(u8 taskId)
         gSprites[spriteId].y = 60;
         gSprites[spriteId].invisible = FALSE;
         gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
-        spriteId = gTasks[taskId].tLotadSpriteId;
+        spriteId = gTasks[taskId].tCINDERFSpriteId;
         gSprites[spriteId].x = 100;
         gSprites[spriteId].y = 75;
         gSprites[spriteId].invisible = FALSE;
@@ -1720,11 +1720,11 @@ static void Task_NewGameOliveSpeech_WaitForSpriteFadeInAndTextPrinter(u8 taskId)
     if (gTasks[taskId].tIsDoneFadingSprites)
     {
         gSprites[gTasks[taskId].tOliveSpriteId].oam.objMode = ST_OAM_OBJ_NORMAL;
-        gSprites[gTasks[taskId].tLotadSpriteId].oam.objMode = ST_OAM_OBJ_NORMAL;
+        gSprites[gTasks[taskId].tCINDERFSpriteId].oam.objMode = ST_OAM_OBJ_NORMAL;
         if (!RunTextPrintersAndIsPrinter0Active())
         {
             gSprites[gTasks[taskId].tOliveSpriteId].oam.objMode = ST_OAM_OBJ_BLEND;
-            gSprites[gTasks[taskId].tLotadSpriteId].oam.objMode = ST_OAM_OBJ_BLEND;
+            gSprites[gTasks[taskId].tCINDERFSpriteId].oam.objMode = ST_OAM_OBJ_BLEND;
             NewGameOliveSpeech_StartFadeOutTarget1InTarget2(taskId, 2);
             NewGameOliveSpeech_StartFadePlatformIn(taskId, 1);
             gTasks[taskId].tTimer = 64;
@@ -1740,7 +1740,7 @@ static void Task_NewGameOliveSpeech_AreYouReady(u8 taskId)
     if (gTasks[taskId].tIsDoneFadingSprites)
     {
         gSprites[gTasks[taskId].tOliveSpriteId].invisible = TRUE;
-        gSprites[gTasks[taskId].tLotadSpriteId].invisible = TRUE;
+        gSprites[gTasks[taskId].tCINDERFSpriteId].invisible = TRUE;
         if (gTasks[taskId].tTimer)
         {
             gTasks[taskId].tTimer--;
@@ -1812,7 +1812,7 @@ static void Task_NewGameOliveSpeech_Cleanup(u8 taskId)
     if (!gPaletteFade.active)
     {
         FreeAllWindowBuffers();
-        FreeAndDestroyMonPicSprite(gTasks[taskId].tLotadSpriteId);
+        FreeAndDestroyMonPicSprite(gTasks[taskId].tCINDERFSpriteId);
         ResetAllPicSprites();
         SetMainCallback2(CB2_NewGame);
         DestroyTask(taskId);
@@ -1908,15 +1908,15 @@ static void SpriteCB_MovePlayerDownWhileShrinking(struct Sprite *sprite)
     sprite->data[0] = y;
 }
 
-static u8 NewGameOliveSpeech_CreateLotadSprite(u8 x, u8 y)
+static u8 NewGameOliveSpeech_CreateCINDERFSprite(u8 x, u8 y)
 {
-    return CreateMonPicSprite_Affine(SPECIES_LOTAD, FALSE, 0, MON_PIC_AFFINE_FRONT, x, y, 14, TAG_NONE);
+    return CreateMonPicSprite_Affine(SPECIES_CINDERF, FALSE, 0, MON_PIC_AFFINE_FRONT, x, y, 14, TAG_NONE);
 }
 
 static void AddOliveSpeechObjects(u8 taskId)
 {
     u8 oliveSpriteId;
-    u8 lotadSpriteId;
+    u8 CINDERFSpriteId;
     u8 brendanSpriteId;
     u8 maySpriteId;
 
@@ -1925,11 +1925,11 @@ static void AddOliveSpeechObjects(u8 taskId)
     gSprites[oliveSpriteId].oam.priority = 0;
     gSprites[oliveSpriteId].invisible = TRUE;
     gTasks[taskId].tOliveSpriteId = oliveSpriteId;
-    lotadSpriteId = NewGameOliveSpeech_CreateLotadSprite(100, 0x4B);
-    gSprites[lotadSpriteId].callback = SpriteCB_Null;
-    gSprites[lotadSpriteId].oam.priority = 0;
-    gSprites[lotadSpriteId].invisible = TRUE;
-    gTasks[taskId].tLotadSpriteId = lotadSpriteId;
+    CINDERFSpriteId = NewGameOliveSpeech_CreateCINDERFSprite(100, 0x4B);
+    gSprites[CINDERFSpriteId].callback = SpriteCB_Null;
+    gSprites[CINDERFSpriteId].oam.priority = 0;
+    gSprites[CINDERFSpriteId].invisible = TRUE;
+    gTasks[taskId].tCINDERFSpriteId = CINDERFSpriteId;
     brendanSpriteId = CreateTrainerSprite(FacilityClassToPicIndex(FACILITY_CLASS_BRENDAN), 120, 60, 0, NULL);
     gSprites[brendanSpriteId].callback = SpriteCB_Null;
     gSprites[brendanSpriteId].invisible = TRUE;
@@ -1946,7 +1946,7 @@ static void AddOliveSpeechObjects(u8 taskId)
 #undef tBG1HOFS
 #undef tPlayerGender
 #undef tOliveSpriteId
-#undef tLotadSpriteId
+#undef tCINDERFSpriteId
 #undef tBrendanSpriteId
 #undef tMaySpriteId
 

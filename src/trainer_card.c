@@ -21,6 +21,7 @@
 #include "gpu_regs.h"
 #include "international_string_util.h"
 #include "pokedex.h"
+#include "pokemon.h"
 #include "pokemon_icon.h"
 #include "graphics.h"
 #include "pokemon_icon.h"
@@ -95,6 +96,8 @@ struct TrainerCardData
 // EWRAM
 EWRAM_DATA struct TrainerCard gTrainerCards[4] = {0};
 EWRAM_DATA static struct TrainerCardData *sData = NULL;
+static EWRAM_DATA u8 spriteIdData[PARTY_SIZE] = {};
+static EWRAM_DATA u16 spriteIdPalette[PARTY_SIZE] = {};
 
 //this file's functions
 static void VblankCb_TrainerCard(void);
@@ -142,8 +145,6 @@ static void PrintBerryCrushStringOnCard(void);
 static void PrintPokeblockStringOnCard(void);
 static void PrintUnionStringOnCard(void);
 static void PrintContestStringOnCard(void);
-static void PrintPokemonIconsOnCard(void);
-static void PrintBattleFacilityStringOnCard(void);
 static void PrintStickersOnCard(void);
 static void BufferTextsVarsForCardPage2(void);
 static void BufferNameForCardBack(void);
@@ -159,6 +160,8 @@ static void PrintStatOnBackOfCard(u8 top, const u8 *str1, u8 *str2, const u8 *co
 static void LoadStickerGfx(void);
 static u8 SetCardBgsAndPals(void);
 static void DrawCardBackStats(void);
+static void UpdateTrainerCardMonIcons(void);
+static void DestroyTrainerCardMonIcons(void);
 static void Task_DoCardFlipTask(u8);
 static bool8 Task_BeginCardFlip(struct Task *task);
 static bool8 Task_AnimateCardFlipDown(struct Task *task);
@@ -466,6 +469,7 @@ static void Task_TrainerCard(u8 taskId)
     case STATE_WAIT_FLIP_TO_BACK:
         if (IsCardFlipTaskActive() && Overworld_IsRecvQueueAtMax() != TRUE)
         {
+            UpdateTrainerCardMonIcons();
             PlaySE(SE_RG_CARD_OPEN);
             sData->mainState = STATE_HANDLE_INPUT_BACK;
         }
@@ -484,6 +488,7 @@ static void Task_TrainerCard(u8 taskId)
             }
             else
             {
+                DestroyTrainerCardMonIcons();
                 FlipTrainerCard();
                 sData->mainState = STATE_WAIT_FLIP_TO_FRONT;
                 PlaySE(SE_RG_CARD_FLIP);
@@ -973,10 +978,6 @@ static bool8 PrintAllOnCardBack(void)
         PrintUnionStringOnCard();
         PrintContestStringOnCard();
         break;
-    case 6:
-        PrintPokemonIconsOnCard();
-        PrintBattleFacilityStringOnCard();
-        break;
     case 7:
         PrintStickersOnCard();
         break;
@@ -1321,42 +1322,6 @@ static void BufferBattleFacilityStats(void)
         break;
     case CARD_TYPE_FRLG:
         break;
-    }
-}
-
-static void PrintBattleFacilityStringOnCard(void)
-{
-    switch (sData->cardType)
-    {
-    case CARD_TYPE_RS:
-        if (sData->hasBattleTowerWins)
-            PrintStatOnBackOfCard(5, gText_BattleTower, sData->textBattleFacilityStat, sTrainerCardTextColors);
-        break;
-    case CARD_TYPE_EMERALD:
-        if (sData->trainerCard.frontierBP)
-            PrintStatOnBackOfCard(5, gText_BattlePtsWon, sData->textBattleFacilityStat, sTrainerCardStatColors);
-        break;
-    case CARD_TYPE_FRLG:
-        break;
-    }
-}
-
-static void PrintPokemonIconsOnCard(void)
-{
-    u8 i;
-    u8 paletteSlots[PARTY_SIZE] = {5, 6, 7, 8, 9, 10};
-    u8 xOffsets[PARTY_SIZE] = {0, 4, 8, 12, 16, 20};
-
-    if (sData->cardType == CARD_TYPE_FRLG)
-    {
-        for (i = 0; i < PARTY_SIZE; i++)
-        {
-            if (sData->trainerCard.monSpecies[i])
-            {
-                u8 monSpecies = GetMonIconPaletteIndexFromSpecies(sData->trainerCard.monSpecies[i]);
-                WriteSequenceToBgTilemapBuffer(3, 16 * i + 224, xOffsets[i] + 3, 15, 4, 4, paletteSlots[monSpecies], 1);
-            }
-        }
     }
 }
 
@@ -1901,4 +1866,34 @@ static void CreateTrainerCardTrainerPic(void)
                     8,
                     WIN_TRAINER_PIC);
     }
+}
+
+static void UpdateTrainerCardMonIcons(void)
+{
+    u8 i;
+    u16 species;
+    u32 personality;
+    s16 x = 32;
+
+    for (i = 0; i < gPartiesCount[B_TRAINER_PLAYER]; i++, x += 32)
+    {
+        species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES);
+        personality = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_PERSONALITY);
+
+        spriteIdData[i] = CreateMonIcon(species, SpriteCB_MonIcon, x, 124, 1, personality);
+        spriteIdPalette[i] = GetValidMonIconPalIndex(species);
+
+        // Apply the fetched palette index to the sprite's OAM settings
+        gSprites[spriteIdData[i]].oam.paletteNum = spriteIdPalette[i];
+    }
+}
+static void DestroyTrainerCardMonIcons(void)
+{
+    u8 i;
+
+    for (i = 0; i < gPartiesCount[B_TRAINER_PLAYER]; i++)
+    {
+        FreeAndDestroyMonIconSprite(&gSprites[spriteIdData[i]]);
+    }
+    FreeMonIconPalettes();
 }
