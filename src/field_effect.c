@@ -269,9 +269,9 @@ static u8 sActiveList[32];
 extern u8 *gFieldEffectScriptPointers[];
 extern const struct SpriteTemplate *const gFieldEffectObjectTemplatePointers[];
 
-static const u32 sNewGameBirch_Gfx[] = INCGFX_U32("graphics/birch_speech/birch.png", ".4bpp");
-static const u32 sUnusedBirchBeauty[] = INCGFX_U32("graphics/birch_speech/unused_beauty.png", ".4bpp", "-num_tiles 822 -Wnum_tiles");
-static const u16 sNewGameBirch_Pal[16] = INCGFX_U16("graphics/birch_speech/birch.png", ".gbapal");
+static const u32 sNewGameOlive_Gfx[] = INCGFX_U32("graphics/olive_speech/olive.png", ".4bpp");
+static const u32 sUnusedOliveBeauty[] = INCGFX_U32("graphics/olive_speech/unused_beauty.png", ".4bpp", "-num_tiles 822 -Wnum_tiles");
+static const u16 sNewGameOlive_Pal[16] = INCGFX_U16("graphics/olive_speech/olive.png", ".gbapal");
 
 static const u32 sPokeballGlow_Gfx[] = INCGFX_U32("graphics/field_effects/pics/pokeball_glow.png", ".4bpp");
 static const u16 sPokeballGlow_Pal[16] = INCGFX_U16("graphics/field_effects/palettes/pokeball_glow.pal", ".gbapal");
@@ -355,35 +355,35 @@ static const struct OamData sOam_16x16 =
     .paletteNum = 0,
 };
 
-static const struct SpriteFrameImage sPicTable_NewGameBirch[] =
+static const struct SpriteFrameImage sPicTable_NewGameOlive[] =
 {
-    obj_frame_tiles(sNewGameBirch_Gfx)
+    obj_frame_tiles(sNewGameOlive_Gfx)
 };
 
-static const struct SpritePalette sSpritePalette_NewGameBirch =
+static const struct SpritePalette sSpritePalette_NewGameOlive =
 {
-    .data = sNewGameBirch_Pal,
+    .data = sNewGameOlive_Pal,
     .tag = 0x1006
 };
 
-static const union AnimCmd sAnim_NewGameBirch[] =
+static const union AnimCmd sAnim_NewGameOlive[] =
 {
     ANIMCMD_FRAME(.imageValue = 0, .duration = 1),
     ANIMCMD_END
 };
 
-static const union AnimCmd *const sAnimTable_NewGameBirch[] =
+static const union AnimCmd *const sAnimTable_NewGameOlive[] =
 {
-    sAnim_NewGameBirch
+    sAnim_NewGameOlive
 };
 
-static const struct SpriteTemplate sSpriteTemplate_NewGameBirch =
+static const struct SpriteTemplate sSpriteTemplate_NewGameOlive =
 {
     .tileTag = TAG_NONE,
     .paletteTag = 0x1006,
     .oam = &sOam_64x64,
-    .anims = sAnimTable_NewGameBirch,
-    .images = sPicTable_NewGameBirch,
+    .anims = sAnimTable_NewGameOlive,
+    .images = sPicTable_NewGameOlive,
 };
 
 const struct SpritePalette gSpritePalette_PokeballGlow =
@@ -1022,10 +1022,10 @@ static void UNUSED LoadTrainerGfx_TrainerCard(u8 gender, u16 palOffset, u8 *dest
     LoadPalette(GetTrainerFrontPicPalette(gender), palOffset, PLTT_SIZE_4BPP);
 }
 
-u8 AddNewGameBirchObject(s16 x, s16 y, u8 subpriority)
+u8 AddNewGameOliveObject(s16 x, s16 y, u8 subpriority)
 {
-    LoadSpritePalette(&sSpritePalette_NewGameBirch);
-    return CreateSprite(&sSpriteTemplate_NewGameBirch, x, y, subpriority);
+    LoadSpritePalette(&sSpritePalette_NewGameOlive);
+    return CreateSprite(&sSpriteTemplate_NewGameOlive, x, y, subpriority);
 }
 
 u8 CreateMonSprite_PicBox(enum Species species, s16 x, s16 y, u8 subpriority)

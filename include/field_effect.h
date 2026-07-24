@@ -3,9 +3,9 @@
 
 #include "field_weather.h"
 
-extern const struct SpritePalette gNewGameBirchObjectPaletteInfo;
-extern const struct SpriteTemplate gNewGameBirchObjectTemplate;
-extern const struct OamData gNewGameBirchOamAttributes;
+extern const struct SpritePalette gNewGameOliveObjectPaletteInfo;
+extern const struct SpriteTemplate gNewGameOliveObjectTemplate;
+extern const struct OamData gNewGameOliveOamAttributes;
 
 extern s32 gFieldEffectArguments[8];
 extern void (*gPostMenuFieldCallback)(void);
@@ -16,7 +16,7 @@ bool8 FieldEffectActiveListContains(u8 id);
 void FieldEffectActiveListClear(void);
 void ReturnToFieldFromFlyMapSelect(void);
 void FieldCallback_UseFly(void);
-u8 AddNewGameBirchObject(s16 x, s16 y, u8 subpriority);
+u8 AddNewGameOliveObject(s16 x, s16 y, u8 subpriority);
 void FieldEffectStop(struct Sprite *sprite, u8 id);
 u8 CreateTrainerSprite(enum TrainerPicID trainerPicId, s16 x, s16 y, u8 subpriority, u8 *buffer);
 void FldEff_TeleportWarpOut(void);

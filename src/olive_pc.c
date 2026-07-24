@@ -20,31 +20,31 @@ bool16 ScriptGetPokedexInfo(void)
     return IsNationalPokedexEnabled();
 }
 
-#define BIRCH_DEX_STRINGS 21
+#define OLIVE_DEX_STRINGS 21
 
-static const u8 *const sBirchDexRatingTexts[BIRCH_DEX_STRINGS] =
+static const u8 *const sOliveDexRatingTexts[OLIVE_DEX_STRINGS] =
 {
-    gBirchDexRatingText_LessThan10,
-    gBirchDexRatingText_LessThan20,
-    gBirchDexRatingText_LessThan30,
-    gBirchDexRatingText_LessThan40,
-    gBirchDexRatingText_LessThan50,
-    gBirchDexRatingText_LessThan60,
-    gBirchDexRatingText_LessThan70,
-    gBirchDexRatingText_LessThan80,
-    gBirchDexRatingText_LessThan90,
-    gBirchDexRatingText_LessThan100,
-    gBirchDexRatingText_LessThan110,
-    gBirchDexRatingText_LessThan120,
-    gBirchDexRatingText_LessThan130,
-    gBirchDexRatingText_LessThan140,
-    gBirchDexRatingText_LessThan150,
-    gBirchDexRatingText_LessThan160,
-    gBirchDexRatingText_LessThan170,
-    gBirchDexRatingText_LessThan180,
-    gBirchDexRatingText_LessThan190,
-    gBirchDexRatingText_LessThan200,
-    gBirchDexRatingText_DexCompleted,
+    gOliveDexRatingText_LessThan10,
+    gOliveDexRatingText_LessThan20,
+    gOliveDexRatingText_LessThan30,
+    gOliveDexRatingText_LessThan40,
+    gOliveDexRatingText_LessThan50,
+    gOliveDexRatingText_LessThan60,
+    gOliveDexRatingText_LessThan70,
+    gOliveDexRatingText_LessThan80,
+    gOliveDexRatingText_LessThan90,
+    gOliveDexRatingText_LessThan100,
+    gOliveDexRatingText_LessThan110,
+    gOliveDexRatingText_LessThan120,
+    gOliveDexRatingText_LessThan130,
+    gOliveDexRatingText_LessThan140,
+    gOliveDexRatingText_LessThan150,
+    gOliveDexRatingText_LessThan160,
+    gOliveDexRatingText_LessThan170,
+    gOliveDexRatingText_LessThan180,
+    gOliveDexRatingText_LessThan190,
+    gOliveDexRatingText_LessThan200,
+    gOliveDexRatingText_DexCompleted,
 };
 
 // This shows your Hoenn Pokédex rating and not your National Dex.
@@ -63,7 +63,7 @@ const u8 *GetPokedexRatingText(u32 count)
             maxDex--;
         }
     }
-    return sBirchDexRatingTexts[(count * (BIRCH_DEX_STRINGS - 1)) / maxDex];
+    return sOliveDexRatingTexts[(count * (OLIVE_DEX_STRINGS - 1)) / maxDex];
 }
 
 void ShowPokedexRatingMessage(void)

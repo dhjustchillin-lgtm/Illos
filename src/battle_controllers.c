@@ -131,7 +131,7 @@ void HandleLinkBattleSetup(void)
     }
 }
 
-void SetUpBattleVarsAndBirchZigzagoon(void)
+void SetUpBattleVarsAndOliveZigzagoon(void)
 {
     s32 i;
 
@@ -2667,7 +2667,7 @@ void BtlController_HandlePrintString(enum BattlerId battler)
         case STRINGID_TRAINER1WINTEXT:
             gBattlerControllerFuncs[battler] = PrintOakText_HowDisappointing;
             return;
-        case STRINGID_DONTLEAVEBIRCH:
+        case STRINGID_DONTLEAVEOLIVE:
             gBattlerControllerFuncs[battler] = PrintOakText_OakNoRunningFromATrainer;
             return;
         }

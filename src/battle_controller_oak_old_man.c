@@ -739,7 +739,7 @@ static void OakOldManHandlePrintString(enum BattlerId battler)
             case STRINGID_TRAINER1WINTEXT:
                 gBattlerControllerFuncs[battler] = PrintOakText_HowDisappointing;
                 return;
-            case STRINGID_DONTLEAVEBIRCH:
+            case STRINGID_DONTLEAVEOLIVE:
                 gBattlerControllerFuncs[battler] = PrintOakText_OakNoRunningFromATrainer;
                 return;
             }

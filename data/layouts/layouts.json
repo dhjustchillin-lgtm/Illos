@@ -629,14 +629,14 @@
             "layout_version": "emerald"
         },
         {
-            "id": "LAYOUT_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB",
-            "name": "LittlerootTown_ProfessorBirchsLab_Layout",
+            "id": "LAYOUT_LITTLEROOT_TOWN_PROFESSOR_OLIVES_LAB",
+            "name": "LittlerootTown_ProfessorOlivesLab_Layout",
             "width": 13,
             "height": 13,
             "primary_tileset": "gTileset_Building",
             "secondary_tileset": "gTileset_Lab",
-            "border_filepath": "data/layouts/LittlerootTown_ProfessorBirchsLab/border.bin",
-            "blockdata_filepath": "data/layouts/LittlerootTown_ProfessorBirchsLab/map.bin",
+            "border_filepath": "data/layouts/LittlerootTown_ProfessorOlivesLab/border.bin",
+            "blockdata_filepath": "data/layouts/LittlerootTown_ProfessorOlivesLab/map.bin",
             "layout_version": "emerald"
         },
         {
@@ -4743,14 +4743,14 @@
             "layout_version": "emerald"
         },
         {
-            "id": "LAYOUT_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB_WITH_TABLE",
-            "name": "LittlerootTown_ProfessorBirchsLabWithTable_Layout",
+            "id": "LAYOUT_LITTLEROOT_TOWN_PROFESSOR_OLIVES_LAB_WITH_TABLE",
+            "name": "LittlerootTown_ProfessorOlivesLabWithTable_Layout",
             "width": 13,
             "height": 13,
             "primary_tileset": "gTileset_Building",
             "secondary_tileset": "gTileset_Lab",
-            "border_filepath": "data/layouts/LittlerootTown_ProfessorBirchsLabWithTable/border.bin",
-            "blockdata_filepath": "data/layouts/LittlerootTown_ProfessorBirchsLabWithTable/map.bin",
+            "border_filepath": "data/layouts/LittlerootTown_ProfessorOlivesLabWithTable/border.bin",
+            "blockdata_filepath": "data/layouts/LittlerootTown_ProfessorOlivesLabWithTable/map.bin",
             "layout_version": "emerald"
         },
         {

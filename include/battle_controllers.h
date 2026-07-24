@@ -302,7 +302,7 @@ extern u8 gBattlerBattleController[MAX_BATTLERS_COUNT];
 
 // general functions
 void HandleLinkBattleSetup(void);
-void SetUpBattleVarsAndBirchZigzagoon(void);
+void SetUpBattleVarsAndOliveZigzagoon(void);
 void InitBattleControllers(void);
 bool32 IsValidForBattle(struct Pokemon *mon);
 void TryReceiveLinkBattleData(void);

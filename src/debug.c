@@ -4086,7 +4086,7 @@ static void DebugAction_DestroyFollowerNPC(u8 taskId)
     X(MUS_ENCOUNTER_MALE)           \
     X(MUS_ABANDONED_SHIP)           \
     X(MUS_FORTREE)                  \
-    X(MUS_BIRCH_LAB)                \
+    X(MUS_OLIVE_LAB)                \
     X(MUS_B_TOWER_RS)               \
     X(MUS_ENCOUNTER_SWIMMER)        \
     X(MUS_CAVE_OF_ORIGIN)           \

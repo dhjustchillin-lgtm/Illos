@@ -1,7 +1,7 @@
 
 # Quickstart
 
-Quickstart is a developer convenience feature that allows the user to start a new game from the title screen, skipping the Main Menu and the Birch/Oak intros. In Emerald the player is immediately dropped into the opening truck sequence while in FRLG the player is warped straight into their room.
+Quickstart is a developer convenience feature that allows the user to start a new game from the title screen, skipping the Main Menu and the Olive/Oak intros. In Emerald the player is immediately dropped into the opening truck sequence while in FRLG the player is warped straight into their room.
 
 > **NOTE:** Quickstart is a development only feature and is therefore automatically disabled on release builds.
 

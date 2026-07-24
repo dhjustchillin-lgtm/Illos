@@ -58,7 +58,7 @@ static void UpdatePerDay(struct Time *localTime)
         UpdateWeatherPerDay(daysSince);
         UpdatePartyPokerusTime(daysSince);
         UpdateMirageRnd(daysSince);
-        UpdateBirchState(daysSince);
+        UpdateOliveState(daysSince);
         UpdateFrontierManiac(daysSince);
         UpdateFrontierGambler(daysSince);
         SetShoalItemFlag(daysSince);

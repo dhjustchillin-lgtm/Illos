@@ -490,8 +490,8 @@
       "flag": "FLAG_ITEM_ROUTE_110_ELIXIR"
     },
     {
-      "local_id": "LOCALID_ROUTE110_BIRCH",
-      "graphics_id": "OBJ_EVENT_GFX_PROF_BIRCH",
+      "local_id": "LOCALID_ROUTE110_OLIVE",
+      "graphics_id": "OBJ_EVENT_GFX_PROF_OLIVE",
       "x": 9,
       "y": 79,
       "elevation": 3,
@@ -501,7 +501,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "FLAG_HIDE_ROUTE_110_BIRCH"
+      "flag": "FLAG_HIDE_ROUTE_110_OLIVE"
     }
   ],
   "warp_events": [
@@ -599,36 +599,36 @@
       "x": 7,
       "y": 85,
       "elevation": 3,
-      "var": "VAR_REGISTER_BIRCH_STATE",
+      "var": "VAR_REGISTER_OLIVE_STATE",
       "var_value": "1",
-      "script": "Route110_EventScript_BirchScene1"
+      "script": "Route110_EventScript_OliveScene1"
     },
     {
       "type": "trigger",
       "x": 8,
       "y": 85,
       "elevation": 3,
-      "var": "VAR_REGISTER_BIRCH_STATE",
+      "var": "VAR_REGISTER_OLIVE_STATE",
       "var_value": "1",
-      "script": "Route110_EventScript_BirchScene2"
+      "script": "Route110_EventScript_OliveScene2"
     },
     {
       "type": "trigger",
       "x": 9,
       "y": 85,
       "elevation": 3,
-      "var": "VAR_REGISTER_BIRCH_STATE",
+      "var": "VAR_REGISTER_OLIVE_STATE",
       "var_value": "1",
-      "script": "Route110_EventScript_BirchScene3"
+      "script": "Route110_EventScript_OliveScene3"
     },
     {
       "type": "trigger",
       "x": 10,
       "y": 85,
       "elevation": 3,
-      "var": "VAR_REGISTER_BIRCH_STATE",
+      "var": "VAR_REGISTER_OLIVE_STATE",
       "var_value": "1",
-      "script": "Route110_EventScript_BirchScene4"
+      "script": "Route110_EventScript_OliveScene4"
     }
   ],
   "bg_events": [

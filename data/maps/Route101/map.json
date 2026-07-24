@@ -40,8 +40,8 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_ROUTE101_BIRCH",
-      "graphics_id": "OBJ_EVENT_GFX_PROF_BIRCH",
+      "local_id": "LOCALID_ROUTE101_OLIVE",
+      "graphics_id": "OBJ_EVENT_GFX_PROF_OLIVE",
       "x": 9,
       "y": 13,
       "elevation": 0,
@@ -51,10 +51,10 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE"
+      "flag": "FLAG_HIDE_ROUTE_101_OLIVE_ZIGZAGOON_BATTLE"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BIRCHS_BAG",
+      "graphics_id": "OBJ_EVENT_GFX_OLIVES_BAG",
       "x": 7,
       "y": 14,
       "elevation": 3,
@@ -63,8 +63,8 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "Route101_EventScript_BirchsBag",
-      "flag": "FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG"
+      "script": "Route101_EventScript_OlivesBag",
+      "flag": "FLAG_HIDE_ROUTE_101_OLIVE_STARTERS_BAG"
     },
     {
       "local_id": "LOCALID_ROUTE101_ZIGZAGOON",
@@ -81,7 +81,7 @@
       "flag": "FLAG_HIDE_ROUTE_101_ZIGZAGOON"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_PROF_BIRCH",
+      "graphics_id": "OBJ_EVENT_GFX_PROF_OLIVE",
       "x": 5,
       "y": 11,
       "elevation": 3,
@@ -90,8 +90,8 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "ProfBirch_EventScript_RatePokedexOrRegister",
-      "flag": "FLAG_HIDE_ROUTE_101_BIRCH"
+      "script": "ProfOlive_EventScript_RatePokedexOrRegister",
+      "flag": "FLAG_HIDE_ROUTE_101_OLIVE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BOY_2",
@@ -116,7 +116,7 @@
       "elevation": 3,
       "var": "VAR_ROUTE101_STATE",
       "var_value": "1",
-      "script": "Route101_EventScript_StartBirchRescue"
+      "script": "Route101_EventScript_StartOliveRescue"
     },
     {
       "type": "trigger",
@@ -125,7 +125,7 @@
       "elevation": 3,
       "var": "VAR_ROUTE101_STATE",
       "var_value": "1",
-      "script": "Route101_EventScript_StartBirchRescue"
+      "script": "Route101_EventScript_StartOliveRescue"
     },
     {
       "type": "trigger",

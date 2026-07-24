@@ -3,7 +3,7 @@
 //
 
 // ********************************************************* //
-//       TM/HM moves found in include/constants/tms_hms.h: //
+//       TM/HM moves found in "include/constants/tms_hms.h": //
 // - MOVE_AERIAL_ACE                                         //
 // - MOVE_ATTRACT                                            //
 // - MOVE_BLIZZARD                                           //
@@ -42377,54 +42377,31 @@ static const u16 sPecharuntTeachableLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 #endif //P_FAMILY_PECHARUNT
-
 static const u16 sCinderfTeachableLearnset[] = {
-    MOVE_ASSURANCE,
     MOVE_ATTRACT,
-    MOVE_BITE,
-    MOVE_BODY_SLAM,
-    MOVE_BURNING_JEALOUSY,
-    MOVE_CRUNCH,
-    MOVE_DARK_PULSE,
     MOVE_DIG,
-    MOVE_DOUBLE_EDGE,
-    MOVE_EMBER,
-    MOVE_ENDURE,
     MOVE_FACADE,
-    MOVE_JAW_LOCK,
-    MOVE_FIRE_FANG,
-    MOVE_FIRE_PLEDGE,
     MOVE_FLAMETHROWER,
-    MOVE_FLARE_BLITZ,
-    MOVE_FOUL_PLAY,
-    MOVE_HEAT_WAVE,
-    MOVE_HOWL,
-    MOVE_INCINERATE,
-    MOVE_LASH_OUT,
-    MOVE_LEER,
-    MOVE_MUD_SLAP,
+    MOVE_FRUSTRATION,
+    MOVE_HIDDEN_POWER,
     MOVE_OVERHEAT,
-    MOVE_PAYBACK,
-    MOVE_PLAY_ROUGH,
     MOVE_PROTECT,
-    MOVE_PSYCH_UP,
     MOVE_REST,
+    MOVE_RETURN,
     MOVE_ROAR,
-    MOVE_ROUND,
-    MOVE_SCARY_FACE,
-    MOVE_SCRATCH,
-    MOVE_SLEEP_TALK,
-    MOVE_SMOG,
-    MOVE_SNARL,
-    MOVE_SNORE,
-    MOVE_SUBSTITUTE,
-    MOVE_SUCKER_PUNCH,
+    MOVE_SECRET_POWER,
     MOVE_SUNNY_DAY,
-    MOVE_TAKE_DOWN,
     MOVE_TAUNT,
-    MOVE_TERA_BLAST,
     MOVE_THIEF,
     MOVE_TORMENT,
-    MOVE_WILL_O_WISP,
+    MOVE_BODY_SLAM,
+    MOVE_DOUBLE_EDGE,
+    MOVE_ENDURE,
+    MOVE_MIMIC,
+    MOVE_MUD_SLAP,
+    MOVE_PSYCH_UP,
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_SUBSTITUTE,
     MOVE_UNAVAILABLE,
 };

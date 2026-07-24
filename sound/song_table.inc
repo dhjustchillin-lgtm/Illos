@@ -389,7 +389,7 @@ gSongTable::
 	song mus_encounter_male, MUSIC_PLAYER_BGM, 0
 	song mus_abandoned_ship, MUSIC_PLAYER_BGM, 0
 	song mus_fortree, MUSIC_PLAYER_BGM, 0
-	song mus_birch_lab, MUSIC_PLAYER_BGM, 0
+	song mus_olive_lab, MUSIC_PLAYER_BGM, 0
 	song mus_b_tower_rs, MUSIC_PLAYER_BGM, 0
 	song mus_encounter_swimmer, MUSIC_PLAYER_BGM, 0
 	song mus_cave_of_origin, MUSIC_PLAYER_BGM, 0

@@ -1132,7 +1132,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BerryTreeLateStage
     .images = gPicTable_PechaBerryTree,
 };
 
-const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ProfBirch = {
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ProfOlive = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_3,
     .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
@@ -1147,7 +1147,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ProfBirch = {
     .oam = &gObjectEventBaseOam_16x32,
     .subspriteTables = sOamTables_16x32,
     .anims = sAnimTable_Standard,
-    .images = sPicTable_ProfBirch,
+    .images = sPicTable_ProfOlive,
 };
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Man4 = {
@@ -1726,7 +1726,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_VigorothFacingAway
     .images = sPicTable_VigorothFacingAway,
 };
 
-const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BirchsBag = {
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_OlivesBag = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_2,
     .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
@@ -1741,7 +1741,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BirchsBag = {
     .oam = &gObjectEventBaseOam_16x16,
     .subspriteTables = sOamTables_16x16,
     .anims = sAnimTable_Inanimate,
-    .images = sPicTable_BirchsBag,
+    .images = sPicTable_OlivesBag,
 };
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_EnemyZigzagoon = {

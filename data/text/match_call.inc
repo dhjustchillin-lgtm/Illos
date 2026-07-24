@@ -2831,8 +2831,8 @@ MatchCall_Text_Steven7::
 	.string "I hope we can meet again\n"
 	.string "somewhere!$"
 
-MatchCall_Text_BirchRegisterCall:
-	.string "PROF. BIRCH: Oh, {PLAYER}{KUN}!\n"
+MatchCall_Text_OliveRegisterCall:
+	.string "PROF. OLIVE: Oh, {PLAYER}{KUN}!\n"
 	.string "I've already heard about you!\p"
 	.string "It seems your POKéNAV's been\n"
 	.string "upgraded with MATCH CALL.\p"
@@ -2842,12 +2842,12 @@ MatchCall_Text_BirchRegisterCall:
 	.string "out in the field.\p"
 	.string "… … … … … …$"
 
-MatchCall_Text_RegisteredBirch:
-	.string "Registered PROF. BIRCH\n"
+MatchCall_Text_RegisteredOlive:
+	.string "Registered PROF. OLIVE\n"
 	.string "in the POKéNAV.$"
 
-MatchCall_Text_UnusedProfBirch:
-	.string "PROF. BIRCH: When one has both\n"
+MatchCall_Text_UnusedProfOlive:
+	.string "PROF. OLIVE: When one has both\n"
 	.string "the POKéDEX and POKéNAV, studying\l"
 	.string "POKéMON becomes more fun, eh?$"
 

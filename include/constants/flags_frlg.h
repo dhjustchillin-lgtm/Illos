@@ -1507,12 +1507,12 @@
 // emerald flags
 // Scripts
 #define FLAG_HIDE_SKY_PILLAR_TOP_RAYQUAZA_STILL  0
-#define FLAG_RESCUED_BIRCH                       0
+#define FLAG_RESCUED_OLIVE                       0
 #define FLAG_LEGENDARIES_IN_SOOTOPOLIS           0
 
 #define FLAG_HIDE_CONTEST_POKE_BALL          0  // Always set after new game, object it hides is added directly
 #define FLAG_MET_RIVAL_MOM                   0
-#define FLAG_BIRCH_AIDE_MET                  0
+#define FLAG_OLIVE_AIDE_MET                  0
 #define FLAG_DECLINED_BIKE                   0
 #define FLAG_RECEIVED_BIKE                   0
 #define FLAG_WATTSON_REMATCH_AVAILABLE       0
@@ -1708,7 +1708,7 @@
 #define FLAG_RECEIVED_SOOTHE_BELL            0
 #define FLAG_RECEIVED_WHITE_HERB             0
 #define FLAG_RECEIVED_SOFT_SAND              0
-#define FLAG_ENABLE_PROF_BIRCH_MATCH_CALL    0
+#define FLAG_ENABLE_PROF_OLIVE_MATCH_CALL    0
 #define FLAG_RECEIVED_CLEANSE_TAG            0
 #define FLAG_RECEIVED_FOCUS_BAND             0
 #define FLAG_DECLINED_WALLY_BATTLE_MAUVILLE  0
@@ -1761,7 +1761,7 @@
 
 // Flags for whether a rematchable trainer has been registered in the player's Match Call.
 // Most are used implicitly by adding their REMATCH_* id to TRAINER_REGISTERED_FLAGS_START.
-// Some Match Call entries (like those for gym leaders, Wally, and all non-trainer NPCs like Prof. Birch)
+// Some Match Call entries (like those for gym leaders, Wally, and all non-trainer NPCs like Prof. Olive)
 // have their own separate flag that needs to be set to be enabled; see src/pokenav_match_call_data.c
 #define TRAINER_REGISTERED_FLAGS_START       0
 #define FLAG_REGISTERED_ROSE                 0
@@ -2009,7 +2009,7 @@
 
 
 // Event Flags
-#define FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG                      0
+#define FLAG_HIDE_ROUTE_101_OLIVE_STARTERS_BAG                      0
 #define FLAG_HIDE_APPRENTICE                                        0
 #define FLAG_HIDE_POKEMON_CENTER_2F_MYSTERY_GIFT_MAN                0
 #define FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_1               0
@@ -2021,8 +2021,8 @@
 #define FLAG_HIDE_SAFARI_ZONE_SOUTH_CONSTRUCTION_WORKERS            0
 #define FLAG_HIDE_MEW                                               0
 #define FLAG_HIDE_ROUTE_104_RIVAL                                   0
-#define FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE                  0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_BIRCH                  0
+#define FLAG_HIDE_ROUTE_101_OLIVE_ZIGZAGOON_BATTLE                  0
+#define FLAG_HIDE_LITTLEROOT_TOWN_OLIVES_LAB_OLIVE                  0
 #define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_RIVAL_BEDROOM          0
 #define FLAG_HIDE_ROUTE_103_RIVAL                                   0
 #define FLAG_HIDE_PETALBURG_WOODS_DEVON_EMPLOYEE                    0
@@ -2095,7 +2095,7 @@
 #define FLAG_HIDE_FANCLUB_LADY                                      0
 #define FLAG_HIDE_EVER_GRANDE_POKEMON_CENTER_1F_SCOTT               0
 #define FLAG_HIDE_LITTLEROOT_TOWN_RIVAL                             0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCH                             0
+#define FLAG_HIDE_LITTLEROOT_TOWN_OLIVE                             0
 #define FLAG_HIDE_ROUTE_111_GABBY_AND_TY_1                          0
 #define FLAG_HIDE_ROUTE_118_GABBY_AND_TY_1                          0
 #define FLAG_HIDE_ROUTE_120_GABBY_AND_TY_1                          0
@@ -2109,8 +2109,8 @@
 #define FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WANDAS_BOYFRIEND     0
 #define FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLYS_UNCLE         0
 #define FLAG_HIDE_SS_TIDAL_CORRIDOR_SCOTT                           0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_POKEBALL_CYNDAQUIL     0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_POKEBALL_TOTODILE      0
+#define FLAG_HIDE_LITTLEROOT_TOWN_OLIVES_LAB_POKEBALL_CYNDAQUIL     0
+#define FLAG_HIDE_LITTLEROOT_TOWN_OLIVES_LAB_POKEBALL_TOTODILE      0
 #define FLAG_HIDE_ROUTE_116_DROPPED_GLASSES_MAN                     0
 #define FLAG_HIDE_RUSTBORO_CITY_RIVAL                               0
 #define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F_SWABLU_DOLL     0
@@ -2135,8 +2135,8 @@
 #define FLAG_HIDE_ROUTE_128_STEVEN                                  0
 #define FLAG_HIDE_SLATEPORT_CITY_GABBY_AND_TY                       0
 #define FLAG_HIDE_BATTLE_FRONTIER_RECEPTION_GATE_SCOTT              0
-#define FLAG_HIDE_ROUTE_110_BIRCH                                   0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_POKEBALL_CHIKORITA     0
+#define FLAG_HIDE_ROUTE_110_OLIVE                                   0
+#define FLAG_HIDE_LITTLEROOT_TOWN_OLIVES_LAB_POKEBALL_CHIKORITA     0
 #define FLAG_HIDE_SOOTOPOLIS_CITY_MAN_1                             0
 #define FLAG_HIDE_SLATEPORT_CITY_CAPTAIN_STERN                      0
 #define FLAG_HIDE_SLATEPORT_CITY_HARBOR_CAPTAIN_STERN               0
@@ -2187,16 +2187,16 @@
 #define FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_2F_ARCHIE           0
 #define FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_2F_CAPTAIN_STERN    0
 #define FLAG_HIDE_BATTLE_TOWER_OPPONENT                             0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_RIVAL                  0
+#define FLAG_HIDE_LITTLEROOT_TOWN_OLIVES_LAB_RIVAL                  0
 #define FLAG_HIDE_ROUTE_119_TEAM_AQUA                               0
 #define FLAG_HIDE_ROUTE_116_MR_BRINEY                               0
 #define FLAG_HIDE_WEATHER_INSTITUTE_1F_WORKERS                      0
 #define FLAG_HIDE_WEATHER_INSTITUTE_2F_WORKERS                      0
 #define FLAG_HIDE_ROUTE_116_WANDAS_BOYFRIEND                        0
 #define FLAG_HIDE_LILYCOVE_CONTEST_HALL_CONTEST_ATTENDANT_2         0
-#define FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_UNKNOWN_0x380          0
-#define FLAG_HIDE_ROUTE_101_BIRCH                                   0
-#define FLAG_HIDE_ROUTE_103_BIRCH                                   0
+#define FLAG_HIDE_LITTLEROOT_TOWN_OLIVES_LAB_UNKNOWN_0x380          0
+#define FLAG_HIDE_ROUTE_101_OLIVE                                   0
+#define FLAG_HIDE_ROUTE_103_OLIVE                                   0
 #define FLAG_HIDE_TRICK_HOUSE_END_MAN                               0
 #define FLAG_HIDE_ROUTE_110_TEAM_AQUA                               0
 #define FLAG_HIDE_ROUTE_118_GABBY_AND_TY_2                          0
@@ -2219,7 +2219,7 @@
 #define FLAG_HIDE_BATTLE_TOWER_REPORTER                             0
 #define FLAG_HIDE_ROUTE_110_RIVAL                                   0
 #define FLAG_HIDE_CHAMPIONS_ROOM_RIVAL                              0
-#define FLAG_HIDE_CHAMPIONS_ROOM_BIRCH                              0
+#define FLAG_HIDE_CHAMPIONS_ROOM_OLIVE                              0
 #define FLAG_HIDE_ROUTE_110_RIVAL_ON_BIKE                           0
 #define FLAG_HIDE_ROUTE_119_RIVAL_ON_BIKE                           0
 #define FLAG_HIDE_AQUA_HIDEOUT_GRUNTS                               0
@@ -2588,7 +2588,7 @@
 #define FLAG_ARRIVED_AT_NAVEL_ROCK                  0
 #define FLAG_LANDMARK_TRAINER_HILL                  0
 #define FLAG_UNUSED_0x8E3                           0 // Unused Flag
-#define FLAG_RECEIVED_POKEDEX_FROM_BIRCH            0
+#define FLAG_RECEIVED_POKEDEX_FROM_OLIVE            0
 
 #define FLAG_UNUSED_0x8E5                           0
 #define FLAG_UNUSED_0x8E6                           0

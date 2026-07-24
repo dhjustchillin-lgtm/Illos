@@ -200,18 +200,18 @@ extern const u8 gText_FemaleSymbol[];
 extern const u8 gText_SelectorArrow3[];
 extern const u8 gText_YesNo[];
 
-// main menu/birch speech text
-extern const u8 gText_Birch_Welcome[];
+// main menu/olive speech text
+extern const u8 gText_Olive_Welcome[];
 extern const u8 gText_ThisIsAPokemon[];
-extern const u8 gText_Birch_MainSpeech[];
-extern const u8 gText_Birch_AndYouAre[];
-extern const u8 gText_Birch_BoyOrGirl[];
-extern const u8 gText_Birch_WhatsYourName[];
-extern const u8 gText_Birch_SoItsPlayer[];
-extern const u8 gText_Birch_YourePlayer[];
-extern const u8 gText_Birch_AreYouReady[];
+extern const u8 gText_Olive_MainSpeech[];
+extern const u8 gText_Olive_AndYouAre[];
+extern const u8 gText_Olive_BoyOrGirl[];
+extern const u8 gText_Olive_WhatsYourName[];
+extern const u8 gText_Olive_SoItsPlayer[];
+extern const u8 gText_Olive_YourePlayer[];
+extern const u8 gText_Olive_AreYouReady[];
 
-extern const u8 gText_BirchInTrouble[];
+extern const u8 gText_OliveInTrouble[];
 extern const u8 gText_ConfirmStarterChoice[];
 
 // mystery event menu text
@@ -342,28 +342,28 @@ extern const u8 gText_SearchCompleted[];
 extern const u8 gText_NoMatchingPkmnWereFound[];
 extern const u8 gText_SelectorArrow[];
 
-// birch dex rating text
-extern const u8 gBirchDexRatingText_LessThan10[];
-extern const u8 gBirchDexRatingText_LessThan20[];
-extern const u8 gBirchDexRatingText_LessThan30[];
-extern const u8 gBirchDexRatingText_LessThan40[];
-extern const u8 gBirchDexRatingText_LessThan50[];
-extern const u8 gBirchDexRatingText_LessThan60[];
-extern const u8 gBirchDexRatingText_LessThan70[];
-extern const u8 gBirchDexRatingText_LessThan80[];
-extern const u8 gBirchDexRatingText_LessThan90[];
-extern const u8 gBirchDexRatingText_LessThan100[];
-extern const u8 gBirchDexRatingText_LessThan110[];
-extern const u8 gBirchDexRatingText_LessThan120[];
-extern const u8 gBirchDexRatingText_LessThan130[];
-extern const u8 gBirchDexRatingText_LessThan140[];
-extern const u8 gBirchDexRatingText_LessThan150[];
-extern const u8 gBirchDexRatingText_LessThan160[];
-extern const u8 gBirchDexRatingText_LessThan170[];
-extern const u8 gBirchDexRatingText_LessThan180[];
-extern const u8 gBirchDexRatingText_LessThan190[];
-extern const u8 gBirchDexRatingText_LessThan200[];
-extern const u8 gBirchDexRatingText_DexCompleted[];
+// olive dex rating text
+extern const u8 gOliveDexRatingText_LessThan10[];
+extern const u8 gOliveDexRatingText_LessThan20[];
+extern const u8 gOliveDexRatingText_LessThan30[];
+extern const u8 gOliveDexRatingText_LessThan40[];
+extern const u8 gOliveDexRatingText_LessThan50[];
+extern const u8 gOliveDexRatingText_LessThan60[];
+extern const u8 gOliveDexRatingText_LessThan70[];
+extern const u8 gOliveDexRatingText_LessThan80[];
+extern const u8 gOliveDexRatingText_LessThan90[];
+extern const u8 gOliveDexRatingText_LessThan100[];
+extern const u8 gOliveDexRatingText_LessThan110[];
+extern const u8 gOliveDexRatingText_LessThan120[];
+extern const u8 gOliveDexRatingText_LessThan130[];
+extern const u8 gOliveDexRatingText_LessThan140[];
+extern const u8 gOliveDexRatingText_LessThan150[];
+extern const u8 gOliveDexRatingText_LessThan160[];
+extern const u8 gOliveDexRatingText_LessThan170[];
+extern const u8 gOliveDexRatingText_LessThan180[];
+extern const u8 gOliveDexRatingText_LessThan190[];
+extern const u8 gOliveDexRatingText_LessThan200[];
+extern const u8 gOliveDexRatingText_DexCompleted[];
 
 // player PC text
 extern const u8 gText_WhatWouldYouLike[];

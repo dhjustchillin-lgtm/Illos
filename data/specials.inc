@@ -231,7 +231,7 @@ gSpecials::
 	def_special OpenPokeblockCaseOnFeeder, waitstate=1
 	def_special IsMirageIslandPresent
 	def_special UpdateShoalTideFlag
-	def_special InitBirchState
+	def_special InitOliveState
 	def_special ScriptGetPokedexInfo
 	def_special ShowPokedexRatingMessage
 	def_special DoPCTurnOnEffect
