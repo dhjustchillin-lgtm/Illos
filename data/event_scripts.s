@@ -1382,6 +1382,10 @@ gText_SelectWithoutRegisteredItem::
 	.string "An item in the BAG can be\n"
 	.string "registered to SELECT for easy use.$"
 
+gText_SelectWithoutRegisteredLongItem::
+	.string "A second item in the BAG can be\n"
+	.string "registered to holding SELECT.$"
+
 gText_PokemonTrainerSchoolEmail::
 	.string "There's an e-mail from POKéMON TRAINER\n"
 	.string "SCHOOL.\p"
@@ -1555,6 +1559,10 @@ EventScript_SelectWithoutRegisteredItem::
 	end
 
 	.include "data/scripts/field_poison.inc"
+
+EventScript_SelectWithoutRegisteredLongItem::
+	msgbox gText_SelectWithoutRegisteredLongItem, MSGBOX_SIGN
+	end
 
 Common_EventScript_NopReturn::
 	return
