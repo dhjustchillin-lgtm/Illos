@@ -1,0 +1,22 @@
+diff a/src/option_menu.c b/src/option_menu.c	(rejected hunks)
+@@ -71,6 +94,7 @@ static void DrawOptionMenuTexts(void);
+ static void DrawBgWindowFrames(void);
+ 
+ EWRAM_DATA static bool8 sArrowPressed = FALSE;
++EWRAM_DATA static u8 sCurrPage = 0;
+ 
+ static const u16 sOptionMenuText_Pal[] = INCBIN_U16("graphics/interface/option_menu_text.gbapal");
+ // note: this is only used in the Japanese release
+@@ -87,6 +111,12 @@ static const u8 *const sOptionMenuItemsNames[MENUITEM_COUNT] =
+     [MENUITEM_CANCEL]      = gText_OptionMenuCancel,
+ };
+ 
++static const u8 *const sOptionMenuItemsNames_Pg2[MENUITEM_COUNT_PG2] =
++{
++    [MENUITEM_MENUPAL]        = gText_MenuPal,
++    [MENUITEM_CANCEL_PG2]      = gText_OptionMenuCancel,
++};
++
+ static const struct WindowTemplate sOptionMenuWinTemplates[] =
+ {
+     [WIN_HEADER] = {

@@ -325,6 +325,16 @@ extern const u8 gText_Speed[];
 extern const u8 gText_Dash[];
 extern const u8 gText_Plus[];
 
+//New menu
+extern const u8 gText_MenuPal[];
+extern const u8 gText_MenuPalColor[];
+extern const u8 gText_MenuPalNumber[];
+extern const u8 gText_SmallDot[];
+extern const u8 gText_LargeDot[];
+extern const u8 gText_PageNav[];
+extern const u8 gText_AM[];
+extern const u8 gText_PM[];
+
 //Pokédex text
 extern const u8 gText_CryOf[];
 extern const u8 gText_SizeComparedTo[];

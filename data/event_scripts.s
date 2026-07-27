@@ -1746,8 +1746,6 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/scripts/apricorn_tree.inc"
 	.include "data/scripts/wild_encounter.inc"
 
-	.include "data/maps/DadsFarm/scripts.inc"
-
 	.include "data/maps/DadsFarm_House_1F/scripts.inc"
 
 	.include "data/maps/DadsFarm_House_2F/scripts.inc"

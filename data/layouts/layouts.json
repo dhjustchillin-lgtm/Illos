@@ -9325,16 +9325,6 @@
             "layout_version": "frlg"
         },
         {
-            "id": "LAYOUT_DADSFARM",
-            "name": "Dadsfarm_Layout",
-            "width": 20,
-            "height": 20,
-            "primary_tileset": "gTileset_General",
-            "secondary_tileset": "gTileset_Petalburg",
-            "border_filepath": "data/layouts/DadsFarm/border.bin",
-            "blockdata_filepath": "data/layouts/DadsFarm/map.bin"
-        },
-        {
             "id": "LAYOUT_DADSFARM_HOUSE_1F",
             "name": "Dadsfarmhouse1F_Layout",
             "width": 11,
