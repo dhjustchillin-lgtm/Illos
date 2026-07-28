@@ -51,8 +51,23 @@ InsideOfTruck_EventScript_MovingBox::
 	msgbox InsideOfTruck_Text_BoxPrintedWithMonLogo, MSGBOX_SIGN
 	end
 
+InsideOfTruck_EventScript_QuestMenu::
+	lockall
+	msgbox InsideOfTruck_Text_OpenQuestMenu, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, InsideOfTruck_EventScript_DoOpenQuestMenu
+	releaseall
+	end
+
+InsideOfTruck_EventScript_DoOpenQuestMenu::
+	openquestmenu
+	releaseall
+	end
+
 InsideOfTruck_Text_BoxPrintedWithMonLogo:
 	.string "The box is printed with a POKéMON logo.\p"
 	.string "It's a POKéMON brand moving and\n"
 	.string "delivery service.$"
 
+InsideOfTruck_Text_OpenQuestMenu:
+	.string "There's a logbook sitting on top\n"
+	.string "of the box. Open it?$"

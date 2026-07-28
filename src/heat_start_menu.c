@@ -734,8 +734,11 @@ static void HeatStartMenu_LoadBgGfx(void) {
     u8* buf = GetBgTilemapBuffer(0);
     LoadBgTilemap(0, 0, 0, 0);
     DecompressAndCopyTileDataToVram(0, sStartMenuTiles, 0, 0, 0);
+
+    // FIX: Use if-else so sStartMenuTilemapSafari doesn't overwrite sStartMenuTilemap
     if (GetSafariZoneFlag() == FALSE) {
         LZ77UnCompWram(sStartMenuTilemap, buf);
+    } else {
         LZ77UnCompWram(sStartMenuTilemapSafari, buf);
     }
 
