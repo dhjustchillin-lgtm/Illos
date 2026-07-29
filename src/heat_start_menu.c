@@ -219,7 +219,7 @@ static const struct WindowTemplate sWindowTemplate_SafariBalls = {
 static const struct WindowTemplate sWindowTemplate_Quests = {
     .bg = 0,
     .tilemapLeft = 2,   // Fine-tune X position (Tile coordinate: 0 - 29)
-    .tilemapTop = 12,    // Fine-tune Y position (Tile coordinate: 0 - 19)
+    .tilemapTop = 11,    // Fine-tune Y position (Tile coordinate: 0 - 19)
     .width = 8,         // Fine-tune width in tiles
     .height = 3,        // Fine-tune height in tiles
     .paletteNum = 15,
@@ -625,6 +625,7 @@ static void HeatStartMenu_ShowQuestsWindow(void)
     sHeatStartMenu->sQuestsWindowId = AddWindow(&sWindowTemplate_Quests);
     FillWindowPixelBuffer(sHeatStartMenu->sQuestsWindowId, PIXEL_FILL(TEXT_COLOR_WHITE));
     PutWindowTilemap(sHeatStartMenu->sQuestsWindowId);
+    DrawStdWindowFrame(sHeatStartMenu->sQuestsWindowId, FALSE);
     
     // Fine-tune internal text X and Y coordinates inside the window box below (currently 2, 4):
     AddTextPrinterParameterized(sHeatStartMenu->sQuestsWindowId, FONT_NARROW, gText_QuestsButton, 2, 4, TEXT_SKIP_DRAW, NULL);
