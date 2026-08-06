@@ -659,7 +659,8 @@ class TilesetWebBackend(BaseHTTPRequestHandler):
             <span style="font-weight: bold;">Tileset Target:</span>
             <span>{os.path.basename(STUDIO["dir_path"])}</span>
             <span style="margin-left: 20px; color: #888;">Mode: {STUDIO['attr_bytes'] * 8}-bit Attributes</span>
-            <span style="margin-left: auto; color: #aaa;">Total Metatiles: {len(STUDIO["metatiles"])}</span>
+            <span style="margin-left: auto; color: #aaa;">Total Metatiles: <span id="metatile-count">{len(STUDIO["metatiles"])}</span></span>
+            <button onclick="addMetatile()">➕ ADD METATILE</button>
         </div>
         <div id="content">
             <div class="grid-container" id="grid"></div>
@@ -761,7 +762,9 @@ class TilesetWebBackend(BaseHTTPRequestHandler):
                 card.appendChild(label);
                 grid.appendChild(card);
             }}
-            selectMetatile(0);
+            if (metatilesData.length > 0) {{
+                selectMetatile(Math.min(Math.max(selectedIndex, 0), metatilesData.length - 1));
+            }}
         }}
 
         function renderAtlas() {{
@@ -778,6 +781,23 @@ class TilesetWebBackend(BaseHTTPRequestHandler):
                 }};
                 atlas.appendChild(cell);
             }}
+        }}
+
+        function addMetatile() {{
+            // Add a completely zero-filled metatile: eight 16-bit entries of 0x0000.
+            metatilesData.push([0, 0, 0, 0, 0, 0, 0, 0]);
+            metatileAttrs.push({{ behavior: 0, layer: 0, terrain: 0, encounter: 0 }});
+
+            const newIndex = metatilesData.length - 1;
+            selectedIndex = newIndex;
+            selectedChunkIdx = 0;
+
+            initGrid();
+
+            const count = document.getElementById('metatile-count');
+            if (count) count.innerText = metatilesData.length;
+
+            selectMetatile(newIndex);
         }}
 
         function selectMetatile(id) {{
