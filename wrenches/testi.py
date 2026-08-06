@@ -14,6 +14,30 @@ except ImportError:
     print("[CRITICAL] 'Pillow' library is required. Run: pip install Pillow")
     sys.exit(1)
 
+# Layer type options
+LAYER_TYPES = {
+    0: "Normal (Middle & Top)",
+    1: "Covered (Bottom & Middle)",
+    2: "Split (Bottom & Top)",
+}
+
+# Terrain Types (32-bit mode)
+TERRAIN_TYPES = {
+    0: "Normal",
+    1: "Grass",
+    2: "Water",
+    3: "Waterfall",
+    4: "Sand",
+    5: "Ice",
+}
+
+# Encounter Types (32-bit mode)
+ENCOUNTER_TYPES = {
+    0: "None",
+    1: "Land / Grass",
+    2: "Water",
+}
+
 STUDIO = {
     "dir_path": "",
     "tiles_png_path": "",
@@ -22,8 +46,56 @@ STUDIO = {
     "palettes": {},           # Map of pal_idx (0-15) -> list of 16 RGB tuples
     "tiles_img": None,        # Raw 8x8 indexed tiles image
     "metatiles": [],          # List of 8-u16 entries per metatile [L1_TL, L1_TR, L1_BL, L1_BR, L2_TL, L2_TR, L2_BL, L2_BR]
-    "metatile_attrs": []      # List of u16 attribute values per metatile
+    "metatile_attrs": [],     # Parsed attributes per metatile: dict with keys {behavior, layer, terrain, encounter}
+    "attr_bytes": 2,          # 2 bytes per attribute (Standard Emerald) or 4 bytes (Expanded/FireRed)
+    "behavior_map": {},       # Map of behavior_id -> behavior_name string
 }
+
+
+def load_behavior_constants(header_path: str) -> dict:
+    """Parses metatile_behaviors.h for enums and defines."""
+    behaviors = {}
+    if not os.path.exists(header_path):
+        print(f"[WARNING] Header file '{header_path}' not found. Behavior names won't be resolved.")
+        return behaviors
+
+    with open(header_path, "r", encoding="utf-8", errors="ignore") as f:
+        content = f.read()
+
+    # Parse Enums: enum { MB_NORMAL, MB_SECRET_BASE_WALL, ... };
+    enum_matches = re.findall(r"enum\s*\{([^}]+)\}", content, re.MULTILINE | re.DOTALL)
+    for enum_body in enum_matches:
+        current_val = 0
+        enum_body = re.sub(r"//.*|/\*[\s\S]*?\*/", "", enum_body)
+
+        for item in enum_body.split(","):
+            item = item.strip()
+            if not item:
+                continue
+
+            if "=" in item:
+                name, val_str = item.split("=", 1)
+                name = name.strip()
+                val_str = val_str.strip()
+                current_val = int(val_str, 16) if val_str.startswith("0x") else int(val_str)
+            else:
+                name = item.strip()
+
+            behaviors[current_val] = name
+            current_val += 1
+
+    # Parse #defines: #define MB_INVALID UCHAR_MAX
+    define_pattern = re.compile(r"#define\s+(MB_\w+)\s+(0x[0-9A-Fa-f]+|\d+|UCHAR_MAX)")
+    for match in define_pattern.finditer(content):
+        name, val_str = match.groups()
+        if val_str == "UCHAR_MAX":
+            val = 255
+        else:
+            val = int(val_str, 16) if val_str.startswith("0x") else int(val_str)
+        behaviors[val] = name
+
+    return behaviors
+
 
 def load_jasc_pal(filepath):
     colors = []
@@ -39,15 +111,16 @@ def load_jasc_pal(filepath):
                         colors.append((int(parts[0]), int(parts[1]), int(parts[2])))
             else:
                 for line in lines:
-                    match = re.match(r'^(\d+)\s+(\d+)\s+(\d+)$', line)
+                    match = re.match(r"^(\d+)\s+(\d+)\s+(\d+)$", line)
                     if match:
                         colors.append((int(match.group(1)), int(match.group(2)), int(match.group(3))))
     except Exception:
         pass
-    
+
     while len(colors) < 16:
         colors.append((0, 0, 0))
     return colors[:16]
+
 
 def load_all_palettes(dir_path):
     palettes = {}
@@ -69,9 +142,12 @@ def load_all_palettes(dir_path):
 
     return palettes
 
-def stage_tileset(dir_path):
+
+def stage_tileset(dir_path, header_path, attr_bytes):
     STUDIO["dir_path"] = dir_path
-    
+    STUDIO["attr_bytes"] = attr_bytes
+    STUDIO["behavior_map"] = load_behavior_constants(header_path)
+
     png_files = glob.glob(os.path.join(dir_path, "*.png"))
     STUDIO["tiles_png_path"] = png_files[0] if png_files else os.path.join(dir_path, "tiles.png")
     STUDIO["metatiles_bin_path"] = os.path.join(dir_path, "metatiles.bin")
@@ -84,30 +160,60 @@ def stage_tileset(dir_path):
     else:
         STUDIO["tiles_img"] = Image.new("P", (128, 128), 0)
 
+    # Load Metatiles
     STUDIO["metatiles"] = []
     if os.path.exists(STUDIO["metatiles_bin_path"]):
         with open(STUDIO["metatiles_bin_path"], "rb") as f:
             data = f.read()
             num_entries = len(data) // 2
-            u16_data = struct.unpack(f'<{num_entries}H', data)
-            
+            u16_data = struct.unpack(f"<{num_entries}H", data)
+
             stride = 8 if num_entries % 8 == 0 else 4
             for i in range(0, len(u16_data), stride):
-                entry = list(u16_data[i:i+stride])
+                entry = list(u16_data[i : i + stride])
                 if len(entry) < 8:
                     entry = entry + [0] * (8 - len(entry))
                 STUDIO["metatiles"].append(entry)
 
+    # Load Metatile Attributes
     STUDIO["metatile_attrs"] = []
     if os.path.exists(STUDIO["attr_bin_path"]):
         with open(STUDIO["attr_bin_path"], "rb") as f:
             data = f.read()
-            if len(data) % 2 == 0:
-                num_attrs = len(data) // 2
-                STUDIO["metatile_attrs"] = list(struct.unpack(f'<{num_attrs}H', data))
+            file_size = len(data)
 
+            # Auto-detect format if byte count matches precisely
+            if attr_bytes == 2 and file_size % 4 == 0 and (file_size // 4) == len(STUDIO["metatiles"]):
+                STUDIO["attr_bytes"] = 4
+            elif attr_bytes == 4 and file_size % 2 == 0 and (file_size // 2) == len(STUDIO["metatiles"]):
+                STUDIO["attr_bytes"] = 2
+
+            entry_bytes = STUDIO["attr_bytes"]
+            num_entries = file_size // entry_bytes
+
+            for i in range(num_entries):
+                offset = i * entry_bytes
+                if entry_bytes == 2:
+                    val = struct.unpack_from("<H", data, offset)[0]
+                    STUDIO["metatile_attrs"].append({
+                        "behavior": val & 0x00FF,
+                        "layer": (val & 0xF000) >> 12,
+                        "terrain": 0,
+                        "encounter": 0,
+                    })
+                else:
+                    val = struct.unpack_from("<I", data, offset)[0]
+                    STUDIO["metatile_attrs"].append({
+                        "behavior": val & 0x000001FF,
+                        "terrain": (val & 0x00003E00) >> 9,
+                        "encounter": (val & 0x07000000) >> 24,
+                        "layer": (val & 0x60000000) >> 29,
+                    })
+
+    # Pad missing attributes
     while len(STUDIO["metatile_attrs"]) < len(STUDIO["metatiles"]):
-        STUDIO["metatile_attrs"].append(0)
+        STUDIO["metatile_attrs"].append({"behavior": 0, "layer": 0, "terrain": 0, "encounter": 0})
+
 
 def render_8x8_tile(tile_u16):
     tile_id = tile_u16 & 0x03FF
@@ -117,18 +223,18 @@ def render_8x8_tile(tile_u16):
 
     tiles_img = STUDIO["tiles_img"]
     tiles_per_row = max(1, tiles_img.width // 8)
-    
+
     col = tile_id % tiles_per_row
     row = tile_id // tiles_per_row
 
     crop_box = (col * 8, row * 8, (col + 1) * 8, (row + 1) * 8)
-    
+
     if crop_box[2] <= tiles_img.width and crop_box[3] <= tiles_img.height:
         tile_crop = tiles_img.crop(crop_box)
     else:
         tile_crop = Image.new("P", (8, 8), 0)
 
-    pal_colors = STUDIO["palettes"].get(pal_idx, STUDIO["palettes"].get(0, [(0,0,0)]*16))
+    pal_colors = STUDIO["palettes"].get(pal_idx, STUDIO["palettes"].get(0, [(0, 0, 0)] * 16))
     flattened_pal = []
     for rgb in pal_colors:
         flattened_pal.extend(rgb)
@@ -148,7 +254,7 @@ def render_8x8_tile(tile_u16):
             final_pixels.append((0, 0, 0, 0))
         else:
             final_pixels.append(rgba_pixels[idx])
-            
+
     tile_rgb.putdata(final_pixels)
 
     if x_flip:
@@ -157,6 +263,7 @@ def render_8x8_tile(tile_u16):
         tile_rgb = ImageOps.flip(tile_rgb)
 
     return tile_rgb
+
 
 def render_metatile(metatile_entry):
     img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
@@ -177,22 +284,42 @@ def render_metatile(metatile_entry):
 
     return img
 
+
 def save_metatiles_to_disk():
     try:
+        # Save Metatiles
         u16_list = []
         for meta in STUDIO["metatiles"]:
             u16_list.extend(meta[:8])
-        
-        # Save metatiles binary in binary write mode ("wb")
+
         with open(STUDIO["metatiles_bin_path"], "wb") as f:
-            f.write(struct.pack(f'<{len(u16_list)}H', *u16_list))
+            f.write(struct.pack(f"<{len(u16_list)}H", *u16_list))
 
-        # FIX: Open in binary mode ("wb") for attributes as well
+        # Save Attributes
         if STUDIO["metatile_attrs"]:
-            with open(STUDIO["attr_bin_path"], "wb") as f:
-                f.write(struct.pack(f'<{len(STUDIO["metatile_attrs"])}H', *STUDIO["metatile_attrs"]))
+            entry_bytes = STUDIO["attr_bytes"]
 
-        print(f"[SUCCESS] Saved {len(STUDIO['metatiles'])} metatiles to {STUDIO['metatiles_bin_path']}")
+            with open(STUDIO["attr_bin_path"], "wb") as f:
+                for attr in STUDIO["metatile_attrs"]:
+                    behavior = attr.get("behavior", 0)
+                    layer = attr.get("layer", 0)
+
+                    if entry_bytes == 2:
+                        val = (behavior & 0x00FF) | ((layer & 0x000F) << 12)
+                        f.write(struct.pack("<H", val))
+                    else:
+                        terrain = attr.get("terrain", 0)
+                        encounter = attr.get("encounter", 0)
+
+                        val = (
+                            (behavior & 0x000001FF)
+                            | ((terrain & 0x0000001F) << 9)
+                            | ((encounter & 0x00000007) << 24)
+                            | ((layer & 0x00000003) << 29)
+                        )
+                        f.write(struct.pack("<I", val))
+
+        print(f"[SUCCESS] Saved metatiles & attributes to disk ({STUDIO['attr_bytes'] * 8}-bit mode).")
         return True
     except Exception as e:
         print(f"[ERROR] Failed to save metatiles: {e}")
@@ -225,7 +352,7 @@ class TilesetWebBackend(BaseHTTPRequestHandler):
             overflow: hidden;
         }}
         #sidebar {{
-            width: 420px;
+            width: 440px;
             background: #252526;
             border-right: 1px solid #3c3c3c;
             display: flex;
@@ -310,10 +437,6 @@ class TilesetWebBackend(BaseHTTPRequestHandler):
         button:hover {{
             background: #1177bb;
         }}
-        button.active {{
-            background: #007acc;
-            border: 1px solid #fff;
-        }}
         .sidebar-section {{
             margin-bottom: 15px;
         }}
@@ -338,6 +461,34 @@ class TilesetWebBackend(BaseHTTPRequestHandler):
             width: 100%;
             height: 100%;
             image-rendering: pixelated;
+        }}
+        .attr-box {{
+            background: #1e1e1e;
+            border: 1px solid #3c3c3c;
+            border-radius: 4px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }}
+        .attr-row {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+        }}
+        .attr-row label {{
+            color: #aaa;
+            width: 110px;
+        }}
+        .attr-row select {{
+            flex: 1;
+            background: #111;
+            border: 1px solid #444;
+            color: #fff;
+            font-size: 11px;
+            padding: 3px;
+            border-radius: 2px;
         }}
         .chunks-grid {{
             display: grid;
@@ -414,7 +565,7 @@ class TilesetWebBackend(BaseHTTPRequestHandler):
         }}
         .raw-atlas-wrapper {{
             overflow-x: auto;
-            max-height: 200px;
+            max-height: 180px;
             overflow-y: auto;
             background: #111;
             padding: 4px;
@@ -438,10 +589,6 @@ class TilesetWebBackend(BaseHTTPRequestHandler):
         }}
         .raw-tile-cell:hover {{
             border-color: #007acc;
-        }}
-        .raw-tile-cell.active {{
-            border-color: #fff;
-            box-shadow: 0 0 4px #fff;
         }}
         .save-btn {{
             width: 100%;
@@ -471,6 +618,28 @@ class TilesetWebBackend(BaseHTTPRequestHandler):
         </div>
 
         <div class="sidebar-section">
+            <div class="sidebar-title">Metatile Attributes</div>
+            <div class="attr-box">
+                <div class="attr-row">
+                    <label>Layer Type:</label>
+                    <select id="attr-layer" onchange="updateAttrProperty('layer', this.value)"></select>
+                </div>
+                <div class="attr-row">
+                    <label>Metatile Behavior:</label>
+                    <select id="attr-behavior" onchange="updateAttrProperty('behavior', this.value)"></select>
+                </div>
+                <div class="attr-row" id="row-terrain" style="display: none;">
+                    <label>Terrain Type:</label>
+                    <select id="attr-terrain" onchange="updateAttrProperty('terrain', this.value)"></select>
+                </div>
+                <div class="attr-row" id="row-encounter" style="display: none;">
+                    <label>Encounter Type:</label>
+                    <select id="attr-encounter" onchange="updateAttrProperty('encounter', this.value)"></select>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
             <div class="sidebar-title">16 Per Row Raw Tile Atlas</div>
             <div class="raw-atlas-wrapper">
                 <div class="raw-atlas-grid" id="raw-atlas"></div>
@@ -489,6 +658,7 @@ class TilesetWebBackend(BaseHTTPRequestHandler):
         <div id="toolbar">
             <span style="font-weight: bold;">Tileset Target:</span>
             <span>{os.path.basename(STUDIO["dir_path"])}</span>
+            <span style="margin-left: 20px; color: #888;">Mode: {STUDIO['attr_bytes'] * 8}-bit Attributes</span>
             <span style="margin-left: auto; color: #aaa;">Total Metatiles: {len(STUDIO["metatiles"])}</span>
         </div>
         <div id="content">
@@ -500,12 +670,62 @@ class TilesetWebBackend(BaseHTTPRequestHandler):
         let selectedIndex = 0;
         let selectedChunkIdx = 0;
         let metatilesData = {json.dumps(STUDIO["metatiles"])};
+        let metatileAttrs = {json.dumps(STUDIO["metatile_attrs"])};
+        const attrBytes = {STUDIO["attr_bytes"]};
         const totalRawTiles = {total_raw_tiles};
+        const layerTypesMap = {json.dumps(LAYER_TYPES)};
+        const behaviorMap = {json.dumps(STUDIO["behavior_map"])};
+        const terrainTypesMap = {json.dumps(TERRAIN_TYPES)};
+        const encounterTypesMap = {json.dumps(ENCOUNTER_TYPES)};
 
         const chunkLabels = [
             "L1 Top-Left", "L1 Top-Right", "L1 Bot-Left", "L1 Bot-Right",
             "L2 Top-Left", "L2 Top-Right", "L2 Bot-Left", "L2 Bot-Right"
         ];
+
+        function populateDropdowns() {{
+            // Layer types
+            const layerSel = document.getElementById('attr-layer');
+            layerSel.innerHTML = '';
+            for (let k in layerTypesMap) {{
+                layerSel.innerHTML += `<option value="${{k}}">${{k}} - ${{layerTypesMap[k]}}</option>`;
+            }}
+
+            // Metatile behaviors
+            const behaviorSel = document.getElementById('attr-behavior');
+            behaviorSel.innerHTML = '';
+            
+            // Build behavior list from header map + defaults
+            let sortedBehaviors = [];
+            for (let k in behaviorMap) sortedBehaviors.push({{ id: parseInt(k), name: behaviorMap[k] }});
+            sortedBehaviors.sort((a, b) => a.id - b.id);
+
+            if (sortedBehaviors.length === 0) {{
+                for (let i = 0; i < 256; i++) sortedBehaviors.push({{ id: i, name: '0x' + i.toString(16).toUpperCase() }});
+            }}
+
+            sortedBehaviors.forEach(item => {{
+                behaviorSel.innerHTML += `<option value="${{item.id}}">0x${{item.id.toString(16).toUpperCase().padStart(2, '0')}} (${{item.id}}) - ${{item.name}}</option>`;
+            }});
+
+            // 32-bit expanded attributes dropdowns
+            if (attrBytes === 4) {{
+                document.getElementById('row-terrain').style.display = 'flex';
+                document.getElementById('row-encounter').style.display = 'flex';
+
+                const terrainSel = document.getElementById('attr-terrain');
+                terrainSel.innerHTML = '';
+                for (let k in terrainTypesMap) {{
+                    terrainSel.innerHTML += `<option value="${{k}}">${{k}} - ${{terrainTypesMap[k]}}</option>`;
+                }}
+
+                const encounterSel = document.getElementById('attr-encounter');
+                encounterSel.innerHTML = '';
+                for (let k in encounterTypesMap) {{
+                    encounterSel.innerHTML += `<option value="${{k}}">${{k}} - ${{encounterTypesMap[k]}}</option>`;
+                }}
+            }}
+        }}
 
         function parseTile(val) {{
             return {{
@@ -570,9 +790,25 @@ class TilesetWebBackend(BaseHTTPRequestHandler):
             if (current) current.classList.add('selected');
 
             document.getElementById('selected-img').src = '/metatile/' + id + '.png?t=' + Date.now();
-            document.getElementById('selected-info').innerText = 'Metatile #' + id;
+            document.getElementById('selected-info').innerText = 'Metatile #' + id + ' (0x' + id.toString(16).toUpperCase() + ')';
+
+            // Sync attribute panel values
+            const attr = metatileAttrs[id] || {{ behavior: 0, layer: 0, terrain: 0, encounter: 0 }};
+            document.getElementById('attr-layer').value = attr.layer;
+            document.getElementById('attr-behavior').value = attr.behavior;
+            if (attrBytes === 4) {{
+                document.getElementById('attr-terrain').value = attr.terrain;
+                document.getElementById('attr-encounter').value = attr.encounter;
+            }}
 
             renderChunkCards();
+        }}
+
+        function updateAttrProperty(prop, val) {{
+            if (!metatileAttrs[selectedIndex]) {{
+                metatileAttrs[selectedIndex] = {{ behavior: 0, layer: 0, terrain: 0, encounter: 0 }};
+            }}
+            metatileAttrs[selectedIndex][prop] = parseInt(val) || 0;
         }}
 
         function selectChunk(chunkIdx) {{
@@ -666,11 +902,9 @@ class TilesetWebBackend(BaseHTTPRequestHandler):
 
             entry[chunkIdx] = packTile(parsed.id, parsed.xFlip, parsed.yFlip, parsed.pal);
 
-            // Live refresh chunk preview image
             const chunkImg = document.getElementById('chunk-img-' + chunkIdx);
             if (chunkImg) chunkImg.src = '/tile/' + entry[chunkIdx] + '.png?t=' + Date.now();
 
-            // Live refresh metatile images
             const timestamp = Date.now();
             document.getElementById('selected-img').src = '/metatile/' + selectedIndex + '.png?t=' + timestamp;
             document.getElementById('meta-img-' + selectedIndex).src = '/metatile/' + selectedIndex + '.png?t=' + timestamp;
@@ -682,15 +916,19 @@ class TilesetWebBackend(BaseHTTPRequestHandler):
             const res = await fetch('/save', {{
                 method: 'POST',
                 headers: {{ 'Content-Type': 'application/json' }},
-                body: JSON.stringify({{ metatiles: metatilesData }})
+                body: JSON.stringify({{ 
+                    metatiles: metatilesData,
+                    attributes: metatileAttrs 
+                }})
             }});
             if (res.ok) {{
-                alert('Metatiles saved successfully!');
+                alert('Metatiles and Attributes saved successfully!');
             }} else {{
                 alert('Failed to save metatiles.');
             }}
         }}
 
+        populateDropdowns();
         initGrid();
         renderAtlas();
     </script>
@@ -700,7 +938,7 @@ class TilesetWebBackend(BaseHTTPRequestHandler):
             return
 
         elif self.path.startswith("/metatile/"):
-            match = re.match(r'^/metatile/(\d+)\.png', self.path)
+            match = re.match(r"^/metatile/(\d+)\.png", self.path)
             if match:
                 idx = int(match.group(1))
                 if 0 <= idx < len(STUDIO["metatiles"]):
@@ -717,7 +955,7 @@ class TilesetWebBackend(BaseHTTPRequestHandler):
                     return
 
         elif self.path.startswith("/tile/"):
-            match = re.match(r'^/tile/(\d+)\.png', self.path)
+            match = re.match(r"^/tile/(\d+)\.png", self.path)
             if match:
                 tile_u16 = int(match.group(1))
                 img = render_8x8_tile(tile_u16)
@@ -737,15 +975,19 @@ class TilesetWebBackend(BaseHTTPRequestHandler):
 
     def do_POST(self):
         if self.path == "/save":
-            content_length = int(self.headers.get('Content-Length', 0))
+            content_length = int(self.headers.get("Content-Length", 0))
             if content_length > 0:
-                body = self.rfile.read(content_length).decode('utf-8')
+                body = self.rfile.read(content_length).decode("utf-8")
                 data = json.loads(body)
                 if "metatiles" in data:
                     STUDIO["metatiles"] = data["metatiles"]
+                if "attributes" in data:
+                    STUDIO["metatile_attrs"] = data["attributes"]
 
             if save_metatiles_to_disk():
-                res_msg = json.dumps({"message": f"Successfully updated metatiles binary at '{STUDIO['metatiles_bin_path']}'"}).encode('utf-8')
+                res_msg = json.dumps({
+                    "message": f"Successfully updated metatiles and attributes binaries."
+                }).encode("utf-8")
                 self.send_response(200)
                 self.send_header("Content-Type", "application/json")
                 self.send_header("Content-Length", str(len(res_msg)))
@@ -756,19 +998,34 @@ class TilesetWebBackend(BaseHTTPRequestHandler):
             self.send_response(500)
             self.end_headers()
 
+
 def main():
     parser = argparse.ArgumentParser(description="Pokeemerald Metatile Editor Studio")
     parser.add_argument("dir_path", help="Path to target tileset folder")
+    parser.add_argument(
+        "--header",
+        default="../include/constants/metatile_behaviors.h",
+        help="Path to metatile_behaviors.h",
+    )
+    parser.add_argument(
+        "-b",
+        "--bytes",
+        type=int,
+        choices=[2, 4],
+        default=2,
+        help="Attribute bytes per entry (2 for Emerald, 4 for FireRed). Default: 2",
+    )
     args = parser.parse_args()
 
-    stage_tileset(args.dir_path)
+    stage_tileset(args.dir_path, args.header, args.bytes)
 
-    server = ThreadingHTTPServer(('0.0.0.0', 8080), TilesetWebBackend)
+    server = ThreadingHTTPServer(("0.0.0.0", 8080), TilesetWebBackend)
     print("GBA Metatile Editor active at http://localhost:8080")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
         print("\nShutting down server.")
+
 
 if __name__ == "__main__":
     main()
