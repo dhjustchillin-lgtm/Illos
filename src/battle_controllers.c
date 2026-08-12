@@ -35,6 +35,7 @@
 #include "constants/songs.h"
 #include "test/battle.h"
 #include "test/test.h"
+#include "dynamic_palettes.h"
 
 static EWRAM_DATA u8 sLinkSendTaskId = 0;
 static EWRAM_DATA u8 sLinkReceiveTaskId = 0;
@@ -2863,6 +2864,9 @@ void BtlController_HandleIntroTrainerBallThrow(enum BattlerId battler, u16 tagTr
     {
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].data[0] = 50;
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].data[2] = -40;
+
+        // Replace LoadCompressedPalette(...) here for player battle back palette:
+        DynPal_LoadPaletteByOffset(sDynPalPlayerBattleBack, OBJ_PLTT_ID(gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum));
     }
     else
     {
@@ -2895,6 +2899,7 @@ void BtlController_HandleIntroTrainerBallThrow(enum BattlerId battler, u16 tagTr
     gBattleSpritesDataPtr->animationData->introAnimActive = TRUE;
     gBattlerControllerFuncs[battler] = BattleControllerDummy;
 }
+
 
 static bool32 TwoMonsAtSendOut(enum BattlerId battler)
 {

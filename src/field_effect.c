@@ -40,6 +40,8 @@
 #include "constants/metatile_behaviors.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "dynamic_palettes.h"
+#include "constants/trainers.h"
 
 #define subsprite_table(ptr) {.subsprites = ptr, .subspriteCount = (sizeof ptr) / (sizeof(struct Subsprite))}
 
@@ -1001,7 +1003,19 @@ u8 CreateTrainerSprite(enum TrainerPicID trainerPicId, s16 x, s16 y, u8 subprior
     spriteSheet.size = TRAINER_PIC_SIZE;
     spriteSheet.tag = GetTrainerPicTag(trainerPicId, TRUE);
 
-    LoadSpritePaletteWithTag(GetTrainerFrontPicPalette(trainerPicId), GetTrainerPicTag(trainerPicId, TRUE));
+    // Use the correct constant names for pokeemerald-expansion:
+    if (trainerPicId == TRAINER_PIC_BRENDAN 
+     || trainerPicId == TRAINER_PIC_MAY 
+     || trainerPicId == TRAINER_PIC_RS_BRENDAN 
+     || trainerPicId == TRAINER_PIC_RS_MAY)
+    {
+        DynPal_LoadPaletteByOffset(sDynPalPlayerBattleFront, OBJ_PLTT_ID(0));
+    }
+    else
+    {
+        LoadSpritePaletteWithTag(GetTrainerFrontPicPalette(trainerPicId), GetTrainerPicTag(trainerPicId, TRUE));
+    }
+
     LoadCompressedSpriteSheetOverrideBuffer(&spriteSheet, buffer);
     if (alloced)
         Free(buffer);
@@ -1015,6 +1029,8 @@ u8 CreateTrainerSprite(enum TrainerPicID trainerPicId, s16 x, s16 y, u8 subprior
     spriteTemplate.callback = SpriteCallbackDummy;
     return CreateSprite(&spriteTemplate, x, y, subpriority);
 }
+
+
 
 static void UNUSED LoadTrainerGfx_TrainerCard(u8 gender, u16 palOffset, u8 *dest)
 {

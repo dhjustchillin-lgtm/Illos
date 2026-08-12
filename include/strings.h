@@ -210,6 +210,7 @@ extern const u8 gText_Olive_WhatsYourName[];
 extern const u8 gText_Olive_SoItsPlayer[];
 extern const u8 gText_Olive_YourePlayer[];
 extern const u8 gText_Olive_AreYouReady[];
+extern const u8 gText_NewGame_ChooseTones[];
 
 extern const u8 gText_OliveInTrouble[];
 extern const u8 gText_ConfirmStarterChoice[];

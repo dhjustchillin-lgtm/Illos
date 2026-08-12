@@ -30,6 +30,8 @@
 #include "constants/battle_palace.h"
 #include "constants/battle_move_effects.h"
 #include "constants/event_objects.h" // only for SHADOW_SIZE constants
+#include "dynamic_palettes.h"
+#include "constants/trainers.h"
 
 // this file's functions
 static u8 GetBattlePalaceMoveGroup(enum BattlerId battler, enum Move move);
@@ -694,8 +696,11 @@ void DecompressTrainerFrontPic(enum TrainerPicID trainerPicId, enum BattlerId ba
 {
     enum BattlerPosition position = GetBattlerPosition(battler);
     DecompressDataWithHeaderWram(GetTrainerFrontPicData(trainerPicId), gMonSpritesGfxPtr->spritesGfx[position]);
-    LoadSpritePaletteWithTag(GetTrainerFrontPicPalette(trainerPicId), GetTrainerPicTag(trainerPicId, TRUE));
+
+    // Replace LoadSpritePaletteWithTag with dynamic palette loading:
+    DynPal_LoadPaletteByOffset(sDynPalPlayerBattleFront, OBJ_PLTT_ID(battler));
 }
+
 
 void FreeTrainerFrontPicPalette(enum TrainerPicID trainerPicId)
 {

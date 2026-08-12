@@ -639,3 +639,7 @@ gSpecials::
 	def_special UpdateTrainerCardPhotoIcons
 	def_special StickerManGetBragFlags
 	def_special CheckAddCoins
+  def_special DynPal_ShowFullToneMenu
+	def_special DynPal_ShowToneMenuA
+	def_special DynPal_ShowToneMenuB
+	def_special DynPal_ShowToneMenuC

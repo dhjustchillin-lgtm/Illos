@@ -59,3 +59,6 @@ gText_Olive_AreYouReady::
 	.string "I'm returning to ILLOS today.\n"
 	.string "Come visit my lab when you're ready.\p"
 	.string "$"
+
+gText_NewGame_ChooseTones::
+	.string "Tell me more about yourself.$"

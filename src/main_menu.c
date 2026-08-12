@@ -42,6 +42,7 @@
 #include "mystery_gift_menu.h"
 #include "ui_main_menu.h"
 #include "main_menu.h"
+#include "dynamic_palettes.h"
 
 /*
  * Main menu state machine
@@ -224,6 +225,10 @@ static void NewGameOliveSpeech_ClearGenderWindow(u8, u8);
 static void Task_NewGameOliveSpeech_WhatsYourName(u8);
 static void Task_NewGameOliveSpeech_SlideOutOldGenderSprite(u8);
 static void Task_NewGameOliveSpeech_SlideInNewGenderSprite(u8);
+// DYNPAL Intro seq funcs
+static void Task_NewGame_DynPal_ChoosePlayerTonesStart(u8 taskId);
+static void Task_NewGame_DynPal_ShowToneMenu(u8 taskId);
+static void Task_NewGame_CharacterRestart(u8 taskId);
 static void Task_NewGameOliveSpeech_WaitForWhatsYourNameToPrint(u8);
 static void Task_NewGameOliveSpeech_WaitPressBeforeNameChoice(u8);
 static void Task_NewGameOliveSpeech_StartNamingScreen(u8);
@@ -1559,6 +1564,8 @@ static void Task_NewGameOliveSpeech_StartPlayerFadeIn(u8 taskId)
             NewGameOliveSpeech_StartFadeInTarget1OutTarget2(taskId, 2);
             NewGameOliveSpeech_StartFadePlatformOut(taskId, 1);
             gTasks[taskId].func = Task_NewGameOliveSpeech_WaitForPlayerFadeIn;
+            // DYNPAL Preload custom part indices if they exist
+            DynPal_LoadIntroToneIndices();
         }
     }
 }
@@ -1577,6 +1584,8 @@ static void Task_NewGameOliveSpeech_BoyOrGirl(u8 taskId)
     NewGameOliveSpeech_ClearWindow(0);
     StringExpandPlaceholders(gStringVar4, gText_Olive_BoyOrGirl);
     AddTextPrinterForMessage(TRUE);
+    // DYNPAL Load indices again. Necessary for returning from "no" after naming screen
+    DynPal_LoadIntroToneIndices();
     gTasks[taskId].func = Task_NewGameOliveSpeech_WaitToShowGenderMenu;
 }
 
@@ -1600,13 +1609,13 @@ static void Task_NewGameOliveSpeech_ChooseGender(u8 taskId)
         PlaySE(SE_SELECT);
         gSaveBlock2Ptr->playerGender = gender;
         NewGameOliveSpeech_ClearGenderWindow(1, 1);
-        gTasks[taskId].func = Task_NewGameOliveSpeech_WhatsYourName;
+        gTasks[taskId].func = Task_NewGame_DynPal_ChoosePlayerTonesStart;
         break;
     case FEMALE:
         PlaySE(SE_SELECT);
         gSaveBlock2Ptr->playerGender = gender;
         NewGameOliveSpeech_ClearGenderWindow(1, 1);
-        gTasks[taskId].func = Task_NewGameOliveSpeech_WhatsYourName;
+        gTasks[taskId].func = Task_NewGame_DynPal_ChoosePlayerTonesStart;
         break;
     default: //repeat task if nothing is selected
         break;
@@ -1662,6 +1671,32 @@ static void Task_NewGameOliveSpeech_SlideInNewGenderSprite(u8 taskId)
             gTasks[taskId].func = Task_NewGameOliveSpeech_ChooseGender;
         }
     }
+}
+
+// DYNPAL Game Intro Tasks
+static void Task_NewGame_DynPal_ChoosePlayerTonesStart(u8 taskId)
+{
+    NewGameOliveSpeech_ClearWindow(0);
+
+    StringExpandPlaceholders(gStringVar4, gText_NewGame_ChooseTones);
+    AddTextPrinterForMessage(TRUE);
+
+    gTasks[taskId].func = Task_NewGame_DynPal_ShowToneMenu;
+}
+
+static void Task_NewGame_DynPal_ShowToneMenu(u8 taskId)
+{
+    if (!RunTextPrintersAndIsPrinter0Active() && ((JOY_NEW(A_BUTTON)) || (JOY_NEW(B_BUTTON))))
+    {
+        DynPal_ShowMenuSequence(taskId, Task_NewGameOliveSpeech_WhatsYourName, Task_NewGame_CharacterRestart, FALSE);
+    }
+}
+
+// Clear some stuff upon dynpal cancel
+static void Task_NewGame_CharacterRestart(u8 taskId) {
+    NewGameOliveSpeech_ClearWindow(0);
+    gTasks[taskId].tTimer = 0;
+    gTasks[taskId].func = Task_NewGameOliveSpeech_BoyOrGirl;
 }
 
 static void Task_NewGameOliveSpeech_WhatsYourName(u8 taskId)
@@ -1984,22 +2019,30 @@ static void AddOliveSpeechObjects(u8 taskId)
     gSprites[oliveSpriteId].oam.priority = 0;
     gSprites[oliveSpriteId].invisible = TRUE;
     gTasks[taskId].tOliveSpriteId = oliveSpriteId;
+
     CINDERFSpriteId = NewGameOliveSpeech_CreateCINDERFSprite(100, 0x4B);
     gSprites[CINDERFSpriteId].callback = SpriteCB_Null;
     gSprites[CINDERFSpriteId].oam.priority = 0;
     gSprites[CINDERFSpriteId].invisible = TRUE;
     gTasks[taskId].tCINDERFSpriteId = CINDERFSpriteId;
+
     brendanSpriteId = CreateTrainerSprite(FacilityClassToPicIndex(FACILITY_CLASS_BRENDAN), 120, 60, 0, NULL);
     gSprites[brendanSpriteId].callback = SpriteCB_Null;
     gSprites[brendanSpriteId].invisible = TRUE;
     gSprites[brendanSpriteId].oam.priority = 0;
     gTasks[taskId].tBrendanSpriteId = brendanSpriteId;
+
     maySpriteId = CreateTrainerSprite(FacilityClassToPicIndex(FACILITY_CLASS_MAY), 120, 60, 0, NULL);
     gSprites[maySpriteId].callback = SpriteCB_Null;
     gSprites[maySpriteId].invisible = TRUE;
     gSprites[maySpriteId].oam.priority = 0;
     gTasks[taskId].tMaySpriteId = maySpriteId;
+
+    // Load the custom dynamic palette into the hardware palette slot assigned to the player sprites
+    DynPal_LoadPaletteByOffset(sDynPalPlayerBattleFront, OBJ_PLTT_ID(gSprites[brendanSpriteId].oam.paletteNum));
+    DynPal_LoadPaletteByOffset(sDynPalPlayerBattleFront, OBJ_PLTT_ID(gSprites[maySpriteId].oam.paletteNum));
 }
+
 
 #undef tPlayerSpriteId
 #undef tBG1HOFS
