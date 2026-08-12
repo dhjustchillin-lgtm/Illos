@@ -13,8 +13,6 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "constants/trainers.h"
-#include "data.h"
-#include "graphics.h"
 
 // *MODIFY*
 // Define all dynamic palettes here and in dynamic_palettes.h
@@ -542,69 +540,60 @@ static void DynPal_MenuSaveToneIndex(int dynPalType, int tone)
 // Helper for hot reloading player palette in intro menu
 static void DynPal_ReloadToneForMenuByType(int dynPalType, int tone)
 {
-    // Retrieve previously confirmed selections, fallback to saved values if untouched
-    u8 partA = (dynPalType == DYNPAL_MENU_ID_PART_A) ? tone : 
-               (sDynPalMenu.partATone != 0xFF) ? sDynPalMenu.partATone : gSaveBlock2Ptr->dynPalPartAPreset;
-               
-    u8 partB = (dynPalType == DYNPAL_MENU_ID_PART_B) ? tone : 
-               (sDynPalMenu.partBTone != 0xFF) ? sDynPalMenu.partBTone : gSaveBlock2Ptr->dynPalPartBPreset;
-               
-    u8 partC = (dynPalType == DYNPAL_MENU_ID_PART_C) ? tone : 
-               (sDynPalMenu.partCTone != 0xFF) ? sDynPalMenu.partCTone : gSaveBlock2Ptr->dynPalPartCPreset;
-
-    u16 trainerPicId = PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender);
-
-    DynPal_ReloadPlayerPaletteForMenu(trainerPicId, partA, partB, partC);
+    switch (dynPalType)
+    {
+        case DYNPAL_MENU_ID_PART_A:
+            DynPal_ReloadPlayerPaletteForMenu(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender), tone, 0xFF, 0xFF);
+            break;
+        case DYNPAL_MENU_ID_PART_B:
+            DynPal_ReloadPlayerPaletteForMenu(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender), 0xFF, tone, 0xFF);
+            break;
+        case DYNPAL_MENU_ID_PART_C:
+            DynPal_ReloadPlayerPaletteForMenu(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender), 0xFF, 0xFF, tone);
+            break;
+    }
 }
 
-// Hot reload player palette smoothly without direct VRAM hardware writes
+// *MODIFY*
+// Hot reload player palette - Main section should be identical to DynPal_InitOverworld, but split up between each tone
 static void DynPal_ReloadPlayerPaletteForMenu(u16 paletteTag, u8 partATone, u8 partBTone, u8 partCTone)
 {
     u16 offset;
-    u8 palSlot = 0;
-    u8 i;
-
     if (sDynPalMenu.isOverworld)
     {
         offset = OBJ_PLTT_ID(0);
     }
     else
     {
-        // Find the trainer sprite specifically (avoiding background/platform sprites)
-        for (i = 0; i < MAX_SPRITES; i++)
-        {
-            if (gSprites[i].inUse && gSprites[i].oam.paletteNum != 0)
-            {
-                palSlot = gSprites[i].oam.paletteNum;
-                break;
-            }
-        }
-        offset = OBJ_PLTT_ID(palSlot);
+        offset = OBJ_PLTT_ID(IndexOfSpritePaletteTag(paletteTag));
     }
 
-    const u16* partAPalData = sDynPalPartAPresets[min(partATone, COUNT_PART_A_TONES - 1)].data;
-    const u16* partBPalData = sDynPalPartBPresets[min(partBTone, COUNT_PART_B_TONES - 1)].data;
-    const u16* partCPalData = sDynPalPartCPresets[min(partCTone, COUNT_PART_C_TONES - 1)].data;
+    if (partATone != 0xFF)
+    {
+        const u16* partAPalData = sDynPalPartAPresets[min(partATone, COUNT_PART_A_TONES)].data;
+        DynPal_CopySection(partAPalData, &gPlttBufferUnfaded[offset], 1, 1, DYNPAL_COLOR_GROUP_NORMAL, 4);
+    }
+    if (partBTone != 0xFF)
+    {
+        const u16* partBPalData = sDynPalPartBPresets[min(partBTone, COUNT_PART_B_TONES)].data;
+        DynPal_CopySection(partBPalData, &gPlttBufferUnfaded[offset], 1, 5, DYNPAL_COLOR_GROUP_NORMAL, 4);
+    }
+    if (partCTone != 0xFF)
+    {
+        const u16* partCPalData = sDynPalPartCPresets[min(partCTone, COUNT_PART_C_TONES)].data;
+        DynPal_CopySection(partCPalData, &gPlttBufferUnfaded[offset], 1, 10, DYNPAL_COLOR_GROUP_NORMAL, 4);
+    }
+    DynPal_CopySection(sDynPal_Base, &gPlttBufferUnfaded[offset], 1, 9, DYNPAL_COLOR_GROUP_NORMAL, 1);
+    DynPal_CopySection(sDynPal_Base, &gPlttBufferUnfaded[offset], 2, 14, DYNPAL_COLOR_GROUP_NORMAL, 2);
 
-    // 1. Update the base unfaded buffer
-    DynPal_CopySection(partAPalData, &gPlttBufferUnfaded[offset], 1, 1, DYNPAL_COLOR_GROUP_NORMAL, 4);
-    DynPal_CopySection(partBPalData, &gPlttBufferUnfaded[offset], 1, 5, DYNPAL_COLOR_GROUP_NORMAL, 4);
-    DynPal_CopySection(sDynPal_Base,  &gPlttBufferUnfaded[offset], 1, 9, DYNPAL_COLOR_GROUP_NORMAL, 1);
-    DynPal_CopySection(partCPalData, &gPlttBufferUnfaded[offset], 1, 10, DYNPAL_COLOR_GROUP_NORMAL, 4);
-    DynPal_CopySection(sDynPal_Base,  &gPlttBufferUnfaded[offset], 2, 14, DYNPAL_COLOR_GROUP_NORMAL, 2);
-
-    // 2. Mirror changes to faded buffer
-    memcpy(&gPlttBufferFaded[offset], &gPlttBufferUnfaded[offset], PLTT_SIZE_4BPP);
-
-    // 3. Force the GBA VBlank engine to load slot's palette bitmask safely
-    CpuCopy16(&gPlttBufferFaded[offset], &gPlttBufferFaded[offset], PLTT_SIZE_4BPP); 
-    
-    // Request instant engine transfer during standard VBlank hardware line
+    /*
     if (!sDynPalMenu.isOverworld)
     {
-        // Target specifically the trainer sprite palette slot bit flag (1 << palSlot)
-        BlendPalettes((1 << (16 + palSlot)), 0, RGB_BLACK);
+        // Reflect the code in DynPal_InitBattleFront here
     }
+    */
+
+    memcpy(&gPlttBufferFaded[offset], &gPlttBufferUnfaded[offset], PLTT_SIZE_4BPP);
 }
 
 // SCRIPT SPECIAL WRAPPERS

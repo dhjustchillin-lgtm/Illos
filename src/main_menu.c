@@ -2019,30 +2019,22 @@ static void AddOliveSpeechObjects(u8 taskId)
     gSprites[oliveSpriteId].oam.priority = 0;
     gSprites[oliveSpriteId].invisible = TRUE;
     gTasks[taskId].tOliveSpriteId = oliveSpriteId;
-
     CINDERFSpriteId = NewGameOliveSpeech_CreateCINDERFSprite(100, 0x4B);
     gSprites[CINDERFSpriteId].callback = SpriteCB_Null;
     gSprites[CINDERFSpriteId].oam.priority = 0;
     gSprites[CINDERFSpriteId].invisible = TRUE;
     gTasks[taskId].tCINDERFSpriteId = CINDERFSpriteId;
-
     brendanSpriteId = CreateTrainerSprite(FacilityClassToPicIndex(FACILITY_CLASS_BRENDAN), 120, 60, 0, NULL);
     gSprites[brendanSpriteId].callback = SpriteCB_Null;
     gSprites[brendanSpriteId].invisible = TRUE;
     gSprites[brendanSpriteId].oam.priority = 0;
     gTasks[taskId].tBrendanSpriteId = brendanSpriteId;
-
     maySpriteId = CreateTrainerSprite(FacilityClassToPicIndex(FACILITY_CLASS_MAY), 120, 60, 0, NULL);
     gSprites[maySpriteId].callback = SpriteCB_Null;
     gSprites[maySpriteId].invisible = TRUE;
     gSprites[maySpriteId].oam.priority = 0;
     gTasks[taskId].tMaySpriteId = maySpriteId;
-
-    // Load the custom dynamic palette into the hardware palette slot assigned to the player sprites
-    DynPal_LoadPaletteByOffset(sDynPalPlayerBattleFront, OBJ_PLTT_ID(gSprites[brendanSpriteId].oam.paletteNum));
-    DynPal_LoadPaletteByOffset(sDynPalPlayerBattleFront, OBJ_PLTT_ID(gSprites[maySpriteId].oam.paletteNum));
 }
-
 
 #undef tPlayerSpriteId
 #undef tBG1HOFS

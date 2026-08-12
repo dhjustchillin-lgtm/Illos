@@ -991,6 +991,7 @@ u8 CreateTrainerSprite(enum TrainerPicID trainerPicId, s16 x, s16 y, u8 subprior
     struct CompressedSpriteSheet spriteSheet;
     struct SpriteTemplate spriteTemplate;
     bool32 alloced = FALSE;
+    u16 paletteTag;
 
     // Allocate memory for buffer
     if (buffer == NULL)
@@ -1003,34 +1004,36 @@ u8 CreateTrainerSprite(enum TrainerPicID trainerPicId, s16 x, s16 y, u8 subprior
     spriteSheet.size = TRAINER_PIC_SIZE;
     spriteSheet.tag = GetTrainerPicTag(trainerPicId, TRUE);
 
-    // Use the correct constant names for pokeemerald-expansion:
-    if (trainerPicId == TRAINER_PIC_BRENDAN 
-     || trainerPicId == TRAINER_PIC_MAY 
-     || trainerPicId == TRAINER_PIC_RS_BRENDAN 
-     || trainerPicId == TRAINER_PIC_RS_MAY)
+    paletteTag = GetTrainerPicTag(trainerPicId, TRUE);
+
+    // DYNPAL: Override player trainer palette.
+    if (trainerPicId == TRAINER_PIC_BRENDAN || trainerPicId == TRAINER_PIC_MAY)
     {
-        DynPal_LoadPaletteByOffset(sDynPalPlayerBattleFront, OBJ_PLTT_ID(0));
+        DynPal_LoadPaletteByTag(sDynPalPlayerBattleFront, paletteTag);
     }
     else
     {
-        LoadSpritePaletteWithTag(GetTrainerFrontPicPalette(trainerPicId), GetTrainerPicTag(trainerPicId, TRUE));
+        LoadSpritePaletteWithTag(
+            GetTrainerFrontPicPalette(trainerPicId),
+            paletteTag
+        );
     }
 
     LoadCompressedSpriteSheetOverrideBuffer(&spriteSheet, buffer);
+
     if (alloced)
         Free(buffer);
 
-    spriteTemplate.tileTag = GetTrainerPicTag(trainerPicId, TRUE);
-    spriteTemplate.paletteTag = GetTrainerPicTag(trainerPicId, TRUE);
+    spriteTemplate.tileTag = spriteSheet.tag;
+    spriteTemplate.paletteTag = paletteTag;
     spriteTemplate.oam = &sOam_64x64;
     spriteTemplate.anims = gDummySpriteAnimTable;
     spriteTemplate.images = NULL;
     spriteTemplate.affineAnims = gDummySpriteAffineAnimTable;
     spriteTemplate.callback = SpriteCallbackDummy;
+
     return CreateSprite(&spriteTemplate, x, y, subpriority);
 }
-
-
 
 static void UNUSED LoadTrainerGfx_TrainerCard(u8 gender, u16 palOffset, u8 *dest)
 {

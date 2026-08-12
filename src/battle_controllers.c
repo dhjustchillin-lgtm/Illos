@@ -2864,9 +2864,6 @@ void BtlController_HandleIntroTrainerBallThrow(enum BattlerId battler, u16 tagTr
     {
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].data[0] = 50;
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].data[2] = -40;
-
-        // Replace LoadCompressedPalette(...) here for player battle back palette:
-        DynPal_LoadPaletteByOffset(sDynPalPlayerBattleBack, OBJ_PLTT_ID(gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum));
     }
     else
     {
