@@ -48,7 +48,6 @@
 #include "type_icons.h"
 #include "pokedex.h"
 #include "test/battle.h"
-#include "dynamic_palettes.h"
 
 static void PlayerHandleLoadMonSprite(enum BattlerId battler);
 static void PlayerHandleDrawTrainerPic(enum BattlerId battler);
@@ -1959,12 +1958,7 @@ static void PlayerHandleDrawTrainerPic(enum BattlerId battler)
         isFrontPic = FALSE;
     }
 
-    // Creates the sprite and assigns gBattleStruct->trainerSlideSpriteIds[battler]
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, isFrontPic, xPos, yPos, -1);
-
-    // Apply the dynamic palette immediately after sprite initialization
-    u8 spriteId = gBattleStruct->trainerSlideSpriteIds[battler];
-    DynPal_LoadPaletteByOffset(sDynPalPlayerBattleBack, OBJ_PLTT_ID(gSprites[spriteId].oam.paletteNum));
 }
 
 static void PlayerHandleTrainerSlide(enum BattlerId battler)
@@ -2305,7 +2299,6 @@ static void PlayerHandleIntroTrainerBallThrow(enum BattlerId battler)
 {
     enum TrainerPicID trainerPicID = PlayerGetTrainerBackPicId();
     const u16 *trainerPal = GetTrainerBackPicPalette(trainerPicID);
-
     BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F8, trainerPal, 31, Intro_TryShinyAnimShowHealthbox);
 }
 

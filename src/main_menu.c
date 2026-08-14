@@ -213,18 +213,18 @@ static void NewGameOliveSpeech_StartFadePlatformIn(u8, u8);
 static void Task_NewGameOliveSpeech_SlidePlatformAway(u8);
 static void Task_NewGameOliveSpeech_StartPlayerFadeIn(u8);
 static void Task_NewGameOliveSpeech_WaitForPlayerFadeIn(u8);
-static void Task_NewGameOliveSpeech_BoyOrGirl(u8);
+// static void Task_NewGameOliveSpeech_BoyOrGirl(u8);
 static void LoadMainMenuWindowFrameTiles(u8, u16);
 static void DrawMainMenuWindowBorder(const struct WindowTemplate *, u16);
 static void Task_HighlightSelectedMainMenuItem(u8);
-static void Task_NewGameOliveSpeech_WaitToShowGenderMenu(u8);
-static void Task_NewGameOliveSpeech_ChooseGender(u8);
-static void NewGameOliveSpeech_ShowGenderMenu(void);
-static s8 NewGameOliveSpeech_ProcessGenderMenuInput(void);
-static void NewGameOliveSpeech_ClearGenderWindow(u8, u8);
+// static void Task_NewGameOliveSpeech_WaitToShowGenderMenu(u8);
+// static void Task_NewGameOliveSpeech_ChooseGender(u8);
+// static void NewGameOliveSpeech_ShowGenderMenu(void);
+// static s8 NewGameOliveSpeech_ProcessGenderMenuInput(void);
+// static void NewGameOliveSpeech_ClearGenderWindow(u8, u8);
 static void Task_NewGameOliveSpeech_WhatsYourName(u8);
-static void Task_NewGameOliveSpeech_SlideOutOldGenderSprite(u8);
-static void Task_NewGameOliveSpeech_SlideInNewGenderSprite(u8);
+// static void Task_NewGameOliveSpeech_SlideOutOldGenderSprite(u8);
+// static void Task_NewGameOliveSpeech_SlideInNewGenderSprite(u8);
 // DYNPAL Intro seq funcs
 static void Task_NewGame_DynPal_ChoosePlayerTonesStart(u8 taskId);
 static void Task_NewGame_DynPal_ShowToneMenu(u8 taskId);
@@ -479,60 +479,10 @@ static const union AffineAnimCmd *const sSpriteAffineAnimTable_PlayerShrink[] =
     sSpriteAffineAnim_PlayerShrink
 };
 
-static const struct MenuAction sMenuActions_Gender[] = {
-    {gText_Boy, {NULL}},
-    {gText_Girl, {NULL}}
-};
-
-static const u8 *const sMalePresetNames[] = {
-    COMPOUND_STRING("STU"),
-    COMPOUND_STRING("MILTON"),
-    COMPOUND_STRING("TOM"),
-    COMPOUND_STRING("KENNY"),
-    COMPOUND_STRING("REID"),
-    COMPOUND_STRING("JUDE"),
-    COMPOUND_STRING("JAXSON"),
-    COMPOUND_STRING("EASTON"),
-    COMPOUND_STRING("WALKER"),
-    COMPOUND_STRING("TERU"),
-    COMPOUND_STRING("JOHNNY"),
-    COMPOUND_STRING("BRETT"),
-    COMPOUND_STRING("SETH"),
-    COMPOUND_STRING("TERRY"),
-    COMPOUND_STRING("CASEY"),
-    COMPOUND_STRING("DARREN"),
-    COMPOUND_STRING("LANDON"),
-    COMPOUND_STRING("COLLIN"),
-    COMPOUND_STRING("STANLEY"),
-    COMPOUND_STRING("QUINCY")
-};
-
-static const u8 *const sFemalePresetNames[] = {
-    COMPOUND_STRING("KIMMY"),
-    COMPOUND_STRING("TIARA"),
-    COMPOUND_STRING("BELLA"),
-    COMPOUND_STRING("JAYLA"),
-    COMPOUND_STRING("ALLIE"),
-    COMPOUND_STRING("LIANNA"),
-    COMPOUND_STRING("SARA"),
-    COMPOUND_STRING("MONICA"),
-    COMPOUND_STRING("CAMILA"),
-    COMPOUND_STRING("AUBREE"),
-    COMPOUND_STRING("RUTHIE"),
-    COMPOUND_STRING("HAZEL"),
-    COMPOUND_STRING("NADINE"),
-    COMPOUND_STRING("TANJA"),
-    COMPOUND_STRING("YASMIN"),
-    COMPOUND_STRING("NICOLA"),
-    COMPOUND_STRING("LILLIE"),
-    COMPOUND_STRING("TERRA"),
-    COMPOUND_STRING("LUCY"),
-    COMPOUND_STRING("HALIE")
-};
+static const u8 sDefaultPlayerName[] = _("LEO");
 
 // The number of male vs. female names is assumed to be the same.
 // If they aren't, the smaller of the two sizes will be used and any extra names will be ignored.
-#define NUM_PRESET_NAMES min(ARRAY_COUNT(sMalePresetNames), ARRAY_COUNT(sFemalePresetNames))
 
 enum
 {
@@ -1575,101 +1525,13 @@ static void Task_NewGameOliveSpeech_WaitForPlayerFadeIn(u8 taskId)
     if (gTasks[taskId].tIsDoneFadingSprites)
     {
         gSprites[gTasks[taskId].tPlayerSpriteId].oam.objMode = ST_OAM_OBJ_NORMAL;
-        gTasks[taskId].func = Task_NewGameOliveSpeech_BoyOrGirl;
-    }
-}
 
-static void Task_NewGameOliveSpeech_BoyOrGirl(u8 taskId)
-{
-    NewGameOliveSpeech_ClearWindow(0);
-    StringExpandPlaceholders(gStringVar4, gText_Olive_BoyOrGirl);
-    AddTextPrinterForMessage(TRUE);
-    // DYNPAL Load indices again. Necessary for returning from "no" after naming screen
-    DynPal_LoadIntroToneIndices();
-    gTasks[taskId].func = Task_NewGameOliveSpeech_WaitToShowGenderMenu;
-}
+        // Force the player to be male.
+        gSaveBlock2Ptr->playerGender = MALE;
+        gTasks[taskId].tPlayerGender = MALE;
 
-static void Task_NewGameOliveSpeech_WaitToShowGenderMenu(u8 taskId)
-{
-    if (!RunTextPrintersAndIsPrinter0Active())
-    {
-        NewGameOliveSpeech_ShowGenderMenu();
-        gTasks[taskId].func = Task_NewGameOliveSpeech_ChooseGender;
-    }
-}
-
-static void Task_NewGameOliveSpeech_ChooseGender(u8 taskId)
-{
-    enum Gender gender = NewGameOliveSpeech_ProcessGenderMenuInput();
-    enum Gender gender2;
-
-    switch (gender)
-    {
-    case MALE:
-        PlaySE(SE_SELECT);
-        gSaveBlock2Ptr->playerGender = gender;
-        NewGameOliveSpeech_ClearGenderWindow(1, 1);
+        // Skip the gender question/menu entirely.
         gTasks[taskId].func = Task_NewGame_DynPal_ChoosePlayerTonesStart;
-        break;
-    case FEMALE:
-        PlaySE(SE_SELECT);
-        gSaveBlock2Ptr->playerGender = gender;
-        NewGameOliveSpeech_ClearGenderWindow(1, 1);
-        gTasks[taskId].func = Task_NewGame_DynPal_ChoosePlayerTonesStart;
-        break;
-    default: //repeat task if nothing is selected
-        break;
-    }
-    gender2 = Menu_GetCursorPos();
-    if (gender2 != gTasks[taskId].tPlayerGender)
-    {
-        gTasks[taskId].tPlayerGender = gender2;
-        gSprites[gTasks[taskId].tPlayerSpriteId].oam.objMode = ST_OAM_OBJ_BLEND;
-        NewGameOliveSpeech_StartFadeOutTarget1InTarget2(taskId, 0);
-        gTasks[taskId].func = Task_NewGameOliveSpeech_SlideOutOldGenderSprite;
-    }
-}
-
-static void Task_NewGameOliveSpeech_SlideOutOldGenderSprite(u8 taskId)
-{
-    u8 spriteId = gTasks[taskId].tPlayerSpriteId;
-    if (gTasks[taskId].tIsDoneFadingSprites == 0)
-    {
-        gSprites[spriteId].x += 4;
-    }
-    else
-    {
-        gSprites[spriteId].invisible = TRUE;
-        if (gTasks[taskId].tPlayerGender != MALE)
-            spriteId = gTasks[taskId].tMaySpriteId;
-        else
-            spriteId = gTasks[taskId].tBrendanSpriteId;
-        gSprites[spriteId].x = DISPLAY_WIDTH;
-        gSprites[spriteId].y = 60;
-        gSprites[spriteId].invisible = FALSE;
-        gTasks[taskId].tPlayerSpriteId = spriteId;
-        gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
-        NewGameOliveSpeech_StartFadeInTarget1OutTarget2(taskId, 0);
-        gTasks[taskId].func = Task_NewGameOliveSpeech_SlideInNewGenderSprite;
-    }
-}
-
-static void Task_NewGameOliveSpeech_SlideInNewGenderSprite(u8 taskId)
-{
-    u8 spriteId = gTasks[taskId].tPlayerSpriteId;
-
-    if (gSprites[spriteId].x > 180)
-    {
-        gSprites[spriteId].x -= 4;
-    }
-    else
-    {
-        gSprites[spriteId].x = 180;
-        if (gTasks[taskId].tIsDoneFadingSprites)
-        {
-            gSprites[spriteId].oam.objMode = ST_OAM_OBJ_NORMAL;
-            gTasks[taskId].func = Task_NewGameOliveSpeech_ChooseGender;
-        }
     }
 }
 
@@ -1692,11 +1554,17 @@ static void Task_NewGame_DynPal_ShowToneMenu(u8 taskId)
     }
 }
 
-// Clear some stuff upon dynpal cancel
-static void Task_NewGame_CharacterRestart(u8 taskId) {
+static void Task_NewGame_CharacterRestart(u8 taskId)
+{
     NewGameOliveSpeech_ClearWindow(0);
     gTasks[taskId].tTimer = 0;
-    gTasks[taskId].func = Task_NewGameOliveSpeech_BoyOrGirl;
+
+    // Gender is permanently male.
+    gSaveBlock2Ptr->playerGender = MALE;
+    gTasks[taskId].tPlayerGender = MALE;
+
+    // Do not return to the removed gender-selection screen.
+    gTasks[taskId].func = Task_NewGame_DynPal_ChoosePlayerTonesStart;
 }
 
 static void Task_NewGameOliveSpeech_WhatsYourName(u8 taskId)
@@ -1728,7 +1596,7 @@ static void Task_NewGameOliveSpeech_StartNamingScreen(u8 taskId)
     {
         FreeAllWindowBuffers();
         FreeAndDestroyMonPicSprite(gTasks[taskId].tCINDERFSpriteId);
-        NewGameOliveSpeech_SetDefaultPlayerName(Random() % NUM_PRESET_NAMES);
+        NewGameOliveSpeech_SetDefaultPlayerName(0);
         DestroyTask(taskId);
         DoNamingScreen(NAMING_SCREEN_PLAYER, gSaveBlock2Ptr->playerName, gSaveBlock2Ptr->playerGender, 0, 0, CB2_NewGameOliveSpeech_ReturnFromNamingScreen);
     }
@@ -1765,7 +1633,9 @@ static void Task_NewGameOliveSpeech_ProcessNameYesNoMenu(u8 taskId)
     case MENU_B_PRESSED:
     case 1:
         PlaySE(SE_SELECT);
-        gTasks[taskId].func = Task_NewGameOliveSpeech_BoyOrGirl;
+        gSaveBlock2Ptr->playerGender = MALE;
+        gTasks[taskId].tPlayerGender = MALE;
+        gTasks[taskId].func = Task_NewGame_DynPal_ChoosePlayerTonesStart;
     }
 }
 
@@ -2216,33 +2086,10 @@ static void NewGameOliveSpeech_StartFadePlatformOut(u8 taskId, u8 delay)
 #undef tDelay
 #undef tDelayTimer
 
-static void NewGameOliveSpeech_ShowGenderMenu(void)
-{
-    DrawMainMenuWindowBorder(&sNewGameOliveSpeechTextWindows[1], 0xF3);
-    FillWindowPixelBuffer(1, PIXEL_FILL(1));
-    PrintMenuTable(1, ARRAY_COUNT(sMenuActions_Gender), sMenuActions_Gender);
-    InitMenuInUpperLeftCornerNormal(1, ARRAY_COUNT(sMenuActions_Gender), 0);
-    PutWindowTilemap(1);
-    CopyWindowToVram(1, COPYWIN_FULL);
-}
-
-static s8 NewGameOliveSpeech_ProcessGenderMenuInput(void)
-{
-    return Menu_ProcessInputNoWrap();
-}
-
 void NewGameOliveSpeech_SetDefaultPlayerName(u8 nameId)
 {
-    const u8 *name;
-    u8 i;
-
-    if (gSaveBlock2Ptr->playerGender == MALE)
-        name = sMalePresetNames[nameId];
-    else
-        name = sFemalePresetNames[nameId];
-    for (i = 0; i < PLAYER_NAME_LENGTH; i++)
-        gSaveBlock2Ptr->playerName[i] = name[i];
-    gSaveBlock2Ptr->playerName[PLAYER_NAME_LENGTH] = EOS;
+    (void)nameId;
+    StringCopy(gSaveBlock2Ptr->playerName, sDefaultPlayerName);
 }
 
 static void CreateMainMenuErrorWindow(const u8 *str)
@@ -2350,20 +2197,6 @@ static void ClearMainMenuWindowTilemap(const struct WindowTemplate *template)
 {
     FillBgTilemapBufferRect(template->bg, 0, template->tilemapLeft - 1, template->tilemapTop - 1, template->tilemapLeft + template->width + 1, template->tilemapTop + template->height + 1, 2);
     CopyBgTilemapBufferToVram(template->bg);
-}
-
-static void NewGameOliveSpeech_ClearGenderWindowTilemap(u8 bg, u8 x, u8 y, u8 width, u8 height, u8 unused)
-{
-    FillBgTilemapBufferRect(bg, 0, x + 255, y + 255, width + 2, height + 2, 2);
-}
-
-static void NewGameOliveSpeech_ClearGenderWindow(u8 windowId, bool8 copyToVram)
-{
-    CallWindowFunction(windowId, NewGameOliveSpeech_ClearGenderWindowTilemap);
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-    ClearWindowTilemap(windowId);
-    if (copyToVram == TRUE)
-        CopyWindowToVram(windowId, COPYWIN_FULL);
 }
 
 static void NewGameOliveSpeech_ClearWindow(u8 windowId)

@@ -2467,8 +2467,18 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
         }
         else
         {
-            LoadSpritePaletteWithTag(GetTrainerBackPicPalette(trainerPicId), GetTrainerPicTag(trainerPicId, FALSE));
-            SetMultiuseSpriteTemplateToTrainerBack(trainerPicId, GetBattlerPosition(battler));
+            u16 paletteTag = GetTrainerPicTag(trainerPicId, FALSE);
+
+            if (trainerPicId == TRAINER_PIC_BRENDAN || trainerPicId == TRAINER_PIC_MAY)
+                DynPal_LoadPaletteByTag(sDynPalPlayerBattleBack, paletteTag);
+            else
+                LoadSpritePaletteWithTag(GetTrainerBackPicPalette(trainerPicId), paletteTag);
+        
+            SetMultiuseSpriteTemplateToTrainerBack(
+                trainerPicId,
+                GetBattlerPosition(battler)
+            );
+
             if (subpriority == -1)
                 subpriority = GetBattlerSpriteSubpriority(battler);
             gBattleStruct->trainerSlideSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate,
@@ -2857,32 +2867,48 @@ bool32 TwoOpponentIntroMons(enum BattlerId battler) // Double battle with both o
 void BtlController_HandleIntroTrainerBallThrow(enum BattlerId battler, u16 tagTrainerPal, const u16 *trainerPal, s16 framesToWait, void (*controllerCallback)(enum BattlerId battler))
 {
     u8 taskId;
+    u8 paletteNum;
+    u8 spriteId = gBattleStruct->trainerSlideSpriteIds[battler];
     enum BattleSide side = GetBattlerSide(battler);
 
-    SetSpritePrimaryCoordsFromSecondaryCoords(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]]);
+    SetSpritePrimaryCoordsFromSecondaryCoords(&gSprites[spriteId]);
     if (side == B_SIDE_PLAYER)
     {
-        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].data[0] = 50;
-        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].data[2] = -40;
+        gSprites[spriteId].data[0] = 50;
+        gSprites[spriteId].data[2] = -40;
     }
     else
     {
-        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].data[0] = 35;
-        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].data[2] = 280;
+        gSprites[spriteId].data[0] = 35;
+        gSprites[spriteId].data[2] = 280;
     }
 
-    gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].data[4] = gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].y;
-    gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = StartAnimLinearTranslation;
-    gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].sBattlerId = battler;
+    gSprites[spriteId].data[4] = gSprites[spriteId].y;
+    gSprites[spriteId].callback = StartAnimLinearTranslation;
+    gSprites[spriteId].sBattlerId = battler;
 
     if (side == B_SIDE_PLAYER)
     {
-        StoreSpriteCallbackInData6(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]], SpriteCB_FreePlayerSpriteLoadMonSprite);
-        StartSpriteAnim(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]], ShouldDoSlideInAnim(battler) ? 2 : 1);
+        // --- DYNPAL INTEGRATION START ---
+        // 1. Allocate the sprite palette using the tag passed to the function
+        paletteNum = AllocSpritePalette(tagTrainerPal);
+
+        // 2. Load the base uncompressed palette (passed via trainerPal)
+        LoadPalette(trainerPal, OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
+
+        // 3. Load the Dynamic Palette into the assigned palette slot
+        DynPal_LoadPaletteByOffset(sDynPalPlayerBattleBack, OBJ_PLTT_ID(paletteNum));
+
+        // 4. Assign the allocated palette index to the sprite's OAM
+        gSprites[spriteId].oam.paletteNum = paletteNum;
+        // --- DYNPAL INTEGRATION END ---
+
+        StoreSpriteCallbackInData6(&gSprites[spriteId], SpriteCB_FreePlayerSpriteLoadMonSprite);
+        StartSpriteAnim(&gSprites[spriteId], ShouldDoSlideInAnim(battler) ? 2 : 1);
     }
     else
     {
-        StoreSpriteCallbackInData6(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]], SpriteCB_FreeOpponentSprite);
+        StoreSpriteCallbackInData6(&gSprites[spriteId], SpriteCB_FreeOpponentSprite);
     }
 
     taskId = CreateTask(Task_StartSendOutAnim, 5);
@@ -2896,7 +2922,6 @@ void BtlController_HandleIntroTrainerBallThrow(enum BattlerId battler, u16 tagTr
     gBattleSpritesDataPtr->animationData->introAnimActive = TRUE;
     gBattlerControllerFuncs[battler] = BattleControllerDummy;
 }
-
 
 static bool32 TwoMonsAtSendOut(enum BattlerId battler)
 {

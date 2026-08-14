@@ -991,40 +991,34 @@ u8 CreateTrainerSprite(enum TrainerPicID trainerPicId, s16 x, s16 y, u8 subprior
     struct CompressedSpriteSheet spriteSheet;
     struct SpriteTemplate spriteTemplate;
     bool32 alloced = FALSE;
-    u16 paletteTag;
+    u16 paletteTag = GetTrainerPicTag(trainerPicId, TRUE);
 
-    // Allocate memory for buffer
     if (buffer == NULL)
     {
         buffer = Alloc(TRAINER_PIC_SIZE);
         alloced = TRUE;
     }
 
-    spriteSheet.data = GetTrainerFrontPicData(trainerPicId);
-    spriteSheet.size = TRAINER_PIC_SIZE;
-    spriteSheet.tag = GetTrainerPicTag(trainerPicId, TRUE);
-
-    paletteTag = GetTrainerPicTag(trainerPicId, TRUE);
-
-    // DYNPAL: Override player trainer palette.
+    // DYNPAL Integration
     if (trainerPicId == TRAINER_PIC_BRENDAN || trainerPicId == TRAINER_PIC_MAY)
     {
         DynPal_LoadPaletteByTag(sDynPalPlayerBattleFront, paletteTag);
     }
     else
     {
-        LoadSpritePaletteWithTag(
-            GetTrainerFrontPicPalette(trainerPicId),
-            paletteTag
-        );
+        LoadSpritePaletteWithTag(GetTrainerFrontPicPalette(trainerPicId), paletteTag);
     }
+
+    spriteSheet.data = GetTrainerFrontPicData(trainerPicId);
+    spriteSheet.size = TRAINER_PIC_SIZE;
+    spriteSheet.tag = paletteTag;
 
     LoadCompressedSpriteSheetOverrideBuffer(&spriteSheet, buffer);
 
     if (alloced)
         Free(buffer);
 
-    spriteTemplate.tileTag = spriteSheet.tag;
+    spriteTemplate.tileTag = paletteTag;
     spriteTemplate.paletteTag = paletteTag;
     spriteTemplate.oam = &sOam_64x64;
     spriteTemplate.anims = gDummySpriteAnimTable;
