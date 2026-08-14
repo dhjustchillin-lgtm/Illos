@@ -43,14 +43,14 @@ const u16 sDynPal_Part_Clothes4[] = INCBIN_U16("graphics/dynpal/player_dynpal_sa
 const u8 sText_DynPal_Skin1[] = _("SKIN TONE 1");
 const u8 sText_DynPal_Skin2[] = _("SKIN TONE 2");
 const u8 sText_DynPal_Skin3[] = _("SKIN TONE 3");
-const u8 sText_DynPal_Misc1[] = _("PANTS 1");
-const u8 sText_DynPal_Misc2[] = _("PANTS 2");
-const u8 sText_DynPal_Misc3[] = _("MAY PANTS 1");
-const u8 sText_DynPal_Misc4[] = _("MAY PANTS 2");
-const u8 sText_DynPal_Clothes1[] = _("EMERALD");
-const u8 sText_DynPal_Clothes2[] = _("RS");
-const u8 sText_DynPal_Clothes3[] = _("BLUE");
-const u8 sText_DynPal_Clothes4[] = _("WHITE");
+const u8 sText_DynPal_Misc1[] = _("CLOTHES 1");
+const u8 sText_DynPal_Misc2[] = _("CLOTHES 2");
+const u8 sText_DynPal_Misc3[] = _("CLOTHES 3");
+const u8 sText_DynPal_Misc4[] = _("CLOTHES 4");
+const u8 sText_DynPal_Clothes1[] = _("RED AND GREEN");
+const u8 sText_DynPal_Clothes2[] = _("RED AND GOLD");
+const u8 sText_DynPal_Clothes3[] = _("BLUE AND GOLD");
+const u8 sText_DynPal_Clothes4[] = _("WHITE AND PURPLE");
 
 // *MODIFY*
 // Preset lists (indices in these lists are what is saved to game save)
