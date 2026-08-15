@@ -51,10 +51,10 @@ gText_NewGame_ChooseTones::
 
 gText_Olive_WhatsYourName::
 .string "Right then.\n"
-.string "And… uhm…\l"
-.string "… … … … … … … …\l"
-.string "… … … … … … … …\l"
-.string "what is your name?\l"
+.string "And… uhm…\p"
+.string "… … … … … … … …\n"
+.string "… … … … … … … …\p"
+.string "what is your name?\n"
 .string "(please don't hate me…)$"
 
 gText_Olive_SoItsPlayer::
