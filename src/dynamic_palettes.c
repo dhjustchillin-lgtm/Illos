@@ -43,14 +43,14 @@ const u16 sDynPal_Part_Clothes4[] = INCBIN_U16("graphics/dynpal/player_dynpal_sa
 const u8 sText_DynPal_Skin1[] = _("SKIN TONE 1");
 const u8 sText_DynPal_Skin2[] = _("SKIN TONE 2");
 const u8 sText_DynPal_Skin3[] = _("SKIN TONE 3");
-const u8 sText_DynPal_Misc1[] = _("CLOTHES 1");
-const u8 sText_DynPal_Misc2[] = _("CLOTHES 2");
-const u8 sText_DynPal_Misc3[] = _("CLOTHES 3");
-const u8 sText_DynPal_Misc4[] = _("CLOTHES 4");
-const u8 sText_DynPal_Clothes1[] = _("RED AND GREEN");
-const u8 sText_DynPal_Clothes2[] = _("RED AND GOLD");
-const u8 sText_DynPal_Clothes3[] = _("BLUE AND GOLD");
-const u8 sText_DynPal_Clothes4[] = _("WHITE AND PURPLE");
+const u8 sText_DynPal_Misc1[] = _("BLOND");
+const u8 sText_DynPal_Misc2[] = _("BROWN");
+const u8 sText_DynPal_Misc3[] = _("BLACK");
+const u8 sText_DynPal_Misc4[] = _("AUBURN");
+const u8 sText_DynPal_Clothes1[] = _("BLUE");
+const u8 sText_DynPal_Clothes2[] = _("GREEN");
+const u8 sText_DynPal_Clothes3[] = _("PURPLE");
+const u8 sText_DynPal_Clothes4[] = _("BROWN");
 
 // *MODIFY*
 // Preset lists (indices in these lists are what is saved to game save)
@@ -152,21 +152,16 @@ void DynPal_InitAllDynamicPalettes()
 // For any sections of the palette that should remain constant regardless of parts, use sDynPal_Base as <src>
 static void DynPal_InitOverworld(u16* dest, const u16* partAPalData, const u16* partBPalData, const u16* partCPalData, int groupOffset)
 {
-    // Change this function to match your palette setup
-
-    // This setup assumes your male and female characters will be using the same base palette
-    // If they don't, you can create a second base palette and check against the selected gender
-
-    //Skin 1-4
+    // Skin 1-4
     DynPal_CopySection(partAPalData, dest, 1, 1, groupOffset, 4);
-    //Misc 5-8
+    // Misc 5-8
     DynPal_CopySection(partBPalData, dest, 1, 5, groupOffset, 4);
-    //Grey 9
-    DynPal_CopySection(sDynPal_Base, dest, 1, 9, groupOffset, 1);
-    //Clothes 10-13
-    DynPal_CopySection(partCPalData, dest, 1, 10, groupOffset, 4);
-    //Black&White 14-15
-    DynPal_CopySection(sDynPal_Base, dest, 2, 14, groupOffset, 2);
+    
+    // Clothes 9-13 (Now copies 5 colors from clothes instead of 4)
+    DynPal_CopySection(partCPalData, dest, 1, 9, groupOffset, 5);
+    
+    // Black & White 14-15 (Reading from adjusted base src index)
+    DynPal_CopySection(sDynPal_Base, dest, 1, 14, groupOffset, 2);
 }
 
 // *MODIFY*
@@ -581,17 +576,12 @@ static void DynPal_ReloadPlayerPaletteForMenu(u16 paletteTag, u8 partATone, u8 p
     if (partCTone != 0xFF)
     {
         const u16* partCPalData = sDynPalPartCPresets[min(partCTone, COUNT_PART_C_TONES)].data;
-        DynPal_CopySection(partCPalData, &gPlttBufferUnfaded[offset], 1, 10, DYNPAL_COLOR_GROUP_NORMAL, 4);
+        // Copy 5 colors starting at destination index 9
+        DynPal_CopySection(partCPalData, &gPlttBufferUnfaded[offset], 1, 9, DYNPAL_COLOR_GROUP_NORMAL, 5);
     }
-    DynPal_CopySection(sDynPal_Base, &gPlttBufferUnfaded[offset], 1, 9, DYNPAL_COLOR_GROUP_NORMAL, 1);
-    DynPal_CopySection(sDynPal_Base, &gPlttBufferUnfaded[offset], 2, 14, DYNPAL_COLOR_GROUP_NORMAL, 2);
 
-    /*
-    if (!sDynPalMenu.isOverworld)
-    {
-        // Reflect the code in DynPal_InitBattleFront here
-    }
-    */
+    // Base colors (Black & White at 14-15)
+    DynPal_CopySection(sDynPal_Base, &gPlttBufferUnfaded[offset], 1, 14, DYNPAL_COLOR_GROUP_NORMAL, 2);
 
     memcpy(&gPlttBufferFaded[offset], &gPlttBufferUnfaded[offset], PLTT_SIZE_4BPP);
 }

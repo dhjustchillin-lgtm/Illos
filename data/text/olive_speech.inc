@@ -40,7 +40,7 @@ gText_Olive_MainSpeech::
 
 gText_Olive_AndYouAre::
 .string "Ah, but enough about me.\p"
-.string "Forgive me, but it's been so long\n"
+.string "Forgive me, but it's been 15 years\n"
 .string "since I last saw you.\p"
 .string "I… uhm… forgot your face…\p"
 .string "$"
@@ -54,8 +54,7 @@ gText_Olive_WhatsYourName::
 .string "And… uhm…\p"
 .string "… … … … … … … …\n"
 .string "… … … … … … … …\p"
-.string "what is your name?\n"
-.string "(please don't hate me…)$"
+.string "what is your name?$"
 
 gText_Olive_SoItsPlayer::
 .string "So you're {PLAYER}{KUN}?$"
