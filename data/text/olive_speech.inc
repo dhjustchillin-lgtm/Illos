@@ -69,7 +69,7 @@ gText_Olive_AreYouReady::
 .string "capable of.\p"
 .string "My ship will be arriving in town later.\n"
 .string "Come see me if you get the chance.\p"
-.string "OH, RIGHT- Happy 16th birthday! Tell your\l"
+.string "OH, RIGHT- Happy 16th birthday! Tell your\n"
 .string "twin I said happy birthday to him, too.\l"
 .string "Ta léme!\p"
 .string "$"
