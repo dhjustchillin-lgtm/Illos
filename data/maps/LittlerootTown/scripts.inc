@@ -146,21 +146,18 @@ LittlerootTown_EventScript_GoInsideWithMom::
 	waitmovement 0
 	msgbox LittlerootTown_Text_OurNewHomeLetsGoInside, MSGBOX_DEFAULT
 	closemessage
-	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomApproachDoor
-	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerApproachDoor
-	waitmovement 0
-	opendoor VAR_0x8004, VAR_0x8005
-	waitdooranim
-	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomEnterHouse
-	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerEnterHouse
-	waitmovement 0
-	setflag FLAG_HIDE_LITTLEROOT_TOWN_MOM_OUTSIDE
-	setvar VAR_LITTLEROOT_INTRO_STATE, 3
-	hideplayer
-	closedoor VAR_0x8004, VAR_0x8005
-	waitdooranim
-	clearflag FLAG_HIDE_LITTLEROOT_TOWN_FAT_MAN
-	clearflag FLAG_HIDE_MAP_NAME_POPUP
+
+	@ Give Pokémon
+	givemon SPECIES_CINDERF, 5, ITEM_NONE
+	
+	@ Give Running Shoes & enable engine flags
+	setflag FLAG_RECEIVED_RUNNING_SHOES
+	setflag FLAG_SYS_B_DASH
+	setflag FLAG_SYS_POKEMON_GET
+
+	@ Warp player to Dad's Farm (X: 6, Y: 9)
+	warp MAP_DADS_FARM, 6, 9
+	waitstate
 	return
 
 LittlerootTown_Movement_MomExitHouse:
@@ -905,16 +902,16 @@ LittlerootTown_EventScript_GiveRunningShoes::
 	return
 
 LittlerootTown_Text_OurNewHomeLetsGoInside:
-	.string "MOM: {PLAYER}, we're here, honey!\p"
-	.string "It must be tiring riding with our things\n"
-	.string "in the moving truck.\p"
-	.string "Well, this is LITTLEROOT TOWN.\p"
-	.string "How do you like it?\n"
-	.string "This is our new home!\p"
-	.string "It has a quaint feel, but it seems to be\n"
-	.string "an easy place to live, don't you think?\p"
-	.string "And, you get your own room, {PLAYER}!\n"
-	.string "Let's go inside.$"
+	.string "D-WORKS: {PLAYER}, listen!\p"
+	.string "I haven't actually done anything\n"
+	.string "in this part!\p"
+	.string "I'm going to give you a new POKéMON\n"
+	.string "named CINDERF.\p"
+	.string "And warp you to DAD'S FARM!\p"
+	.string "Explore, write feedback, save,\n"
+	.string "and reset to see the new main menu.\p"
+	.string "Okay, ready, {PLAYER}?\n"
+	.string "Thumbs up.$"
 
 LittlerootTown_Text_WaitPlayer:
 	.string "MOM: Wait, {PLAYER}!$"

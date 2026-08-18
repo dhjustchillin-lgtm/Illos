@@ -1,6 +1,8 @@
 gText_Olive_Welcome::
-.string "Hello! Sorry to call unannounced like this.\p"
-.string "My name is OLIVE. I knew you as a kid.\p"
+.string "Hello! Sorry to call unannounced\n"
+.string "like this.\p"
+.string "My name is OLIVE.\n"
+.string "I knew you as a kid.\p"
 .string "How are things back home on ILLOS?\p"
 .string "$"
 
