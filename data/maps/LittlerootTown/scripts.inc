@@ -149,14 +149,22 @@ LittlerootTown_EventScript_GoInsideWithMom::
 
 	@ Give Pokémon
 	givemon SPECIES_CINDERF, 5, ITEM_NONE
+	special HealPlayerParty
 	
-	@ Give Running Shoes & enable engine flags
+	@ Give Running Shoes, Pokédex & enable engine flags
+	setflag FLAG_SYS_POKEMON_GET
+	setflag FLAG_SYS_POKEDEX_GET
 	setflag FLAG_RECEIVED_RUNNING_SHOES
 	setflag FLAG_SYS_B_DASH
-	setflag FLAG_SYS_POKEMON_GET
+	
+	@ Optional: Enable National Pokédex mode if CINDERF is a custom/non-Hoenn species
+	special EnableNationalPokedex
 
-	@ Warp player to Dad's Farm (X: 6, Y: 9)
-	warp MAP_DADS_FARM, 6, 9
+	@ Give starting Poké Balls
+	giveitem ITEM_POKE_BALL, 5
+
+	@ Warp player to Dad's Farm (X: 6, Y: 8)
+	warp MAP_DADS_FARM, 6, 8
 	waitstate
 	return
 
@@ -906,7 +914,7 @@ LittlerootTown_Text_OurNewHomeLetsGoInside:
 	.string "I haven't actually done anything\n"
 	.string "in this part!\p"
 	.string "I'm going to give you a new POKéMON\n"
-	.string "named CINDERF.\p"
+	.string "named CINDERF (seen in intro).\p"
 	.string "And warp you to DAD'S FARM!\p"
 	.string "Explore, write feedback, save,\n"
 	.string "and reset to see the new main menu.\p"

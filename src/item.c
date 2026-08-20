@@ -461,6 +461,52 @@ bool32 CheckPCHasItem(enum Item itemId, u16 count)
     return BagPocket_CheckPocketForItemCount(&dummyPocket, itemId, count);
 }
 
+bool8 CheckPCHasSpace(u16 itemId, u16 count)
+{
+    u8 i;
+    u16 ownedCount = 0;
+
+    if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || FlagGet(FLAG_STORING_ITEMS_IN_PYRAMID_BAG) == TRUE)
+    {
+        return FALSE;
+    }
+
+    for (i = 0; i < PC_ITEMS_COUNT; i++)  // Get owned count
+    {
+        if (gSaveBlock1Ptr->pcItems[i].itemId == itemId)
+            ownedCount = gSaveBlock1Ptr->pcItems[i].quantity;
+    }
+
+    if (ownedCount + count <= MAX_PC_ITEM_CAPACITY)  // If there's room in already existing slot
+    {
+        return TRUE;
+    }
+
+    // Check space in empty item slots
+    if (count > 0)
+    {
+        for (i = 0; i < PC_ITEMS_COUNT; i++)
+        {
+            if (gSaveBlock1Ptr->pcItems[i].itemId == ITEM_NONE)
+            {
+                if (count > PC_ITEMS_COUNT)
+                {
+                    count -= PC_ITEMS_COUNT;
+                }
+                else
+                {
+                    count = 0;
+                    break;
+                }
+            }
+        }
+        if (count > 0)
+            return FALSE; // No more item slots. The PC is full
+    }
+
+    return TRUE;
+}
+
 bool32 AddPCItem(enum Item itemId, u16 count)
 {
     struct BagPocket dummyPocket = DUMMY_PC_BAG_POCKET;
