@@ -9348,7 +9348,7 @@
     {
       "id": "LAYOUT_DADS_FARM_HOUSE_2F",
       "name": "DadsFarm_House_2F_Layout",
-      "width": 9,
+      "width": 11,
       "height": 8,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_BrendansMaysHouse",
