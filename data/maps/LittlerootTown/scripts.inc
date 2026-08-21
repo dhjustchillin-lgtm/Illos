@@ -163,8 +163,8 @@ LittlerootTown_EventScript_GoInsideWithMom::
 	@ Give starting Poké Balls
 	giveitem ITEM_POKE_BALL, 5
 
-	@ Warp player to Dad's Farm (X: 6, Y: 8)
-	warp MAP_DADS_FARM, 6, 8
+	@ Warp player to Dad's Farm (X: 1, Y: 4)
+	warp MAP_DADS_FARM_HOUSE_2F, 1, 4
 	waitstate
 	return
 
