@@ -18,7 +18,6 @@
 #include "sound.h"
 #include "sprite.h"
 #include "task.h"
-#include "scanline_effect.h"
 #include "gpu_regs.h"
 #include "trig.h"
 #include "graphics.h"
@@ -548,7 +547,6 @@ static void StartPokemonLogoShine(u8 mode)
 
 static void VBlankCB(void)
 {
-    ScanlineEffect_InitHBlankDmaTransfer();
     LoadOam();
     ProcessSpriteCopyRequests();
     TransferPlttBuffer();
@@ -608,7 +606,6 @@ void CB2_InitTitleScreen(void)
         }
 
         // bg1
-        ScanlineEffect_Stop();
         ResetTasks();
         ResetSpriteData();
         FreeAllSpritePalettes();
