@@ -24,6 +24,7 @@
 #include "graphics.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "random.h"
 
 enum {
     TAG_VERSION = 1000,
@@ -62,11 +63,13 @@ static void SpriteCB_PokemonLogoShine(struct Sprite *sprite);
 // const rom data
 static const u16 sUnusedUnknownPal[] = INCGFX_U16("graphics/title_screen/unused.pal", ".gbapal");
 
-static const u32 sTitleScreenRayquazaGfx[] = INCGFX_U32("graphics/title_screen/icefallstiles.png", ".4bpp.smol");
-static const u32 sTitleScreenRayquazaTilemap[] = INCGFX_U32("graphics/title_screen/icefallstiles.bin", ".smolTM");
+static const u32 sTitleScreenSunsetGfx[] = INCGFX_U32("graphics/title_screen/sunsettiles.png", ".4bpp.smol");
+static const u32 sTitleScreenSunsetTilemap[] = INCGFX_U32("graphics/title_screen/sunsettiles.bin", ".smolTM");
+
+static const u32 sTitleScreenIcefallGfx[] = INCGFX_U32("graphics/title_screen/icefallstiles.png", ".4bpp.smol");
+static const u32 sTitleScreenIcefallTilemap[] = INCGFX_U32("graphics/title_screen/icefallstiles.bin", ".smolTM");
+
 static const u32 sTitleScreenLogoShineGfx[] = INCGFX_U32("graphics/title_screen/logo_shine.png", ".4bpp.smol");
-
-
 
 // Used to blend "Emerald Version" as it passes over over the Pokémon banner.
 // Also used by the intro to blend the Game Freak name/logo in and out as they appear and disappear
@@ -486,14 +489,6 @@ static void SpriteCB_PokemonLogoShine(struct Sprite *sprite)
 
             backgroundColor = _RGB(sprite->sBgColor, sprite->sBgColor, sprite->sBgColor);
 
-            // Flash the background green for 4 frames of movement.
-            // Otherwise use the updating color.
-            /*if (sprite->x == DISPLAY_WIDTH / 2 + (3 * SHINE_SPEED)
-             || sprite->x == DISPLAY_WIDTH / 2 + (4 * SHINE_SPEED)
-             || sprite->x == DISPLAY_WIDTH / 2 + (5 * SHINE_SPEED)
-             || sprite->x == DISPLAY_WIDTH / 2 + (6 * SHINE_SPEED))
-                gPlttBufferFaded[0] = RGB(24, 31, 12);
-            else*/
             gPlttBufferFaded[0] = backgroundColor;
         }
 
@@ -557,7 +552,7 @@ static void VBlankCB(void)
     LoadOam();
     ProcessSpriteCopyRequests();
     TransferPlttBuffer();
-    ///
+
     SetGpuReg(REG_OFFSET_BG1VOFS, gBattle_BG1_Y);
 }
 
@@ -597,12 +592,22 @@ void CB2_InitTitleScreen(void)
         // bg2
         DecompressDataWithHeaderVram(gTitleScreenPokemonLogoGfx, (void *)(BG_CHAR_ADDR(0)));
         DecompressDataWithHeaderVram(gTitleScreenPokemonLogoTilemap, (void *)(BG_SCREEN_ADDR(9)));
-        LoadPalette(gTitleScreenBgPalettes, BG_PLTT_ID(0), 15 * PLTT_SIZE_4BPP);
-        // bg3
-        DecompressDataWithHeaderVram(sTitleScreenRayquazaGfx, (void *)(BG_CHAR_ADDR(2)));
-        DecompressDataWithHeaderVram(sTitleScreenRayquazaTilemap, (void *)(BG_SCREEN_ADDR(26)));
+
+        // Randomly select sunset or icefall theme
+        if (Random() % 2 == 0)
+        {
+            DecompressDataWithHeaderVram(sTitleScreenSunsetGfx, (void *)(BG_CHAR_ADDR(2)));
+            DecompressDataWithHeaderVram(sTitleScreenSunsetTilemap, (void *)(BG_SCREEN_ADDR(26)));
+            LoadPalette(gTitleScreenBgPalettes, BG_PLTT_ID(0), 15 * PLTT_SIZE_4BPP);
+        }
+        else
+        {
+            DecompressDataWithHeaderVram(sTitleScreenIcefallGfx, (void *)(BG_CHAR_ADDR(2)));
+            DecompressDataWithHeaderVram(sTitleScreenIcefallTilemap, (void *)(BG_SCREEN_ADDR(26)));
+            LoadPalette(gTitleScreenBgPalettes2, BG_PLTT_ID(0), 15 * PLTT_SIZE_4BPP);
+        }
+
         // bg1
-        ///
         ScanlineEffect_Stop();
         ResetTasks();
         ResetSpriteData();
@@ -647,7 +652,7 @@ void CB2_InitTitleScreen(void)
         SetGpuReg(REG_OFFSET_BLDALPHA, 0);
         SetGpuReg(REG_OFFSET_BLDY, 12);
         SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(3) | BGCNT_CHARBASE(2) | BGCNT_SCREENBASE(26) | BGCNT_16COLOR | BGCNT_TXT256x256);
-        ///
+
         SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(2) | BGCNT_CHARBASE(3) | BGCNT_SCREENBASE(27) | BGCNT_16COLOR | BGCNT_TXT256x256);
         SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(1) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(9) | BGCNT_256COLOR | BGCNT_AFF256x256);
         EnableInterrupts(INTR_FLAG_VBLANK);
@@ -664,7 +669,6 @@ void CB2_InitTitleScreen(void)
         if (!UpdatePaletteFade())
         {
             StartPokemonLogoShine(SHINE_MODE_SINGLE_NO_BG_COLOR);
-            //ScanlineEffect_InitWave(0, DISPLAY_HEIGHT, 4, 4, 0, SCANLINE_EFFECT_REG_BG1HOFS, TRUE);
             SetMainCallback2(MainCB2);
         }
         break;
@@ -816,7 +820,7 @@ static void Task_TitleScreenPhase3(u8 taskId)
             gBattle_BG1_Y = gTasks[taskId].tBg1Y / 2;
             gBattle_BG1_X = 0;
         }
-        //UpdateLegendaryMarkingColor(gTasks[taskId].tCounter);
+
         if ((gMPlayInfo_BGM.status & 0xFFFF) == 0)
         {
             BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_WHITEALPHA);
