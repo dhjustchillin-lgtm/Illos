@@ -24,7 +24,7 @@
     }
   ],
   "coord_events": [],
-    "bg_events": [
+  "bg_events": [
     {
       "type": "sign",
       "x": 8,
