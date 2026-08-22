@@ -550,8 +550,6 @@ static void VBlankCB(void)
     LoadOam();
     ProcessSpriteCopyRequests();
     TransferPlttBuffer();
-
-    SetGpuReg(REG_OFFSET_BG1VOFS, gBattle_BG1_Y);
 }
 
 void CB2_InitTitleScreen(void)
@@ -576,8 +574,6 @@ void CB2_InitTitleScreen(void)
         SetGpuReg(REG_OFFSET_BG0CNT, 0);
         SetGpuReg(REG_OFFSET_BG2HOFS, 0);
         SetGpuReg(REG_OFFSET_BG2VOFS, 0);
-        SetGpuReg(REG_OFFSET_BG1HOFS, 0);
-        SetGpuReg(REG_OFFSET_BG1VOFS, 0);
         SetGpuReg(REG_OFFSET_BG0HOFS, 0);
         SetGpuReg(REG_OFFSET_BG0VOFS, 0);
         DmaFill16(3, 0, (void *)VRAM, VRAM_SIZE);
@@ -650,15 +646,14 @@ void CB2_InitTitleScreen(void)
         SetGpuReg(REG_OFFSET_BLDY, 12);
         SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(3) | BGCNT_CHARBASE(2) | BGCNT_SCREENBASE(26) | BGCNT_16COLOR | BGCNT_TXT256x256);
 
-        SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(2) | BGCNT_CHARBASE(3) | BGCNT_SCREENBASE(27) | BGCNT_16COLOR | BGCNT_TXT256x256);
         SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(1) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(9) | BGCNT_256COLOR | BGCNT_AFF256x256);
         EnableInterrupts(INTR_FLAG_VBLANK);
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_1
-                                    | DISPCNT_OBJ_1D_MAP
-                                    | DISPCNT_BG2_ON
-                                    | DISPCNT_OBJ_ON
-                                    | DISPCNT_WIN0_ON
-                                    | DISPCNT_OBJWIN_ON);
+                            | DISPCNT_OBJ_1D_MAP
+                            | DISPCNT_BG2_ON
+                            | DISPCNT_OBJ_ON
+                            | DISPCNT_WIN0_ON
+                            | DISPCNT_OBJWIN_ON);
         m4aSongNumStart(MUS_TITLE);
         gMain.state = 5;
         break;
@@ -704,7 +699,11 @@ static void Task_TitleScreenPhase1(u8 taskId)
     {
         u8 spriteId;
 
-        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_1 | DISPCNT_OBJ_1D_MAP | DISPCNT_BG2_ON | DISPCNT_OBJ_ON);
+        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_1
+                            | DISPCNT_OBJ_1D_MAP
+                            | DISPCNT_BG0_ON
+                            | DISPCNT_BG2_ON
+                            | DISPCNT_OBJ_ON);
         SetGpuReg(REG_OFFSET_WININ, 0);
         SetGpuReg(REG_OFFSET_WINOUT, 0);
         SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_OBJ | BLDCNT_EFFECT_BLEND | BLDCNT_TGT2_ALL);
@@ -811,12 +810,6 @@ static void Task_TitleScreenPhase3(u8 taskId)
     {
         SetGpuReg(REG_OFFSET_BG2Y_L, 0);
         SetGpuReg(REG_OFFSET_BG2Y_H, 0);
-        if (++gTasks[taskId].tCounter & 1)
-        {
-            gTasks[taskId].tBg1Y++;
-            gBattle_BG1_Y = gTasks[taskId].tBg1Y / 2;
-            gBattle_BG1_X = 0;
-        }
 
         if ((gMPlayInfo_BGM.status & 0xFFFF) == 0)
         {
