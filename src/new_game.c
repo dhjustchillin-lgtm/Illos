@@ -52,6 +52,7 @@
 #include "difficulty.h"
 #include "follower_npc.h"
 #include "quests.h"
+#include "constants/vars.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
 extern const u8 EventScript_ResetAllMapFlagsFrlg[];
@@ -237,6 +238,7 @@ void NewGameInitData(void)
     ResetItemFlags();
     ResetDexNav();
     ClearFollowerNPCData();
+    VarSet(VAR_DADS_FARM_STATE, 0);
 }
 
 static void ResetMiniGamesRecords(void)
