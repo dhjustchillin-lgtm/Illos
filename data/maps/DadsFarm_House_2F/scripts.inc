@@ -45,9 +45,8 @@ DadsFarm_House_2F_EventScript_DadSequence::
 
 	@ Set quest to Active
 	startquest QUEST_CHORES
-  subquestmenu QUEST_MENU_COMPLETE_QUEST, QUEST_CHORES, SUB_QUEST_OUT
-  
-  openquestmenu
+	subquestmenu QUEST_MENU_COMPLETE_QUEST, QUEST_CHORES, SUB_QUEST_OUT
+	openquestmenu
 
 	releaseall
 	end
@@ -76,7 +75,7 @@ DadsFarm_House_2F_Movement_PlayerTossing:
 	delay_16
 	delay_16
 	walk_in_place_faster_right
-  delay_16
+	delay_16
 	delay_16
 	delay_16
 	delay_16
@@ -108,8 +107,57 @@ DadsFarm_House_2F_Movement_DadLeave:
 	delay_16
 	step_end
 
+DadsFarm_House_2F_EventScript_PC::
+	lockall
+	setvar VAR_0x8004, PC_LOCATION_BRENDANS_HOUSE
+	special DoPCTurnOnEffect
+	playse SE_PC_ON
+	msgbox gText_PlayerHouseBootPC, MSGBOX_DEFAULT
+	special BedroomPC
+	releaseall
+	end
+
+DadsFarm_House_2F_EventScript_TurnOffPlayerPC::
+	setvar VAR_0x8004, PC_LOCATION_BRENDANS_HOUSE
+	playse SE_PC_OFF
+	special DoPCTurnOffEffect
+	releaseall
+	end
+
+DadsFarm_House_2F_EventScript_PlayerDresser::
+	msgbox DadsFarm_House_2F_Text_PlayerDresser, MSGBOX_SIGN
+	end
+
+DadsFarm_House_2F_EventScript_MarkosDresser::
+	msgbox DadsFarm_House_2F_Text_MarkosDresser, MSGBOX_SIGN
+	end
+
 DadsFarm_House_2F_Text_DadSequence:
 	.string "{PLAYER}, you're still in bed?\n"
 	.string "You have chores to do today!\p"
 	.string "Oh, by the way... your Mom is\n"
 	.string "in town right now.$"
+
+DadsFarm_House_2F_Text_PlayerDresser:
+	.string "It's your dresser!\n"
+	.string "Everything is neat and orderly.$"
+
+DadsFarm_House_2F_Text_MarkosDresser:
+	.string "It's Markos' dresser!\n"
+	.string "It's a bit messy...$"
+
+DadsFarm_House_2F_EventScript_QuestMenu::
+	lockall
+	msgbox DadsFarm_House_2F_Text_OpenQuestMenu, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, DadsFarm_House_2F_EventScript_DoOpenQuestMenu
+	releaseall
+	end
+
+DadsFarm_House_2F_EventScript_DoOpenQuestMenu::
+	openquestmenu
+	releaseall
+	end
+
+DadsFarm_House_2F_Text_OpenQuestMenu:
+	.string "There's a logbook sitting on top\n"
+	.string "of the desk. Open it?$"
