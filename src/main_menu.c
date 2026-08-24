@@ -479,7 +479,7 @@ static const union AffineAnimCmd *const sSpriteAffineAnimTable_PlayerShrink[] =
     sSpriteAffineAnim_PlayerShrink
 };
 
-static const u8 sDefaultPlayerName[] = _("LEO");
+static const u8 sDefaultPlayerName[] = _("Leo");
 
 // The number of male vs. female names is assumed to be the same.
 // If they aren't, the smaller of the two sizes will be used and any extra names will be ignored.
