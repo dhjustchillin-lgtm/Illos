@@ -9330,7 +9330,7 @@
       "width": 30,
       "height": 30,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_Petalburg",
+      "secondary_tileset": "gTileset_Farm",
       "border_filepath": "data/layouts/DadsFarm/border.bin",
       "blockdata_filepath": "data/layouts/DadsFarm/map.bin"
     },

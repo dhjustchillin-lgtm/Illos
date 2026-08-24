@@ -460,9 +460,9 @@
 #define METATILE_PalletTown_OaksLabDoor  0x2AC
 
 // gTileset_Petalburg
-#define METATILE_Petalburg_Door_OlivesLab   0x249
 #define METATILE_Petalburg_Door_Littleroot  0x248
 #define METATILE_Petalburg_Door_Oldale      0x287
+#define METATILE_Petalburg_Door_OlivesLab   0x249
 
 // gTileset_PetalburgGym
 #define METATILE_PetalburgGym_Door                0x224
