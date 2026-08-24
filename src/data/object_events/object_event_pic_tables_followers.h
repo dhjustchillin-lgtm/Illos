@@ -6729,4 +6729,12 @@ static const struct SpriteFrameImage sPicTable_Pecharunt[] = {
 };
 #endif //P_FAMILY_PECHARUNT
 
+static const struct SpriteFrameImage sPicTable_Cinderf[] = {
+    overworld_ascending_frames(gObjectEventPic_Cinderf, 4, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_Lambiguous[] = {
+    overworld_ascending_frames(gObjectEventPic_Lambiguous, 4, 4),
+};
+
 #endif //OW_POKEMON_OBJECT_EVENTS

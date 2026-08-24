@@ -27510,6 +27510,9 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
     const u16 gMonShinyPalette_Cinderf[] = INCGFX_U16("graphics/pokemon/cinderf/shiny.pal", ".gbapal");
     const u8 gMonIcon_Cinderf[] = INCGFX_U8("graphics/pokemon/cinderf/icon.png", ".4bpp");
     const u8 gMonFootprint_Cinderf[] = INCGFX_U8("graphics/pokemon/cinderf/footprint.png", ".1bpp");
+    const u32 gObjectEventPic_Cinderf[] = INCGFX_COMP("graphics/pokemon/cinderf/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    const u16 gOverworldPalette_Cinderf[] = INCGFX_U16("graphics/pokemon/cinderf/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_Cinderf[] = INCGFX_U16("graphics/pokemon/cinderf/overworld_shiny.pal", ".gbapal");
 
     const u32 gMonFrontPic_Lambiguous[] = INCGFX_U32("graphics/pokemon/lambiguous/anim_front.png", ".4bpp.lz");
     const u32 gMonBackPic_Lambiguous[] = INCGFX_U32("graphics/pokemon/lambiguous/back.png", ".4bpp.lz");
@@ -27517,3 +27520,6 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
     const u16 gMonShinyPalette_Lambiguous[] = INCGFX_U16("graphics/pokemon/lambiguous/shiny.pal", ".gbapal");
     const u8 gMonIcon_Lambiguous[] = INCGFX_U8("graphics/pokemon/lambiguous/icon.png", ".4bpp");
     const u8 gMonFootprint_Lambiguous[] = INCGFX_U8("graphics/pokemon/lambiguous/footprint.png", ".1bpp");
+    const u32 gObjectEventPic_Lambiguous[] = INCGFX_COMP("graphics/pokemon/lambiguous/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    const u16 gOverworldPalette_Lambiguous[] = INCGFX_U16("graphics/pokemon/lambiguous/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_Lambiguous[] = INCGFX_U16("graphics/pokemon/lambiguous/overworld_shiny.pal", ".gbapal");

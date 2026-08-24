@@ -226,6 +226,15 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .iconSprite = gMonIcon_Cinderf,
         .iconPalIndex = 2,
         FOOTPRINT(Cinderf)
+        OVERWORLD(
+           sPicTable_Cinderf,
+           SIZE_32x32,
+           SHADOW_SIZE_M,
+           TRACKS_FOOT,
+           sAnimTable_Following,
+           gOverworldPalette_Cinderf,
+           gShinyOverworldPalette_Cinderf
+         )
         .levelUpLearnset = sCinderfLevelUpLearnset,
         .teachableLearnset = sCinderfTeachableLearnset,
     },
@@ -280,6 +289,15 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .iconSprite = gMonIcon_Lambiguous,
         .iconPalIndex = 2,
         FOOTPRINT(Lambiguous)
+        OVERWORLD(
+           sPicTable_Lambiguous,
+           SIZE_32x32,
+           SHADOW_SIZE_M,
+           TRACKS_SPOT,
+           sAnimTable_Following,
+           gOverworldPalette_Lambiguous,
+           gShinyOverworldPalette_Lambiguous
+         )
         .levelUpLearnset = sLambiguousLevelUpLearnset,
         .teachableLearnset = sLambiguousTeachableLearnset,
     },
