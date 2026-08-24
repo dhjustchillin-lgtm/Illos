@@ -27510,3 +27510,10 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
     const u16 gMonShinyPalette_Cinderf[] = INCGFX_U16("graphics/pokemon/cinderf/shiny.pal", ".gbapal");
     const u8 gMonIcon_Cinderf[] = INCGFX_U8("graphics/pokemon/cinderf/icon.png", ".4bpp");
     const u8 gMonFootprint_Cinderf[] = INCGFX_U8("graphics/pokemon/cinderf/footprint.png", ".1bpp");
+
+    const u32 gMonFrontPic_Lambiguous[] = INCGFX_U32("graphics/pokemon/lambiguous/anim_front.png", ".4bpp.lz");
+    const u32 gMonBackPic_Lambiguous[] = INCGFX_U32("graphics/pokemon/lambiguous/back.png", ".4bpp.lz");
+    const u16 gMonPalette_Lambiguous[] = INCGFX_U16("graphics/pokemon/lambiguous/normal.pal", ".gbapal");
+    const u16 gMonShinyPalette_Lambiguous[] = INCGFX_U16("graphics/pokemon/lambiguous/shiny.pal", ".gbapal");
+    const u8 gMonIcon_Lambiguous[] = INCGFX_U8("graphics/pokemon/lambiguous/icon.png", ".4bpp");
+    const u8 gMonFootprint_Lambiguous[] = INCGFX_U8("graphics/pokemon/lambiguous/footprint.png", ".1bpp");

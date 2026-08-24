@@ -230,6 +230,61 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .teachableLearnset = sCinderfTeachableLearnset,
     },
 
+        [SPECIES_LAMBIGUOUS] =
+    {
+        .baseHP        = 42,
+        .baseAttack    = 55,
+        .baseDefense   = 40,
+        .baseSpeed     = 60,
+        .baseSpAttack  = 30,
+        .baseSpDefense = 38,
+        .types         = MON_TYPES(TYPE_NORMAL, TYPE_DARK),
+        .catchRate     = 255, // Easy early catch rate
+        .expYield      = 53,
+        .evYield_Speed = 1,
+        .genderRatio   = PERCENT_FEMALE(50),
+        .eggCycles     = 15,
+        .friendship    = STANDARD_FRIENDSHIP,
+        .growthRate    = GROWTH_MEDIUM_FAST,
+        .eggGroups     = MON_EGG_GROUPS(EGG_GROUP_FIELD),
+        .abilities     = { ABILITY_INTIMIDATE, ABILITY_FLUFFY, ABILITY_RUN_AWAY },
+        .bodyColor     = BODY_COLOR_WHITE,
+        .speciesName   = _("Lambiguous"),
+        .cryId         = CRY_WOOLOO,
+        .natDexNum     = NATIONAL_DEX_LAMBIGUOUS,
+        .categoryName  = _("Disguise"),
+        .height        = 6,  // 0.6m
+        .weight        = 120, // 12.0kg
+        .description = COMPOUND_STRING(
+        "It wears a rugged wolf pelt to look terrifying\n"
+        "and startle travelers. Underneath, it is a\n"
+        "gentle Pokémon that secretly craves\n"
+        "headpats and snacks."),
+        .pokemonScale = 350,
+        .pokemonOffset = 10,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Lambiguous,
+        .frontPicSize = MON_COORDS_SIZE(48, 48),
+        .frontPicYOffset = 10,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(0, 1),
+        ),
+        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_Lambiguous,
+        .backPicSize = MON_COORDS_SIZE(48, 48),
+        .backPicYOffset = 10,
+        .backAnimId = BACK_ANIM_TRIANGLE_DOWN,
+        .palette = gMonPalette_Lambiguous,
+        .shinyPalette = gMonShinyPalette_Lambiguous,
+        .iconSprite = gMonIcon_Lambiguous,
+        .iconPalIndex = 2,
+        FOOTPRINT(Lambiguous)
+        .levelUpLearnset = sLambiguousLevelUpLearnset,
+        .teachableLearnset = sLambiguousTeachableLearnset,
+    },
+
+
     /* You may add any custom species below this point based on the following structure: */
 
     /*

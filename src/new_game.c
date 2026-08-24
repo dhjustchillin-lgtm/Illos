@@ -239,6 +239,9 @@ void NewGameInitData(void)
     ResetDexNav();
     ClearFollowerNPCData();
     VarSet(VAR_DADS_FARM_STATE, 0);
+    FlagSet(FLAG_SYS_B_DASH);
+    // FlagSet(FLAG_SYS_POKEDEX_GET);
+    EnableNationalPokedex(); // Sets FLAG_SYS_NATIONAL_DEX and updates internal structures
 }
 
 static void ResetMiniGamesRecords(void)

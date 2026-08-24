@@ -22331,3 +22331,20 @@ static const struct LevelUpMove sCinderfLevelUpLearnset[] = {
     LEVEL_UP_MOVE(40, MOVE_FLARE_BLITZ),
     LEVEL_UP_END
 };
+
+static const struct LevelUpMove sLambiguousLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 1, MOVE_TACKLE),
+    LEVEL_UP_MOVE( 1, MOVE_GROWL),
+    LEVEL_UP_MOVE( 3, MOVE_LEER),          // Tries to look intimidating early on
+    LEVEL_UP_MOVE( 6, MOVE_PURSUIT),       // First Dark-type STAB move
+    LEVEL_UP_MOVE( 9, MOVE_DEFENSE_CURL),   // Drops the wolf act and curls into a wool ball
+    LEVEL_UP_MOVE(12, MOVE_BITE),          // Fits the "wolf" costume aggression
+    LEVEL_UP_MOVE(15, MOVE_FAKE_TEARS),    // Reveals its sensitive sheep side
+    LEVEL_UP_MOVE(18, MOVE_HEADBUTT),      // Good mid-game Normal STAB
+    LEVEL_UP_MOVE(21, MOVE_TORMENT),       // Confuses enemies with its fake disguise
+    LEVEL_UP_MOVE(24, MOVE_CRUNCH),        // Strong physical Dark STAB
+    LEVEL_UP_MOVE(27, MOVE_COTTON_SPORE),  // Drops wool everywhere to slow foes
+    LEVEL_UP_MOVE(30, MOVE_SCARY_FACE),
+    LEVEL_UP_MOVE(33, MOVE_DOUBLE_EDGE),   // High-risk physical finisher
+    LEVEL_UP_END
+};
