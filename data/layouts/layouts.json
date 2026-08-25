@@ -9328,7 +9328,7 @@
       "id": "LAYOUT_DADS_FARM",
       "name": "DadsFarm_Layout",
       "width": 30,
-      "height": 30,
+      "height": 45,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Farm",
       "border_filepath": "data/layouts/DadsFarm/border.bin",
