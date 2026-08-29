@@ -8,3 +8,4 @@ DadsFarm_House_1F_EventScript_Box::
 DadsFarm_House_1F_Text_Box:
 	.string "It's where we cure\n"
 	.string "cheeses and meats.$"
+  

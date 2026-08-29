@@ -1,5 +1,7 @@
 const struct SpritePalette gSpritePalette_GeneralFieldEffect0 = {gFieldEffectObjectPalette0, FLDEFF_PAL_TAG_GENERAL_0};
 const struct SpritePalette gSpritePalette_GeneralFieldEffect1 = {gFieldEffectObjectPalette1, FLDEFF_PAL_TAG_GENERAL_1};
+const struct SpritePalette gSpritePalette_Wheat = {gFieldEffectPal_Wheat, FLDEFF_PAL_TAG_WHEAT};
+
 
 static const union AnimCmd sAnim_Shadow[] =
 {
@@ -709,7 +711,7 @@ static const union AnimCmd *const sAnimTable_LongGrass[] =
 
 const struct SpriteTemplate gFieldEffectObjectTemplate_LongGrass = {
     .tileTag = TAG_NONE,
-    .paletteTag = FLDEFF_PAL_TAG_GENERAL_1,
+    .paletteTag = FLDEFF_PAL_TAG_WHEAT,
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_LongGrass,
     .images = sPicTable_LongGrass,
