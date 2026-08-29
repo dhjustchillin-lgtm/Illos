@@ -9327,7 +9327,7 @@
     {
       "id": "LAYOUT_DADS_FARM",
       "name": "DadsFarm_Layout",
-      "width": 30,
+      "width": 60,
       "height": 45,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Farm",
