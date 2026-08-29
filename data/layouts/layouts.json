@@ -9327,7 +9327,7 @@
     {
       "id": "LAYOUT_DADS_FARM",
       "name": "DadsFarm_Layout",
-      "width": 60,
+      "width": 44,
       "height": 45,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Farm",
@@ -9355,6 +9355,16 @@
       "border_filepath": "data/layouts/DadsFarm_House_2F/border.bin",
       "blockdata_filepath": "data/layouts/DadsFarm_House_2F/map.bin",
       "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_KYMA_ROUTE",
+      "name": "KymaRoute_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/KymaRoute/border.bin",
+      "blockdata_filepath": "data/layouts/KymaRoute/map.bin"
     }
   ]
 }
