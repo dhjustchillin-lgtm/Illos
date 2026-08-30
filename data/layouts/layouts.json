@@ -9365,6 +9365,17 @@
       "secondary_tileset": "gTileset_Petalburg",
       "border_filepath": "data/layouts/KymaRoute/border.bin",
       "blockdata_filepath": "data/layouts/KymaRoute/map.bin"
+    },
+    {
+      "id": "LAYOUT_SHED",
+      "name": "Shed_Layout",
+      "width": 5,
+      "height": 5,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_InsideOfTruck",
+      "border_filepath": "data/layouts/Shed/border.bin",
+      "blockdata_filepath": "data/layouts/Shed/map.bin",
+      "layout_version": "emerald"
     }
   ]
 }

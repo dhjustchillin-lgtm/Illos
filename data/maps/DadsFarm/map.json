@@ -30,7 +30,7 @@
       "movement_range_y": 2,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "DadsFarm_EventScript_Brendan",
+      "script": "DadsFarm_EventScript_Markos",
       "flag": "0"
     },
     {
@@ -53,6 +53,13 @@
       "y": 7,
       "elevation": 0,
       "dest_map": "MAP_DADS_FARM_HOUSE_1F",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 36,
+      "y": 8,
+      "elevation": 0,
+      "dest_map": "MAP_SHED",
       "dest_warp_id": "0"
     }
   ],
