@@ -30,13 +30,13 @@
       "movement_range_y": 2,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "DadsFarm_EventScript_Brendan",
       "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_SPECIES(LAMBIGUOUS)",
-      "x": 52,
-      "y": 29,
+      "x": 36,
+      "y": 31,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
       "movement_range_x": 1,
@@ -44,7 +44,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_ROUTE_101_OLIVE_ZIGZAGOON_BATTLE"
+      "flag": "FLAG_HIDE_ROUTE_101_ZIGZAGOON"
     }
   ],
   "warp_events": [
@@ -60,118 +60,118 @@
     {
       "type": "trigger",
       "x": 30,
-      "y": 32,
+      "y": 31,
       "elevation": 0,
-      "var": "VAR_TEMP_0",
-      "var_value": "0",
+      "var": "VAR_DADS_FARM_STATE",
+      "var_value": "1",
       "script": "DadsFarm_EventScript_TriggerCutscene"
     },
     {
       "type": "trigger",
       "x": 31,
-      "y": 32,
+      "y": 31,
       "elevation": 0,
-      "var": "VAR_TEMP_0",
-      "var_value": "0",
+      "var": "VAR_DADS_FARM_STATE",
+      "var_value": "1",
       "script": "DadsFarm_EventScript_TriggerCutscene"
     },
     {
       "type": "trigger",
       "x": 32,
-      "y": 32,
+      "y": 31,
       "elevation": 0,
-      "var": "VAR_TEMP_0",
-      "var_value": "0",
+      "var": "VAR_DADS_FARM_STATE",
+      "var_value": "1",
       "script": "DadsFarm_EventScript_TriggerCutscene"
     },
     {
       "type": "trigger",
       "x": 33,
-      "y": 32,
+      "y": 31,
       "elevation": 0,
-      "var": "VAR_TEMP_0",
-      "var_value": "0",
+      "var": "VAR_DADS_FARM_STATE",
+      "var_value": "1",
       "script": "DadsFarm_EventScript_TriggerCutscene"
     },
     {
       "type": "trigger",
       "x": 34,
-      "y": 32,
+      "y": 31,
       "elevation": 0,
-      "var": "VAR_TEMP_0",
-      "var_value": "0",
+      "var": "VAR_DADS_FARM_STATE",
+      "var_value": "1",
       "script": "DadsFarm_EventScript_TriggerCutscene"
     },
     {
       "type": "trigger",
       "x": 35,
-      "y": 32,
+      "y": 31,
       "elevation": 0,
-      "var": "VAR_TEMP_0",
-      "var_value": "0",
+      "var": "VAR_DADS_FARM_STATE",
+      "var_value": "1",
       "script": "DadsFarm_EventScript_TriggerCutscene"
     },
     {
       "type": "trigger",
       "x": 36,
-      "y": 32,
+      "y": 31,
       "elevation": 0,
-      "var": "VAR_TEMP_0",
-      "var_value": "0",
+      "var": "VAR_DADS_FARM_STATE",
+      "var_value": "1",
       "script": "DadsFarm_EventScript_TriggerCutscene"
     },
     {
       "type": "trigger",
       "x": 37,
-      "y": 32,
+      "y": 31,
       "elevation": 0,
-      "var": "VAR_TEMP_0",
-      "var_value": "0",
+      "var": "VAR_DADS_FARM_STATE",
+      "var_value": "1",
       "script": "DadsFarm_EventScript_TriggerCutscene"
     },
     {
       "type": "trigger",
       "x": 38,
-      "y": 32,
+      "y": 31,
       "elevation": 0,
-      "var": "VAR_TEMP_0",
-      "var_value": "0",
+      "var": "VAR_DADS_FARM_STATE",
+      "var_value": "1",
       "script": "DadsFarm_EventScript_TriggerCutscene"
     },
     {
       "type": "trigger",
       "x": 39,
-      "y": 32,
+      "y": 31,
       "elevation": 0,
-      "var": "VAR_TEMP_0",
-      "var_value": "0",
+      "var": "VAR_DADS_FARM_STATE",
+      "var_value": "1",
       "script": "DadsFarm_EventScript_TriggerCutscene"
     },
     {
       "type": "trigger",
       "x": 40,
-      "y": 32,
+      "y": 31,
       "elevation": 0,
-      "var": "VAR_TEMP_0",
-      "var_value": "0",
+      "var": "VAR_DADS_FARM_STATE",
+      "var_value": "1",
       "script": "DadsFarm_EventScript_TriggerCutscene"
     },
     {
       "type": "trigger",
       "x": 41,
-      "y": 32,
+      "y": 31,
       "elevation": 0,
-      "var": "VAR_TEMP_0",
-      "var_value": "0",
+      "var": "VAR_DADS_FARM_STATE",
+      "var_value": "1",
       "script": "DadsFarm_EventScript_TriggerCutscene"
     },
     {
       "type": "trigger",
       "x": 42,
-      "y": 32,
+      "y": 31,
       "elevation": 0,
-      "var": "VAR_TEMP_0",
-      "var_value": "0",
+      "var": "VAR_DADS_FARM_STATE",
+      "var_value": "1",
       "script": "DadsFarm_EventScript_TriggerCutscene"
     }
   ],
