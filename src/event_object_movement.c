@@ -496,7 +496,15 @@ const u8 gInitialMovementTypeFacingDirections[NUM_MOVEMENT_TYPES] = {
 #include "data/object_events/object_event_graphics_info.h"
 #include "data/object_events/object_event_graphics_info_followers.h"
 
+const u16 gObjectEventPal_Bag[] = INCBIN_U16("graphics/object_events/palettes/bag.gbapal");
+
+const struct SpritePalette gObjectEventSpritePalette_Bag = {
+    .data = gObjectEventPal_Bag,
+    .tag = OBJ_EVENT_PAL_TAG_BAG,
+};
+
 static const struct SpritePalette sObjectEventSpritePalettes[] = {
+    {gObjectEventPal_Bag, OBJ_EVENT_PAL_TAG_BAG},
     {gObjectEventPal_Npc1,                  OBJ_EVENT_PAL_TAG_NPC_1},
     {gObjectEventPal_Npc2,                  OBJ_EVENT_PAL_TAG_NPC_2},
     {gObjectEventPal_Npc3,                  OBJ_EVENT_PAL_TAG_NPC_3},
@@ -591,6 +599,7 @@ static const struct SpritePalette sObjectEventSpritePalettes[] = {
         // If it's looking for a tag that isn't in this table, the game locks in an infinite loop.
 #endif
 };
+
 
 static const u16 sReflectionPaletteTags_Brendan[] = {
     OBJ_EVENT_PAL_TAG_BRENDAN_REFLECTION,
