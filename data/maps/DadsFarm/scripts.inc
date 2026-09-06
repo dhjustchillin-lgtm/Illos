@@ -1,5 +1,7 @@
 .set LOCALID_Markos, 1
 .set LOCALID_LAMBIGUOUS, 2
+.set LOCALID_DAD, 3
+.set LOCALID_Markos_Temp, 4
 
 DadsFarm_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, DadsFarm_OnTransition
@@ -11,7 +13,7 @@ DadsFarm_OnTransition:
 	end
 
 DadsFarm_EventScript_PrepareShedAmbush::
-	@ Reveal the flag BEFORE the map loads so the map loader instantiates the sprite
+	@ Reveal Lambiguous BEFORE the map loads so the map loader instantiates the sprite
 	clearflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
 	setobjectxyperm LOCALID_LAMBIGUOUS, 36, 11
 	setobjectmovementtype LOCALID_LAMBIGUOUS, MOVEMENT_TYPE_FACE_UP
@@ -32,6 +34,8 @@ DadsFarm_EventScript_Markos::
 DadsFarm_EventScript_OnLoadCutscene::
 	lockall
 	setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
+	setflag FLAG_HIDE_PLAYERS_HOUSE_DAD @ Ensure Dad is hidden initially
+	setflag FLAG_HIDE_ROUTE_104_RIVAL @ Ensure Dad is hidden initially
 	delay 30
 	applymovement LOCALID_Markos, DadsFarm_Movement_MarkosLookUp
 	waitmovement 0
@@ -76,12 +80,187 @@ DadsFarm_EventScript_ShedAmbushCutscene::
 	setwildbattle SPECIES_LAMBIGUOUS, 7, ITEM_NONE
 	dowildbattle
 	
-	@ Post-battle cleanup
+	@ Post-battle cleanup & Spawning Dad + Markos
 	removeobject LOCALID_LAMBIGUOUS
 	setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
+
+	@ 1. Unhide flags first
+	clearflag FLAG_HIDE_PLAYERS_HOUSE_DAD
+	clearflag FLAG_HIDE_ROUTE_104_RIVAL
+
+	@ 2. Set permanent coordinates before instantiating
+	setobjectxyperm LOCALID_DAD, 30, 15
+	setobjectxyperm LOCALID_Markos_Temp, 30, 16
+
+	@ 3. Add objects to the active map state
+	addobject LOCALID_DAD
+	addobject LOCALID_Markos_Temp
+
+	@ 4. Update current coordinates to match
+	setobjectxy LOCALID_DAD, 30, 15
+	setobjectxy LOCALID_Markos_Temp, 30, 16
+
+	applymovement LOCALID_DAD, DadsFarm_Movement_DadRunToPosition
+	applymovement LOCALID_Markos_Temp, DadsFarm_Movement_DadRunToPosition
+	waitmovement 0
+
+	@ Turn player to face Dad on the left
+	applymovement OBJ_EVENT_ID_PLAYER, DadsFarm_Movement_PlayerFaceLeft
+	waitmovement 0
+
+	@ Dialogue sequence post-chase
+	msgbox DadsFarm_Text_DadPostBattle, MSGBOX_DEFAULT
+	closemessage
+
+	applymovement LOCALID_Markos_Temp, DadsFarm_Movement_MarkosLookUp
+	waitmovement 0
+
+	msgbox DadsFarm_Text_MarkosAsksForPokemon, MSGBOX_DEFAULT
+	closemessage
+
+	msgbox DadsFarm_Text_DadRespondsToMarkos, MSGBOX_DEFAULT
+	closemessage
+
+	@ 1. Player moves down, right, and turns left FIRST
+	applymovement OBJ_EVENT_ID_PLAYER, DadsFarm_Movement_PlayerStepOut
+	waitmovement 0
+
+	@ 2. NOW Markos walks to the shed door
+	applymovement LOCALID_Markos_Temp, DadsFarm_Movement_MarkosEnterShed
+	waitmovement 0
+
+	opendoor 36, 8
+	waitdooranim
+	applymovement LOCALID_Markos_Temp, DadsFarm_Movement_WalkIntoDoor
+	waitmovement 0
+	closedoor 36, 8
+	waitdooranim
+	removeobject LOCALID_Markos_Temp
+
+	@ Wait 2 seconds (120 frames), then Markos exits the door
+	delay 120
+
+	opendoor 36, 8
+	waitdooranim
+	addobject LOCALID_Markos_Temp
+	setobjectxy LOCALID_Markos_Temp, 36, 8
+	applymovement LOCALID_Markos_Temp, DadsFarm_Movement_WalkOutOfDoor
+	waitmovement 0
+	closedoor 36, 8
+	waitdooranim
+
+	@ Markos walks down, turns right, and asks to battle
+	applymovement LOCALID_Markos_Temp, DadsFarm_Movement_MarkosWalkDown
+	waitmovement 0
+	applymovement LOCALID_Markos_Temp, DadsFarm_Movement_FaceRight
+	waitmovement 0
+
+	msgbox DadsFarm_Text_MarkosAskBattle, MSGBOX_DEFAULT
+	closemessage
+
+	@ Dad shows Exclamation Mark, walks right, and looks down
+	playse SE_PIN
+	applymovement LOCALID_DAD, DadsFarm_Movement_DadExclamationWalkRightLookDown
+	applymovement LOCALID_Markos_Temp, DadsFarm_Movement_MarkosLookUp
+	waitmovement LOCALID_DAD
+	waitmovement LOCALID_Markos_Temp
+	delay 20
+
+	@ Dad explains Pokémon are for work, not battling
+	msgbox DadsFarm_Text_DadPokemonAreForWork, MSGBOX_DEFAULT
+	closemessage
+
+	@ Markos begs "Please!"
+	msgbox DadsFarm_Text_MarkosBegsBattle, MSGBOX_DEFAULT
+	closemessage
+
+	@ Dad talks FIRST before moving to heal
+	msgbox DadsFarm_Text_DadHealsParty, MSGBOX_DEFAULT
+	closemessage
+
+	@ Dad JUST moves one right and looks down
+	applymovement LOCALID_DAD, DadsFarm_Movement_DadStepRightLookDown
+	waitmovement 0
+
+	@ Markos looks right, Player looks up
+	applymovement LOCALID_Markos_Temp, DadsFarm_Movement_FaceRight
+	applymovement OBJ_EVENT_ID_PLAYER, DadsFarm_Movement_FaceUp
+	waitmovement 0
+
+	@ Heal player's party
+	special HealPlayerParty
+
+	delay 60 @ Wait a second (60 frames)
+
+	@ Dad walks two left and turns right
+	applymovement LOCALID_DAD, DadsFarm_Movement_DadWalkTwoLeftFaceRight
+	waitmovement 0
+
+	@ Player turns left
+	applymovement OBJ_EVENT_ID_PLAYER, DadsFarm_Movement_FaceLeft
+	waitmovement 0
+
+	@ Markos asks "Are you ready?"
+	msgbox DadsFarm_Text_MarkosAreYouReady, MSGBOX_DEFAULT
+	closemessage
+
 	setvar VAR_DADS_FARM_STATE, 6
 	releaseall
 	end
+
+@ -------------------------------------------------------------
+@ DIALOGUE TEXT STRINGS
+@ -------------------------------------------------------------
+
+DadsFarm_Text_DadPostBattle:
+	.string "Dad: {PLAYER}! Are you alright?\p"
+	.string "We heard all the commotion from over by\n"
+	.string "the field, and... wait a minute.\p"
+	.string "Why do you have my Pokémon?\p"
+	.string "… … … … … … … …\n"
+	.string "… … … … … … … …\p"
+	.string "Oh. I see.\p"
+	.string "Well... hmm. Truth be told, I was hoping\n"
+	.string "to train it to help out around the farm,\l"
+	.string "but the stubborn thing wouldn't listen\l"
+	.string "to a word I said.\p"
+	.string "Looks like it took a liking to you, though.\n"
+	.string "Alright, son. Take care of it, raise it\l"
+	.string "until it fully evolves, and then come\l"
+	.string "find me.$"
+
+DadsFarm_Text_MarkosAsksForPokemon:
+	.string "Markos: Woah, Dad! That's not fair!\n"
+	.string "Can I get a Pokémon of my own, too?$"
+
+DadsFarm_Text_DadRespondsToMarkos:
+	.string "Dad: Haha, sure thing, Markos.\n"
+	.string "That just saves me twice as much work!$"
+
+DadsFarm_Text_MarkosAskBattle:
+	.string "Markos: Hey {PLAYER}! Now that we both\n"
+	.string "have Pokémon, let's battle!$"
+
+DadsFarm_Text_DadPokemonAreForWork:
+	.string "Dad: Hold on now, Markos. Pokémon on\n"
+	.string "this farm are meant for working,\l"
+	.string "not for tough battles!$"
+
+DadsFarm_Text_MarkosBegsBattle:
+	.string "Markos: Aww, please Dad? Just one quick\n"
+	.string "battle! We need to see who's stronger!$"
+
+DadsFarm_Text_DadHealsParty:
+	.string "Dad: ...Alright, fine... but make\n"
+	.string "sure your Pokémon are fully healed first.$"
+
+DadsFarm_Text_MarkosAreYouReady:
+	.string "Markos: Alright, {PLAYER}!\n"
+	.string "Are you ready for this?$"
+
+@ -------------------------------------------------------------
+@ MOVEMENT SCRIPTS & TEXT
+@ -------------------------------------------------------------
 
 DadsFarm_Movement_PlayerExclamationDown:
 	walk_in_place_faster_down
@@ -92,9 +271,72 @@ DadsFarm_Movement_LambiguousLunge:
 	walk_fast_up
 	step_end
 
-@ -------------------------------------------------------------
-@ MOVEMENT SCRIPTS & TEXT
-@ -------------------------------------------------------------
+DadsFarm_Movement_PlayerFaceLeft:
+	walk_in_place_faster_left
+	step_end
+
+DadsFarm_Movement_PlayerStepOut:
+	walk_down
+	walk_right
+	walk_in_place_faster_left
+	step_end
+
+DadsFarm_Movement_MarkosEnterShed:
+	walk_right
+	walk_up
+	step_end
+
+DadsFarm_Movement_WalkOutOfDoor:
+	walk_down
+	set_visible
+	step_end
+
+DadsFarm_Movement_MarkosWalkDown:
+	walk_down
+	step_end
+
+DadsFarm_Movement_FaceRight:
+	walk_in_place_faster_right
+	step_end
+
+DadsFarm_Movement_FaceLeft:
+	walk_in_place_faster_left
+	step_end
+
+DadsFarm_Movement_FaceUp:
+	walk_in_place_faster_up
+	step_end
+
+DadsFarm_Movement_DadExclamationWalkRightLookDown:
+	emote_exclamation_mark
+	walk_right
+	walk_in_place_faster_down
+	step_end
+
+DadsFarm_Movement_DadStepRightLookDown:
+	walk_right
+	walk_in_place_faster_down
+	step_end
+
+DadsFarm_Movement_DadWalkTwoLeftFaceRight:
+	walk_left
+	walk_left
+	walk_in_place_faster_right
+	step_end
+
+DadsFarm_Movement_DadRunToPosition:
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	step_end
 
 DadsFarm_Movement_MarkosExclamation:
 	emote_exclamation_mark

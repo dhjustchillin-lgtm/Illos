@@ -2,7 +2,7 @@
   "id": "MAP_SHED",
   "name": "Shed",
   "layout": "LAYOUT_SHED",
-  "music": "MUS_HELP",
+  "music": "MUS_LITTLEROOT",
   "region_map_section": "MAPSEC_LITTLEROOT_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
