@@ -1694,6 +1694,8 @@ enum __attribute__((packed)) Species
     // Add any custom species between here and SPECIES_CUSTOM_END
     SPECIES_CINDERF = 1573,
     SPECIES_LAMBIGUOUS = 1574,
+    SPECIES_NEREQUA = 1575,
+    SPECIES_FEVINE = 1576,
     SPECIES_CUSTOM_END,
 
     SPECIES_EGG = SPECIES_CUSTOM_END,

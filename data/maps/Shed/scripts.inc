@@ -56,7 +56,6 @@ Shed_EventScript_Bag::
 	setflag FLAG_SYS_POKEMON_GET
 	fadescreen FADE_TO_BLACK
 	special ChooseStarter
-	waitstate
 	setvar VAR_DADS_FARM_STATE, 5
   call Shed_EventScript_SetMusicHelp
   setflag FLAG_HIDE_ROUTE_101_OLIVE_STARTERS_BAG

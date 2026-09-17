@@ -2556,6 +2556,8 @@ enum PokemonCry
     CRY_PECHARUNT,
 #endif //P_FAMILY_PECHARUNT
     CRY_CINDERF,
+    CRY_NEREQUA,
+    CRY_FEVINE,
     CRY_COUNT,
 };
 

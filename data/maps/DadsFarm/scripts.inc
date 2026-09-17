@@ -77,7 +77,7 @@ DadsFarm_EventScript_ShedAmbushCutscene::
 	waitmovement 0
 
 	@ Initiate wild battle using Route 101 battle parameters
-	setwildbattle SPECIES_LAMBIGUOUS, 7, ITEM_NONE
+	setwildbattle SPECIES_LAMBIGUOUS, 5, ITEM_NONE
 	dowildbattle
 	
 	@ Post-battle cleanup & Spawning Dad + Markos
@@ -174,29 +174,8 @@ DadsFarm_EventScript_ShedAmbushCutscene::
 	msgbox DadsFarm_Text_MarkosBegsBattle, MSGBOX_DEFAULT
 	closemessage
 
-	@ Dad talks FIRST before moving to heal
-	msgbox DadsFarm_Text_DadHealsParty, MSGBOX_DEFAULT
-	closemessage
-
-	@ Dad JUST moves one right and looks down
-	applymovement LOCALID_DAD, DadsFarm_Movement_DadStepRightLookDown
-	waitmovement 0
-
-	@ Markos looks right, Player looks up
+	@ Markos turns to face player directly for battle
 	applymovement LOCALID_Markos_Temp, DadsFarm_Movement_FaceRight
-	applymovement OBJ_EVENT_ID_PLAYER, DadsFarm_Movement_FaceUp
-	waitmovement 0
-
-	@ Heal player's party
-	special HealPlayerParty
-
-	delay 60 @ Wait a second (60 frames)
-
-	@ Dad walks two left and turns right
-	applymovement LOCALID_DAD, DadsFarm_Movement_DadWalkTwoLeftFaceRight
-	waitmovement 0
-
-	@ Player turns left
 	applymovement OBJ_EVENT_ID_PLAYER, DadsFarm_Movement_FaceLeft
 	waitmovement 0
 
@@ -204,6 +183,31 @@ DadsFarm_EventScript_ShedAmbushCutscene::
 	msgbox DadsFarm_Text_MarkosAreYouReady, MSGBOX_DEFAULT
 	closemessage
 
+	@ Check starter variable (0 = Treecko/Grass, 1 = Torchic/Fire, 2 = Mudkip/Water)
+	switch VAR_STARTER_MON
+	case 0, DadsFarm_EventScript_MarkosBattleTreecko
+	case 1, DadsFarm_EventScript_MarkosBattleTorchic
+	case 2, DadsFarm_EventScript_MarkosBattleMudkip
+	end
+
+DadsFarm_EventScript_MarkosBattleTreecko::
+	trainerbattle_no_intro TRAINER_BRENDAN_ROUTE_103_MUDKIP, DadsFarm_Text_MarkosDefeat
+	goto DadsFarm_EventScript_AfterMarkosBattle
+	end
+
+DadsFarm_EventScript_MarkosBattleTorchic::
+	trainerbattle_no_intro TRAINER_BRENDAN_ROUTE_103_TREECKO, DadsFarm_Text_MarkosDefeat
+	goto DadsFarm_EventScript_AfterMarkosBattle
+	end
+
+DadsFarm_EventScript_MarkosBattleMudkip::
+	trainerbattle_no_intro TRAINER_BRENDAN_ROUTE_103_TORCHIC, DadsFarm_Text_MarkosDefeat
+	goto DadsFarm_EventScript_AfterMarkosBattle
+	end
+
+DadsFarm_EventScript_AfterMarkosBattle::
+	msgbox DadsFarm_Text_MarkosPostBattle, MSGBOX_DEFAULT
+	closemessage
 	setvar VAR_DADS_FARM_STATE, 6
 	releaseall
 	end
@@ -249,10 +253,6 @@ DadsFarm_Text_DadPokemonAreForWork:
 DadsFarm_Text_MarkosBegsBattle:
 	.string "Markos: Aww, please Dad? Just one quick\n"
 	.string "battle! We need to see who's stronger!$"
-
-DadsFarm_Text_DadHealsParty:
-	.string "Dad: ...Alright, fine... but make\n"
-	.string "sure your Pokémon are fully healed first.$"
 
 DadsFarm_Text_MarkosAreYouReady:
 	.string "Markos: Alright, {PLAYER}!\n"
@@ -311,17 +311,6 @@ DadsFarm_Movement_DadExclamationWalkRightLookDown:
 	emote_exclamation_mark
 	walk_right
 	walk_in_place_faster_down
-	step_end
-
-DadsFarm_Movement_DadStepRightLookDown:
-	walk_right
-	walk_in_place_faster_down
-	step_end
-
-DadsFarm_Movement_DadWalkTwoLeftFaceRight:
-	walk_left
-	walk_left
-	walk_in_place_faster_right
 	step_end
 
 DadsFarm_Movement_DadRunToPosition:
@@ -1470,3 +1459,12 @@ DadsFarm_Movement_LambiguousFullChase12:
 	walk_fast_right
 	walk_fast_right
 	step_end
+
+DadsFarm_Text_MarkosDefeat:
+	.string "Woah! You're already pretty good at\n"
+  .string "this!$"
+
+DadsFarm_Text_MarkosPostBattle:
+	.string "Markos: Man, that was awesome!\n"
+	.string "Even if I lost, having a Pokémon is\l"
+	.string "the coolest thing ever!$"

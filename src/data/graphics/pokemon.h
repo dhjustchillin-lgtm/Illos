@@ -27523,3 +27523,23 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
     const u32 gObjectEventPic_Lambiguous[] = INCGFX_COMP("graphics/pokemon/lambiguous/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
     const u16 gOverworldPalette_Lambiguous[] = INCGFX_U16("graphics/pokemon/lambiguous/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_Lambiguous[] = INCGFX_U16("graphics/pokemon/lambiguous/overworld_shiny.pal", ".gbapal");
+
+const u32 gMonFrontPic_Nerequa[] = INCGFX_U32("graphics/pokemon/nerequa/anim_front.png", ".4bpp.lz");
+    const u32 gMonBackPic_Nerequa[] = INCGFX_U32("graphics/pokemon/nerequa/back.png", ".4bpp.lz");
+    const u16 gMonPalette_Nerequa[] = INCGFX_U16("graphics/pokemon/nerequa/normal.pal", ".gbapal");
+    const u16 gMonShinyPalette_Nerequa[] = INCGFX_U16("graphics/pokemon/nerequa/shiny.pal", ".gbapal");
+    const u8 gMonIcon_Nerequa[] = INCGFX_U8("graphics/pokemon/nerequa/icon.png", ".4bpp");
+    const u8 gMonFootprint_Nerequa[] = INCGFX_U8("graphics/pokemon/nerequa/footprint.png", ".1bpp");
+    const u32 gObjectEventPic_Nerequa[] = INCGFX_COMP("graphics/pokemon/nerequa/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    const u16 gOverworldPalette_Nerequa[] = INCGFX_U16("graphics/pokemon/nerequa/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_Nerequa[] = INCGFX_U16("graphics/pokemon/nerequa/overworld_shiny.pal", ".gbapal");
+
+const u32 gMonFrontPic_Fevine[] = INCGFX_U32("graphics/pokemon/fevine/anim_front.png", ".4bpp.lz");
+    const u32 gMonBackPic_Fevine[] = INCGFX_U32("graphics/pokemon/fevine/back.png", ".4bpp.lz");
+    const u16 gMonPalette_Fevine[] = INCGFX_U16("graphics/pokemon/fevine/normal.pal", ".gbapal");
+    const u16 gMonShinyPalette_Fevine[] = INCGFX_U16("graphics/pokemon/fevine/shiny.pal", ".gbapal");
+    const u8 gMonIcon_Fevine[] = INCGFX_U8("graphics/pokemon/fevine/icon.png", ".4bpp");
+    const u8 gMonFootprint_Fevine[] = INCGFX_U8("graphics/pokemon/fevine/footprint.png", ".1bpp");
+    const u32 gObjectEventPic_Fevine[] = INCGFX_COMP("graphics/pokemon/fevine/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    const u16 gOverworldPalette_Fevine[] = INCGFX_U16("graphics/pokemon/fevine/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_Fevine[] = INCGFX_U16("graphics/pokemon/fevine/overworld_shiny.pal", ".gbapal");

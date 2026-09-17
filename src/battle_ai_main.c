@@ -73,6 +73,8 @@ static s32 AI_PowerfulStatus(enum BattlerId battlerAtk, enum BattlerId battlerDe
 static s32 AI_DynamicFunc(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 score);
 static s32 AI_PredictSwitch(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 score);
 static s32 AI_CheckPpStall(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 score);
+static s32 AI_Hippie(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 score);
+
 
 static s32 (*const sBattleAiFuncTable[])(enum BattlerId, enum BattlerId, enum Move, s32) =
 {
@@ -110,7 +112,7 @@ static s32 (*const sBattleAiFuncTable[])(enum BattlerId, enum BattlerId, enum Mo
     [31] = NULL,                     // Unused
     [32] = NULL,                     // Unused
     [33] = NULL,                     // Unused
-    [34] = NULL,                     // Unused
+    [34] = AI_Hippie,                     // AI_FLAG_HIPPIE
     [35] = NULL,                     // Unused
     [36] = NULL,                     // Unused
     [37] = NULL,                     // Unused
@@ -6658,4 +6660,59 @@ void ResetDynamicAiFunctions(void)
 {
     sDynamicAiFunc = NULL;
     gDynamicAiSwitchFunc = NULL;
+}
+
+static s32 AI_Hippie(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 score)
+{
+    struct SimulatedDamage damage;
+    u32 maxPossibleDamage = 0;
+    u8 moveCategory;
+    uq4_12_t typeEffectiveness = UQ_4_12(1.0); // Default effectiveness multiplier buffer
+
+    // 1. Instantly discourage any status move that inflicts recoil/self-KO or toxic chip
+    if (move == MOVE_EXPLOSION || move == MOVE_SELF_DESTRUCT || 
+        move == MOVE_MEMENTO || move == MOVE_CURSE)
+    {
+        return score - 20; // Heavily discourage self-destructive moves
+    }
+
+    // 2. Fetch the move's category (Physical, Special, or Status)
+    moveCategory = GetMoveCategory(move);
+
+    // If it's purely a Status move, it can't directly deal damage—allow it safely
+    if (moveCategory == DAMAGE_CATEGORY_STATUS)
+    {
+        return score;
+    }
+
+    // 3. Check if the opponent (player) is in red HP (<= 20% max HP)
+    if (gBattleMons[battlerDef].hp <= (gBattleMons[battlerDef].maxHP / 5))
+    {
+        return score - 20; // Never attack if the player is in the red
+    }
+
+    // 4. Calculate damage using valid expansion arguments
+    damage = AI_CalcDamage(
+        move, 
+        battlerAtk, 
+        battlerDef, 
+        &typeEffectiveness, 
+        TRUE, 
+        TRUE, 
+        gBattleWeather, 
+        gFieldStatuses
+    );
+
+    // Factor in a guaranteed Critical Hit multiplier (~1.5x damage in Gen 6+)
+    // Uses highestDamageRoll from the SimulatedDamage struct
+    maxPossibleDamage = (damage.maximum * 3) / 2;
+
+    // 5. If the absolute maximum damage could faint the player, block the move
+    if (maxPossibleDamage >= gBattleMons[battlerDef].hp)
+    {
+        return score - 20; // Prevent accidental KOs
+    }
+
+    // Default return if the move is safe to use
+    return score;
 }

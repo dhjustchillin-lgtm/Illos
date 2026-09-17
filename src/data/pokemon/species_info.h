@@ -212,7 +212,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 12,
         .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(0, 15),
+            ANIMCMD_FRAME(1, 20),
             ANIMCMD_FRAME(0, 1),
+            ANIMCMD_END,
         ),
         .frontAnimId = 22,
         .frontAnimDelay = 15,
@@ -225,6 +228,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .shinyPalette = gMonShinyPalette_Cinderf,
         .iconSprite = gMonIcon_Cinderf,
         .iconPalIndex = 2,
+        NO_SHADOW
         FOOTPRINT(Cinderf)
         OVERWORLD(
            sPicTable_Cinderf,
@@ -261,11 +265,11 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .speciesName   = _("Lambiguous"),
         .cryId         = CRY_WOOLOO,
         .natDexNum     = NATIONAL_DEX_LAMBIGUOUS,
-        .categoryName  = _("Disguise"),
+        .categoryName  = _("Body Shame"),
         .height        = 6,  // 0.6m
         .weight        = 120, // 12.0kg
         .description = COMPOUND_STRING(
-        "It wears a rugged wolf pelt to look terrifying\n"
+        "It wears a wolf pelt to look terrifying\n"
         "and startle travelers. Underneath, it is a\n"
         "gentle Pokémon that secretly craves\n"
         "headpats and snacks."),
@@ -277,17 +281,19 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .frontPicSize = MON_COORDS_SIZE(48, 48),
         .frontPicYOffset = 10,
         .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 15),
             ANIMCMD_FRAME(0, 1),
         ),
         .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
         .backPic = gMonBackPic_Lambiguous,
-        .backPicSize = MON_COORDS_SIZE(48, 48),
-        .backPicYOffset = 10,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 3,
         .backAnimId = BACK_ANIM_TRIANGLE_DOWN,
         .palette = gMonPalette_Lambiguous,
         .shinyPalette = gMonShinyPalette_Lambiguous,
         .iconSprite = gMonIcon_Lambiguous,
         .iconPalIndex = 2,
+        NO_SHADOW
         FOOTPRINT(Lambiguous)
         OVERWORLD(
            sPicTable_Lambiguous,
@@ -301,6 +307,144 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .levelUpLearnset = sLambiguousLevelUpLearnset,
         .teachableLearnset = sLambiguousTeachableLearnset,
     },
+
+        [SPECIES_NEREQUA] =
+    {
+        .baseHP        = 45,
+        .baseAttack    = 65,
+        .baseDefense   = 45,
+        .baseSpeed     = 60,
+        .baseSpAttack  = 50,
+        .baseSpDefense = 45,
+        .types         = MON_TYPES(TYPE_WATER),
+        .catchRate     = 45,
+        .expYield      = 62,
+        .evYield_Attack = 1,
+        .genderRatio   = PERCENT_FEMALE(12.5),
+        .eggCycles     = 20,
+        .friendship    = 70,
+        .growthRate    = GROWTH_MEDIUM_SLOW,
+        .eggGroups     = MON_EGG_GROUPS(EGG_GROUP_FIELD),
+        .abilities     = { ABILITY_TORRENT, ABILITY_NONE, ABILITY_TORRENT },
+        .bodyColor     = BODY_COLOR_BLUE,
+        .speciesName   = _("Nerequa"),
+        .cryId         = CRY_NEREQUA,
+        .natDexNum     = NATIONAL_DEX_NEREQUA,
+        .categoryName  = _("Soul Heal"),
+        .height        = 5,
+        .weight        = 55,
+        .description = COMPOUND_STRING(
+            "It expels a mist from pores along\n"
+            "its back. This mist has natural healing\n"
+            "properties that quickly soothe exhausted\n"
+            "allies in battle."),
+        .pokemonScale = 489,
+        .pokemonOffset = 19,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Nerequa,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 12,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(0, 15),
+            ANIMCMD_FRAME(1, 20),
+            ANIMCMD_FRAME(0, 1),
+            ANIMCMD_END,
+        ),
+        .frontAnimId = 22,
+        .frontAnimDelay = 15,
+        .enemyMonElevation = 0,
+        .backPic = gMonBackPic_Nerequa,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 6,
+        .backAnimId = 21,
+        .palette = gMonPalette_Nerequa,
+        .shinyPalette = gMonShinyPalette_Nerequa,
+        .iconSprite = gMonIcon_Nerequa,
+        .iconPalIndex = 3,
+        NO_SHADOW
+        FOOTPRINT(Nerequa)
+        OVERWORLD(
+           sPicTable_Nerequa,
+           SIZE_32x32,
+           SHADOW_SIZE_M,
+           TRACKS_FOOT,
+           sAnimTable_Following,
+           gOverworldPalette_Nerequa,
+           gShinyOverworldPalette_Nerequa
+         )
+        .levelUpLearnset = sNerequaLevelUpLearnset,
+        .teachableLearnset = sNerequaTeachableLearnset,
+    },
+
+        [SPECIES_FEVINE] =
+    {
+        .baseHP        = 45,
+        .baseAttack    = 40,
+        .baseDefense   = 50,
+        .baseSpeed     = 65,
+        .baseSpAttack  = 60,
+        .baseSpDefense = 50,
+        .types         = MON_TYPES(TYPE_GRASS),
+        .catchRate     = 45,
+        .expYield      = 62,
+        .evYield_SpAttack = 1,
+        .genderRatio   = PERCENT_FEMALE(12.5),
+        .eggCycles     = 20,
+        .friendship    = 70,
+        .growthRate    = GROWTH_MEDIUM_SLOW,
+        .eggGroups     = MON_EGG_GROUPS(EGG_GROUP_FIELD),
+        .abilities     = { ABILITY_OVERGROW, ABILITY_NONE, ABILITY_CHLOROPHYLL },
+        .bodyColor     = BODY_COLOR_GREEN,
+        .speciesName   = _("Fevine"),
+        .cryId         = CRY_SPRIGATITO,
+        .natDexNum     = NATIONAL_DEX_FEVINE,
+        .categoryName  = _("Soul Imprint"),
+        .height        = 5,
+        .weight        = 55,
+        .description = COMPOUND_STRING(
+            "This Pokémon does not have short-term\n"
+            "memory. Instead, it stores memories\n"
+            "in the mossy mane around its neck."),
+        .pokemonScale = 489,
+        .pokemonOffset = 19,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Fevine,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 12,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(0, 15),
+            ANIMCMD_FRAME(1, 20),
+            ANIMCMD_FRAME(0, 1),
+            ANIMCMD_END,
+        ),
+        .frontAnimId = 22,
+        .frontAnimDelay = 15,
+        .enemyMonElevation = 0,
+        .backPic = gMonBackPic_Fevine,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 7,
+        .backAnimId = 21,
+        .palette = gMonPalette_Fevine,
+        .shinyPalette = gMonShinyPalette_Fevine,
+        .iconSprite = gMonIcon_Fevine,
+        .iconPalIndex = 1,
+        NO_SHADOW
+        FOOTPRINT(Fevine)
+        OVERWORLD(
+           sPicTable_Fevine,
+           SIZE_32x32,
+           SHADOW_SIZE_M,
+           TRACKS_FOOT,
+           sAnimTable_Following,
+           gOverworldPalette_Fevine,
+           gShinyOverworldPalette_Fevine
+         )
+        .levelUpLearnset = sFevineLevelUpLearnset,
+        .teachableLearnset = sFevineTeachableLearnset,
+    },
+
 
 
     /* You may add any custom species below this point based on the following structure: */

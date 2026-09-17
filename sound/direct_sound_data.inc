@@ -8743,6 +8743,15 @@ Cry_Cinderf::
 .if TESTING == FALSE
   .incbin "sound/direct_sound_samples/cries/cinderf.bin"
 .endif
+  .align 2
+Cry_Nerequa::
+.if TESTING == FALSE
+  .incbin "sound/direct_sound_samples/cries/nerequa.bin"
+.endif
+Cry_Fevine::
+.if TESTING == FALSE
+  .incbin "sound/direct_sound_samples/cries/fevine.bin"
+.endif
 .endif @ P_CRIES_ENABLED
 
 .if TESTING == TRUE
