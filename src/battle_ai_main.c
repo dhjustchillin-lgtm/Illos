@@ -6667,31 +6667,32 @@ static s32 AI_Hippie(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
     struct SimulatedDamage damage;
     u32 maxPossibleDamage = 0;
     u8 moveCategory;
-    uq4_12_t typeEffectiveness = UQ_4_12(1.0); // Default effectiveness multiplier buffer
+    uq4_12_t typeEffectiveness = UQ_4_12(1.0); 
 
-    // 1. Instantly discourage any status move that inflicts recoil/self-KO or toxic chip
+    // 1. Instantly discourage any self-destructive/recoil moves
     if (move == MOVE_EXPLOSION || move == MOVE_SELF_DESTRUCT || 
-        move == MOVE_MEMENTO || move == MOVE_CURSE)
+        move == MOVE_MEMENTO || move == MOVE_CURSE || move == MOVE_FINAL_GAMBIT)
     {
-        return score - 20; // Heavily discourage self-destructive moves
+        return 0; // Drop score completely to avoid these
     }
 
-    // 2. Fetch the move's category (Physical, Special, or Status)
+    // 2. Fetch the move's category
     moveCategory = GetMoveCategory(move);
 
-    // If it's purely a Status move, it can't directly deal damage—allow it safely
+    // If it's purely a Status move, give it a slight preference boost 
+    // so it naturally scores higher than any downgraded attacking move.
     if (moveCategory == DAMAGE_CATEGORY_STATUS)
     {
-        return score;
+        return score + 5; 
     }
 
     // 3. Check if the opponent (player) is in red HP (<= 20% max HP)
     if (gBattleMons[battlerDef].hp <= (gBattleMons[battlerDef].maxHP / 5))
     {
-        return score - 20; // Never attack if the player is in the red
+        return 0; // Completely block attacking if player is in the red
     }
 
-    // 4. Calculate damage using valid expansion arguments
+    // 4. Calculate damage using expansion arguments
     damage = AI_CalcDamage(
         move, 
         battlerAtk, 
@@ -6703,16 +6704,16 @@ static s32 AI_Hippie(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
         gFieldStatuses
     );
 
-    // Factor in a guaranteed Critical Hit multiplier (~1.5x damage in Gen 6+)
-    // Uses highestDamageRoll from the SimulatedDamage struct
+    // Factor in a guaranteed Critical Hit multiplier (~1.5x damage)
     maxPossibleDamage = (damage.maximum * 3) / 2;
 
-    // 5. If the absolute maximum damage could faint the player, block the move
+    // 5. If the absolute maximum damage could faint the player, tank the score.
+    // Returning 0 ensures Status moves (score + 5) or weaker attacks are always chosen instead.
     if (maxPossibleDamage >= gBattleMons[battlerDef].hp)
     {
-        return score - 20; // Prevent accidental KOs
+        return 0; 
     }
 
-    // Default return if the move is safe to use
+    // Default return if the move is completely safe to use
     return score;
 }
