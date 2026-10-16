@@ -555,8 +555,6 @@ static void VBlankCB(void)
     LoadOam();
     ProcessSpriteCopyRequests();
     TransferPlttBuffer();
-
-    SetGpuReg(REG_OFFSET_BG1VOFS, gBattle_BG1_Y);
 }
 
 void CB2_InitTitleScreen(void)
@@ -762,15 +760,16 @@ static void Task_TitleScreenPhase2(u8 taskId)
     else
     {
         gTasks[taskId].tSkipToNext = TRUE;
-        SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG1 | BLDCNT_EFFECT_BLEND | BLDCNT_TGT2_BG0 | BLDCNT_TGT2_BD);
-        SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(6, 15));
+        SetGpuReg(REG_OFFSET_BLDCNT, 0);
+        SetGpuReg(REG_OFFSET_BLDALPHA, 0);
         SetGpuReg(REG_OFFSET_BLDY, 0);
-        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_1
-                                    | DISPCNT_OBJ_1D_MAP
-                                    | DISPCNT_BG0_ON
-                                    | DISPCNT_BG1_ON
-                                    | DISPCNT_BG2_ON
-                                    | DISPCNT_OBJ_ON);
+
+        SetGpuReg(REG_OFFSET_DISPCNT,
+            DISPCNT_MODE_1
+          | DISPCNT_OBJ_1D_MAP
+          | DISPCNT_BG0_ON
+          | DISPCNT_BG2_ON
+          | DISPCNT_OBJ_ON);
         CreatePressStartBanner(START_BANNER_X, 108);
         CreateCopyrightBanner(START_BANNER_X, 148);
         if (QUICKSTART && QUICKSTART_HUD)
