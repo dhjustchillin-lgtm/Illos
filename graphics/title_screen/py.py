@@ -1,10 +1,10 @@
 from PIL import Image
 import struct
 
-IMG_BIN = "sunsettiles.img.bin"
-PAL_BIN = "sunsettiles.pal.bin"
-PNG_OUT = "sunsettiles.png"
-PAL_OUT = "sunsettiles.pal"
+IMG_BIN = "beachtiles.img.bin"
+PAL_BIN = "beachtiles.pal.bin"
+PNG_OUT = "beachtiles.png"
+PAL_OUT = "beachtiles.pal"
 
 # 1. Read Palette (16 colors, 16-bit BGR555 format)
 colors = []

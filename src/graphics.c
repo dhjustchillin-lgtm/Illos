@@ -2107,6 +2107,9 @@ const u16 gTitleScreenBgPalettes[]         = INCBIN_U16("graphics/title_screen/p
                                                         "graphics/title_screen/sunsettiles.gbapal");
 const u16 gTitleScreenBgPalettes2[]         = INCBIN_U16("graphics/title_screen/pokemon_logo.gbapal",
                                                         "graphics/title_screen/icefallstiles.gbapal");
+const u16 gTitleScreenBgPalettes3[]         = INCBIN_U16("graphics/title_screen/pokemon_logo.gbapal",
+
+"graphics/title_screen/beachtiles.gbapal");
 const u16 gTitleScreenEmeraldVersionPal[]  = INCGFX_U16("graphics/title_screen/emerald_version.png", ".gbapal");
 const u32 gTitleScreenPokemonLogoGfx[]     = INCGFX_U32("graphics/title_screen/pokemon_logo.png", ".8bpp.smol");
 const u32 gTitleScreenEmeraldVersionGfx[]  = INCGFX_U32("graphics/title_screen/emerald_version.png", ".8bpp.smol", "-mwidth 8 -mheight 4");

@@ -69,6 +69,9 @@ static const u32 sTitleScreenSunsetTilemap[] = INCGFX_U32("graphics/title_screen
 static const u32 sTitleScreenIcefallGfx[] = INCGFX_U32("graphics/title_screen/icefallstiles.png", ".4bpp.smol");
 static const u32 sTitleScreenIcefallTilemap[] = INCGFX_U32("graphics/title_screen/icefallstiles.bin", ".smolTM");
 
+static const u32 sTitleScreenBeachGfx[] = INCGFX_U32("graphics/title_screen/beachtiles.png", ".4bpp.smol");
+static const u32 sTitleScreenBeachTilemap[] = INCGFX_U32("graphics/title_screen/beachtiles.bin", ".smolTM");
+
 static const u32 sTitleScreenLogoShineGfx[] = INCGFX_U32("graphics/title_screen/logo_shine.png", ".4bpp.smol");
 
 // Used to blend "Emerald Version" as it passes over over the Pokémon banner.
@@ -591,18 +594,26 @@ void CB2_InitTitleScreen(void)
         DecompressDataWithHeaderVram(gTitleScreenPokemonLogoGfx, (void *)(BG_CHAR_ADDR(0)));
         DecompressDataWithHeaderVram(gTitleScreenPokemonLogoTilemap, (void *)(BG_SCREEN_ADDR(9)));
 
-        // Randomly select sunset or icefall theme
-        if (Random() % 2 == 0)
+        // Randomly select sunset, icefall, or beach theme
+        switch (Random() % 3)
         {
+        case 0:
             DecompressDataWithHeaderVram(sTitleScreenSunsetGfx, (void *)(BG_CHAR_ADDR(2)));
             DecompressDataWithHeaderVram(sTitleScreenSunsetTilemap, (void *)(BG_SCREEN_ADDR(26)));
             LoadPalette(gTitleScreenBgPalettes, BG_PLTT_ID(0), 15 * PLTT_SIZE_4BPP);
-        }
-        else
-        {
+            break;
+
+        case 1:
             DecompressDataWithHeaderVram(sTitleScreenIcefallGfx, (void *)(BG_CHAR_ADDR(2)));
             DecompressDataWithHeaderVram(sTitleScreenIcefallTilemap, (void *)(BG_SCREEN_ADDR(26)));
             LoadPalette(gTitleScreenBgPalettes2, BG_PLTT_ID(0), 15 * PLTT_SIZE_4BPP);
+            break;
+
+        case 2:
+            DecompressDataWithHeaderVram(sTitleScreenBeachGfx, (void *)(BG_CHAR_ADDR(2)));
+            DecompressDataWithHeaderVram(sTitleScreenBeachTilemap, (void *)(BG_SCREEN_ADDR(26)));
+            LoadPalette(gTitleScreenBgPalettes3, BG_PLTT_ID(0), 15 * PLTT_SIZE_4BPP);
+            break;
         }
 
         // bg1
@@ -717,7 +728,7 @@ static void Task_TitleScreenPhase1(u8 taskId)
 
         // Create left side of version banner
         spriteId = CreateSprite(&sVersionBannerLeftSpriteTemplate, VERSION_BANNER_LEFT_X, VERSION_BANNER_Y, 0);
-        gSprites[spriteId].sAlphaBlendIdx = ARRAY_COUNT(gTitleScreenAlphaBlend);
+        gSprites[spriteId].sAlphaBlendIdx =     ARRAY_COUNT(gTitleScreenAlphaBlend) - 1;
         gSprites[spriteId].sParentTaskId = taskId;
 
         // Create right side of version banner
@@ -777,9 +788,6 @@ static void Task_TitleScreenPhase2(u8 taskId)
     yPos = gTasks[taskId].tBg2Y * 256;
     SetGpuReg(REG_OFFSET_BG2Y_L, yPos);
     SetGpuReg(REG_OFFSET_BG2Y_H, yPos / 0x10000);
-
-    gTasks[taskId].data[5] = 15; // Unused
-    gTasks[taskId].data[6] = 6;  // Unused
 }
 
 // Show Rayquaza silhouette and process main title screen input
@@ -855,18 +863,4 @@ static void CB2_GoToBerryFixScreen(void)
         m4aMPlayAllStop();
         SetMainCallback2(CB2_InitBerryFixProgram);
     }
-}
-
-static void UpdateLegendaryMarkingColor(u8 frameNum)
-{
-    if ((frameNum % 4) == 0) // Change color every 4th frame
-    {
-        s32 intensity = Cos(frameNum, Q_8_8(0.5)) + Q_8_8(0.5);
-        u32 r = 31 - Q_8_8_TO_INT(intensity * 31);
-        u32 g = 31 - Q_8_8_TO_INT(intensity * 22);
-        u32 b = 12;
-
-        u16 color = RGB(r, g, b);
-        LoadPalette(&color, BG_PLTT_ID(14) + 15, sizeof(color));
-   }
 }

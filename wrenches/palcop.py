@@ -40,7 +40,7 @@ def copy_tilemap_palettes(source_path, target_path):
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print("Usage: python copy_palettes.py <source_tilemap.bin> <target_tilemap.bin>")
+        print("Usage: python palcop.py <source_tilemap.bin> <target_tilemap.bin>")
         sys.exit(1)
 
     copy_tilemap_palettes(sys.argv[1], sys.argv[2])
