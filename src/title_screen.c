@@ -264,24 +264,69 @@ static const union AnimCmd sAnim_Copyright_4[] =
     ANIMCMD_FRAME(37, 4),
     ANIMCMD_END,
 };
+static const union AnimCmd sAnim_DworksBanner_0[] =
+{
+    ANIMCMD_FRAME(49, 4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_DworksBanner_1[] =
+{
+    ANIMCMD_FRAME(53, 4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_DworksBanner_2[] =
+{
+    ANIMCMD_FRAME(57, 4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_DworksBanner_3[] =
+{
+    ANIMCMD_FRAME(61, 4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_DworksBanner_4[] =
+{
+    ANIMCMD_FRAME(65, 4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_DworksBanner_5[] =
+{
+    ANIMCMD_FRAME(69, 4),
+    ANIMCMD_END,
+};
 
 // The "Press Start" and copyright graphics are each 5 32x8 segments long
 #define NUM_PRESS_START_FRAMES 5
 #define NUM_COPYRIGHT_FRAMES 5
+#define NUM_DWORKS_BANNER_FRAMES 6
 
-static const union AnimCmd *const sStartCopyrightBannerAnimTable[NUM_PRESS_START_FRAMES + NUM_COPYRIGHT_FRAMES] =
+static const union AnimCmd *const sStartCopyrightBannerAnimTable[
+    NUM_PRESS_START_FRAMES
+  + NUM_COPYRIGHT_FRAMES
+  + NUM_DWORKS_BANNER_FRAMES] =
 {
     sAnim_PressStart_0,
     sAnim_PressStart_1,
     sAnim_PressStart_2,
     sAnim_PressStart_3,
     sAnim_PressStart_4,
-    [NUM_PRESS_START_FRAMES] =
+
     sAnim_Copyright_0,
     sAnim_Copyright_1,
     sAnim_Copyright_2,
     sAnim_Copyright_3,
     sAnim_Copyright_4,
+
+    sAnim_DworksBanner_0,
+    sAnim_DworksBanner_1,
+    sAnim_DworksBanner_2,
+    sAnim_DworksBanner_3,
+    sAnim_DworksBanner_4,
+    sAnim_DworksBanner_5,
 };
 
 static const struct SpriteTemplate sStartCopyrightBannerSpriteTemplate =
@@ -297,7 +342,7 @@ static const struct CompressedSpriteSheet sSpriteSheet_PressStart[] =
 {
     {
         .data = gTitleScreenPressStartGfx,
-        .size = 0x520,
+        .size = 0xA00,
         .tag = TAG_PRESS_START_COPYRIGHT
     },
     {},
@@ -445,6 +490,22 @@ static void CreateCopyrightBanner(s16 x, s16 y)
     {
         spriteId = CreateSprite(&sStartCopyrightBannerSpriteTemplate, x, y, 0);
         StartSpriteAnim(&gSprites[spriteId], i + NUM_PRESS_START_FRAMES);
+    }
+}
+
+static void CreateDworksBanner(s16 x, s16 y)
+{
+    u8 i;
+    u8 spriteId;
+
+    x -= 64;
+    for (i = 0; i < NUM_DWORKS_BANNER_FRAMES; i++, x += 32)
+    {
+        spriteId = CreateSprite(&sStartCopyrightBannerSpriteTemplate, x, y, 0);
+        StartSpriteAnim(&gSprites[spriteId],
+            NUM_PRESS_START_FRAMES
+          + NUM_COPYRIGHT_FRAMES
+          + i);
     }
 }
 
@@ -771,7 +832,8 @@ static void Task_TitleScreenPhase2(u8 taskId)
           | DISPCNT_BG2_ON
           | DISPCNT_OBJ_ON);
         CreatePressStartBanner(START_BANNER_X, 108);
-        CreateCopyrightBanner(START_BANNER_X, 148);
+        CreateCopyrightBanner(START_BANNER_X, 140);
+        CreateDworksBanner(START_BANNER_X - 32, 148);
         if (QUICKSTART && QUICKSTART_HUD)
             CreateQuickstartHud();
         gTasks[taskId].tBg1Y = 0;

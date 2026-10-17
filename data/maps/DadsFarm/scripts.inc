@@ -977,7 +977,6 @@ DadsFarm_Movement_RunAndFlee12:
 	player_run_left
 	player_run_left
 	player_run_left
-	player_run_left
 	player_run_up
 	player_run_up
 	player_run_up
@@ -998,6 +997,7 @@ DadsFarm_Movement_RunAndFlee12:
 	player_run_up
 	player_run_up
 	player_run_up
+	player_run_right
 	player_run_right
 	player_run_right
 	player_run_right
