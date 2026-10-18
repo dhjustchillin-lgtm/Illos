@@ -832,8 +832,8 @@ static void Task_TitleScreenPhase2(u8 taskId)
           | DISPCNT_BG2_ON
           | DISPCNT_OBJ_ON);
         CreatePressStartBanner(START_BANNER_X, 108);
-        CreateCopyrightBanner(START_BANNER_X, 140);
-        CreateDworksBanner(START_BANNER_X - 32, 148);
+        CreateCopyrightBanner(START_BANNER_X, 144);
+        CreateDworksBanner(START_BANNER_X - 32, 152);
         if (QUICKSTART && QUICKSTART_HUD)
             CreateQuickstartHud();
         gTasks[taskId].tBg1Y = 0;
