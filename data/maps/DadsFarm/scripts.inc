@@ -50,6 +50,8 @@ DadsFarm_EventScript_OnLoadCutscene::
 	closemessage
 	applymovement LOCALID_Markos, DadsFarm_Movement_MarkosStepDown
 	waitmovement 0
+	subquestmenu QUEST_MENU_COMPLETE_QUEST, QUEST_CHORES, SUB_QUEST_BERRY
+	msgbox DadsFarm_Text_Quest_Update, MSGBOX_DEFAULT
 	setvar VAR_DADS_FARM_STATE, 2
 	releaseall
 	end
@@ -111,6 +113,9 @@ DadsFarm_EventScript_ShedAmbushCutscene::
 	@ Dialogue sequence post-chase
 	msgbox DadsFarm_Text_DadPostBattle, MSGBOX_DEFAULT
 	closemessage
+
+	subquestmenu QUEST_MENU_COMPLETE_QUEST, QUEST_CHORES, SUB_QUEST_EVO
+	msgbox DadsFarm_Text_Quest_Update, MSGBOX_DEFAULT
 
 	applymovement LOCALID_Markos_Temp, DadsFarm_Movement_MarkosLookUp
 	waitmovement 0
@@ -216,15 +221,19 @@ DadsFarm_EventScript_AfterMarkosBattle::
 @ DIALOGUE TEXT STRINGS
 @ -------------------------------------------------------------
 
+DadsFarm_Text_Quest_Update:
+	.string "The quest Dad's Chores\n"
+	.strint "has been updated."
+	
 DadsFarm_Text_DadPostBattle:
 	.string "Dad: {PLAYER}! Are you alright?\p"
 	.string "We heard all the commotion from over by\n"
-	.string "the field, and... wait a minute.\p"
+	.string "the field, and… wait a minute.\p"
 	.string "Why do you have my Pokémon?\p"
 	.string "… … … … … … … …\n"
 	.string "… … … … … … … …\p"
 	.string "Oh. I see.\p"
-	.string "Well... hmm. Truth be told, I was hoping\n"
+	.string "Well… hmm. Truth be told, I was hoping\n"
 	.string "to train it to help out around the farm,\l"
 	.string "but the stubborn thing wouldn't listen\l"
 	.string "to a word I said.\p"
@@ -252,7 +261,7 @@ DadsFarm_Text_DadPokemonAreForWork:
 
 DadsFarm_Text_MarkosBegsBattle:
 	.string "Markos: Aww, please Dad? Just one quick\n"
-	.string "battle! We need to see who's stronger!$"
+	.string "battle!$"
 
 DadsFarm_Text_MarkosAreYouReady:
 	.string "Markos: Alright, {PLAYER}!\n"

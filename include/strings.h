@@ -2128,6 +2128,13 @@ extern const u8 gText_SideQuestMap1[];
 //subquests
 extern const u8 gText_SubQuest1_Name1[];
 extern const u8 gText_SubQuest1_Desc1[];
+extern const u8 gText_SubQuest1_SubMap1[];
+extern const u8 gText_SubQuest1_Name2[];
+extern const u8 gText_SubQuest1_Desc2[];
+extern const u8 gText_SubQuest1_SubMap2[];
+extern const u8 gText_SubQuest1_Name3[];
+extern const u8 gText_SubQuest1_Desc3[];
+extern const u8 gText_SubQuest1_SubMap3[];
 
 // Battle Factory Screen
 extern const u8 gText_RentalPkmn2[];

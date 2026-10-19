@@ -1199,3 +1199,10 @@ const u8 gText_SideQuestMap1[] = _("Dad's Farm");
 //subquests
 const u8 gText_SubQuest1_Name1[] = _("Go Outside");
 const u8 gText_SubQuest1_Desc1[] = _("Go outside to start.");
+const u8 gText_SubQuest1_SubMap1[] = _("Dad's Farm");
+const u8 gText_SubQuest1_Name2[] = _("Plant Berries");
+const u8 gText_SubQuest1_Desc2[] = _("Plant berries out east.");
+const u8 gText_SubQuest1_SubMap2[] = _("Dad's Farm");
+const u8 gText_SubQuest1_Name3[] = _("Evolution");
+const u8 gText_SubQuest1_Desc3[] = _("Fully evolve your starter.");
+const u8 gText_SubQuest1_SubMap3[] = _("");

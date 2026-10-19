@@ -19,8 +19,10 @@
 #define QUEST_COUNT                     (QUEST_CHORES + 1)
 
 #define SUB_QUEST_OUT                  0
+#define SUB_QUEST_BERRY                1
+#define SUB_QUEST_EVO                  2
 
-#define QUEST_CHORES_SUB_COUNT         1
+#define QUEST_CHORES_SUB_COUNT         3
 #define SUB_QUEST_COUNT                QUEST_CHORES_SUB_COUNT
 
 #define QUEST_ARRAY_COUNT              (SUB_QUEST_COUNT > QUEST_COUNT ? SUB_QUEST_COUNT : QUEST_COUNT)

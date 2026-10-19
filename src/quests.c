@@ -250,11 +250,29 @@ static const struct SubQuest sSubQuests1[QUEST_CHORES_SUB_COUNT] =
         0,
         gText_SubQuest1_Name1,
         gText_SubQuest1_Desc1,
-        gText_SideQuestMap1,
+				gText_SubQuest1_SubMap1,
         OBJ_EVENT_GFX_NORMAN,
         OBJECT,
         sText_Found
     ),
+		sub_quest(
+				1,
+				gText_SubQuest1_Name2,
+				gText_SubQuest1_Desc2,
+				gText_SubQuest1_SubMap1,
+				OBJ_EVENT_GFX_BRENDAN_NORMAL,
+				OBJECT,
+				sText_Found
+		),
+		sub_quest(
+				2,
+				gText_SubQuest1_Name3,
+				gText_SubQuest1_Desc3,
+				gText_SubQuest1_SubMap3,
+				OBJ_EVENT_GFX_NORMAN,
+				OBJECT,
+				sText_Found
+		),
 };
 
 ////////////////////////END SUBQUEST CUSTOMIZATION/////////////////////////////

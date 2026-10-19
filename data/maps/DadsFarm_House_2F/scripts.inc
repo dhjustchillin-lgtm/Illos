@@ -135,7 +135,7 @@ DadsFarm_House_2F_EventScript_MarkosDresser::
 DadsFarm_House_2F_Text_DadSequence:
 	.string "{PLAYER}, you're still in bed?\n"
 	.string "You have chores to do today!\p"
-	.string "Oh, by the way... your Mom is\n"
+	.string "Oh, by the way… your Mom is\n"
 	.string "in town right now.$"
 
 DadsFarm_House_2F_Text_PlayerDresser:
@@ -144,7 +144,7 @@ DadsFarm_House_2F_Text_PlayerDresser:
 
 DadsFarm_House_2F_Text_MarkosDresser:
 	.string "It's Markos' dresser!\n"
-	.string "It's a bit messy...$"
+	.string "It's a bit messy…$"
 
 DadsFarm_House_2F_EventScript_QuestMenu::
 	lockall
