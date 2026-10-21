@@ -73,7 +73,7 @@
       "flag": "FLAG_HIDE_ROUTE_104_RIVAL"
     }
   ],
-    "warp_events": [
+  "warp_events": [
     {
       "x": 6,
       "y": 7,
