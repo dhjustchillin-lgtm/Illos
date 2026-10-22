@@ -223,7 +223,7 @@ DadsFarm_EventScript_AfterMarkosBattle::
 
 DadsFarm_Text_Quest_Update:
 	.string "The quest Dad's Chores\n"
-	.strint "has been updated."
+	.string "has been updated.$"
 	
 DadsFarm_Text_DadPostBattle:
 	.string "Dad: {PLAYER}! Are you alright?\p"
