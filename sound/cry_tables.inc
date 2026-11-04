@@ -2555,6 +2555,7 @@ gCryTable::
   cry Cry_Cinderf
   cry Cry_Nerequa
   cry Cry_Fevine
+	cry Cry_Raitheos
 .endif @ P_CRIES_ENABLED
 
 	.align 2
@@ -5114,4 +5115,5 @@ gCryTable_Reverse::
   cry_reverse Cry_Cinderf
   cry_reverse Cry_Nerequa
   cry_reverse Cry_Fevine
+	cry_reverse Cry_Raitheos
 .endif @ P_CRIES_ENABLED

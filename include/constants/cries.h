@@ -2558,6 +2558,7 @@ enum PokemonCry
     CRY_CINDERF,
     CRY_NEREQUA,
     CRY_FEVINE,
+    CRY_RAITHEOS,
     CRY_COUNT,
 };
 

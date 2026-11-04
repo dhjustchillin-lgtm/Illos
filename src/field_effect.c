@@ -1002,6 +1002,7 @@ u8 CreateTrainerSprite(enum TrainerPicID trainerPicId, s16 x, s16 y, u8 subprior
     // DYNPAL Integration
     if (trainerPicId == TRAINER_PIC_BRENDAN || trainerPicId == TRAINER_PIC_MAY)
     {
+        DynPal_InitAllDynamicPalettes();
         DynPal_LoadPaletteByTag(sDynPalPlayerBattleFront, paletteTag);
     }
     else

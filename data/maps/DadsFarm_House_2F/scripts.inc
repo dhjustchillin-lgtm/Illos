@@ -17,19 +17,21 @@ DadsFarm_House_2F_OnFrame:
 
 DadsFarm_House_2F_EventScript_DadSequence::
 	lockall
-	
-	@ Player tossing and turning in bed
+
+	@ Player tosses and turns while the sleep emote is visible
+	applymovement OBJ_EVENT_ID_PLAYER, Sleep
+	waitmovement 0
 	applymovement OBJ_EVENT_ID_PLAYER, DadsFarm_House_2F_Movement_PlayerTossing
 	waitmovement 0
-	
-	@ Spawn Dad right when he enters
+
+	@ Spawn Dad after the tossing animation finishes
 	clearflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_BEDROOM_MOM
 	addobject 1
 
 	@ Move Dad down
 	applymovement 1, DadsFarm_House_2F_Movement_DadApproach
 	waitmovement 0
-	
+
 	@ Dialogue
 	msgbox DadsFarm_House_2F_Text_DadSequence, MSGBOX_DEFAULT
 	waitmessage
@@ -38,10 +40,10 @@ DadsFarm_House_2F_EventScript_DadSequence::
 	@ Move Dad back up
 	applymovement 1, DadsFarm_House_2F_Movement_DadLeave
 	waitmovement 0
-	
+
 	removeobject 1
 	setflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_BEDROOM_MOM
-	setvar VAR_DADS_FARM_STATE, 1  @ Prevents script from triggering again
+	setvar VAR_DADS_FARM_STATE, 1
 
 	@ Set quest to Active
 	startquest QUEST_CHORES
@@ -161,3 +163,7 @@ DadsFarm_House_2F_EventScript_DoOpenQuestMenu::
 DadsFarm_House_2F_Text_OpenQuestMenu:
 	.string "There's a logbook sitting on top\n"
 	.string "of the desk. Open it?$"
+
+Sleep:
+	emote_sleep
+	step_end

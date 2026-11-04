@@ -8752,6 +8752,10 @@ Cry_Fevine::
 .if TESTING == FALSE
   .incbin "sound/direct_sound_samples/cries/fevine.bin"
 .endif
+Cry_Raitheos::
+.if TESTING == FALSE
+	.incbin "sound/direct_sound_samples/cries/raitheos.bin"
+.endif
 .endif @ P_CRIES_ENABLED
 
 .if TESTING == TRUE

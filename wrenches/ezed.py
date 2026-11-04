@@ -1004,8 +1004,6 @@ class Editor:
 
             elif key in (
                 ord(" "),
-                ord("e"),
-                ord("E"),
             ):
                 self.set_pixel(
                     self.cursor_x,

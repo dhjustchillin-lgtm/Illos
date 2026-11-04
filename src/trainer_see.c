@@ -68,6 +68,7 @@ static const u16 sGfx_Emoticons[] = INCGFX_U16("graphics/misc/emoticons.png", ".
 static const u8 sEmotion_ExclamationMarkGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_exclamation.png", ".4bpp");
 static const u8 sEmotion_QuestionMarkGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_question.png", ".4bpp");
 static const u8 sEmotion_HeartGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_heart.png", ".4bpp");
+static const u8 sEmotion_SleepGfx[] = INCBIN_U8("graphics/field_effects/pics/emotion_sleep.4bpp");
 static const u8 sEmotion_DoubleExclamationMarkGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_double_exclamation.png", ".4bpp");
 static const u8 sEmotion_XGfx[] = INCGFX_U8("graphics/field_effects/pics/emote_x.png", ".4bpp");
 // HGSS emote graphics ripped by Lemon on The Spriters Resource: https://www.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/sheet/30497/
@@ -242,6 +243,14 @@ static const struct SpriteFrameImage sSpriteImageTable_HeartIcon[] =
     }
 };
 
+static const struct SpriteFrameImage sSpriteImageTable_SleepIcon[] =
+{
+    {
+        .data = sEmotion_SleepGfx,
+        .size = sizeof(sEmotion_SleepGfx)
+    }
+};
+
 static const struct SpriteFrameImage sSpriteImageTable_Emotes[] =
 {
     overworld_frame(sEmotion_Gfx, 2, 2, 0), // FOLLOWER_EMOTION_HAPPY
@@ -381,6 +390,21 @@ static const union AnimCmd sSpriteAnim_Icons4[] =
     ANIMCMD_END
 };
 
+static const union AnimCmd sSpriteAnim_SleepIcon[] =
+{
+    ANIMCMD_FRAME(0, 63),
+    ANIMCMD_FRAME(0, 63),
+    ANIMCMD_FRAME(0, 63),
+    ANIMCMD_FRAME(0, 63),
+    ANIMCMD_FRAME(0, 63),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sSpriteAnimTable_SleepIcon[] =
+{
+    sSpriteAnim_SleepIcon
+};
+
 static const union AnimCmd *const sSpriteAnimTable_Icons[] =
 {
     sSpriteAnim_Icons1,
@@ -421,6 +445,17 @@ static const struct SpriteTemplate sSpriteTemplate_HeartIcon =
     .oam = &sOamData_Icons,
     .anims = sSpriteAnimTable_Icons,
     .images = sSpriteImageTable_HeartIcon,
+    .callback = SpriteCB_TrainerIcons
+};
+
+static const struct SpriteTemplate sSpriteTemplate_SleepIcon =
+{
+    .tileTag = TAG_NONE,
+    .paletteTag = OBJ_EVENT_PAL_TAG_EMOTES,
+    .oam = &sOamData_Icons,
+    .anims = sSpriteAnimTable_SleepIcon,
+    .images = sSpriteImageTable_SleepIcon,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_TrainerIcons
 };
 
@@ -1094,6 +1129,19 @@ u8 FldEff_HeartIcon(void)
 
         SetIconSpriteData(sprite, FLDEFF_HEART_ICON, 0);
         UpdateSpritePaletteByTemplate(&sSpriteTemplate_HeartIcon, sprite);
+    }
+
+    return 0;
+}
+
+u8 FldEff_SleepIcon(void)
+{
+    u8 spriteId = CreateSpriteAtEnd(&sSpriteTemplate_SleepIcon, 0, 0, 0x52);
+
+    if (spriteId != MAX_SPRITES)
+    {
+        SetIconSpriteData(&gSprites[spriteId], FLDEFF_SLEEP_ICON, 0);
+        UpdateSpritePaletteByTemplate(&sSpriteTemplate_SleepIcon, &gSprites[spriteId]);
     }
 
     return 0;

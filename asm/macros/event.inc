@@ -38,7 +38,7 @@
 	.4byte \destination
 	.endm
 
-	@ If the result of the last comparison matches condition (see Comparison operators), jumps to destination and continues script execution from there.
+	@ If the result of the last comparison matches condition (esee Comparison operators), jumps to destination and continues script execution from there.
 	.macro goto_if condition:req, destination:req
 	.byte SCR_OP_GOTO_IF
 	.byte \condition
@@ -3109,3 +3109,10 @@
 	getbraillestringwidth \text
 	call EventScript_BrailleCursorWaitButton
 	.endm
+
+	@ Applies the movement at the specified id then executes a msgbox.
+  .macro msgboxEmote localId:req, movements:req, text:req, type=MSGBOX_DEFAULT
+  applymovement \localId , \movements
+  loadword 0, \text
+  callstd \type
+  .endm

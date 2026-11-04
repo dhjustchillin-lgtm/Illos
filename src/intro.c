@@ -64,6 +64,8 @@ static void Task_Test2_LoadGraphics(u8 taskId);
 static void Task_Test2_Show(u8 taskId);
 
 static void Task_Test2_ShowFrame(u8 taskId);
+static void Task_Test2_ShowMonBackground(u8 taskId);
+static void Task_Test2_ShowRunningScene(u8 taskId);
 
 static void Task_Test2_Opening(u8 taskId);
 static void Task_Test3_LoadMountains(u8 taskId);
@@ -1762,10 +1764,16 @@ static void Task_Test2_LoadMonBackground(u8 taskId)
     Task_Test2_HideRunningSprites(taskId);
 
     /*
-     * All elemental graphics were loaded once by Task_Test2_LoadGraphics.
-     * Only replace the 32x32 map and its 16-bank 4bpp palette here.
-     * BG0 and BG2 are disabled while the elemental scene is active.
+     * Hide every background before touching the shared screen block or
+     * palette. The elemental tilesets are already resident in VRAM; this
+     * stage only prepares the map, palette, and BG1 registers. The next
+     * task reveals BG1 after a VBlank has had time to transfer the palette.
      */
+    SetGpuReg(
+        REG_OFFSET_DISPCNT,
+        DISPCNT_MODE_0 | DISPCNT_OBJ_1D_MAP | DISPCNT_OBJ_ON
+    );
+
     sIntroTilemapPending = FALSE;
     CopyTest2IntroTilemapFromSource(
         mon->backgroundTilemap,
@@ -1791,6 +1799,13 @@ static void Task_Test2_LoadMonBackground(u8 taskId)
     SetGpuReg(REG_OFFSET_BG1HOFS, 0);
     SetGpuReg(REG_OFFSET_BG1VOFS, 0);
 
+    gTasks[taskId].func = Task_Test2_ShowMonBackground;
+}
+
+static void Task_Test2_ShowMonBackground(u8 taskId)
+{
+    /* The map and palette were prepared while hidden on the previous
+     * frame, so switching to the elemental background is a single reveal. */
     SetGpuReg(
         REG_OFFSET_DISPCNT,
         DISPCNT_MODE_0
@@ -1836,11 +1851,11 @@ static void Task_Test2_MonRelease(u8 taskId)
         CreatePokeballSpriteToReleaseMon(
             spriteId,
             sprite->oam.paletteNum,
-            TEST2_MON_X,
-            TEST2_MON_Y,
-            0,
-            0,
-            32,
+            255,  // launch from the right side
+            TEST2_MON_Y,    // launch height
+            0,    // OAM priority
+            0,    // subpriority
+            32,   // delay
             PALETTES_BG,
             species
         );
@@ -1921,41 +1936,54 @@ static void Task_Test2_MonReturn(u8 taskId)
     }
 
     gTasks[taskId].tTest2MonState = TEST2_MON_STATE_NONE;
-    gTasks[taskId].func = Task_Test2_Opening;
+    /* RestoreRunningScene owns the task callback until the runner scene is
+     * safely revealed on the following frame. */
 }
 
 static void Task_Test2_RestoreRunningScene(u8 taskId)
 {
-    Task_Test2_ShowRunningSprites(taskId);
+    u16 black = RGB_BLACK;
 
     /*
-     * No character graphics are recopied: the loop, runner, and all three
-     * elemental tilesets remain resident in BG VRAM for the whole scene.
-     * Restore only the two 16-color palette banks used by the runner scene
-     * and the runner's animated map in the shared screen block.
+     * Hide all backgrounds while the shared screen block and palette are
+     * restored. The loop and all tilesets stay in VRAM; only the runner map
+     * and palette are changed. Runner sprites remain hidden until reveal.
      */
+    SetGpuReg(
+        REG_OFFSET_DISPCNT,
+        DISPCNT_MODE_0 | DISPCNT_OBJ_1D_MAP | DISPCNT_OBJ_ON
+    );
+    Task_Test2_HideRunningSprites(taskId);
+
     LoadPalette(
         sTestBgSharedPal,
         BG_PLTT_ID(0),
         sizeof(sTestBgSharedPal)
     );
-
     LoadPalette(
         sTest2LoopBgPal,
         BG_PLTT_ID(TEST2_LOOP_BG_PALETTE),
         PLTT_SIZE_4BPP
     );
+    LoadPalette(&black, 0, sizeof(black));
 
     sIntroTilemapPending = FALSE;
     CopyTest2IntroTilemap(0);
 
-    /* Restore the window and black backdrop as well as the BG layers. */
-    Test2SetCinematicBars(sTest2BarHeight);
-
     SetGpuReg(REG_OFFSET_BG0HOFS, sTest2LoopBgScroll);
     Test2ApplySharedDisplacement(gTasks[taskId].tTest2Displacement);
-
     TransferPlttBuffer();
+
+    gTasks[taskId].func = Task_Test2_ShowRunningScene;
+}
+
+static void Task_Test2_ShowRunningScene(u8 taskId)
+{
+    /* Palette/map restoration has now crossed a VBlank. Reveal the runner
+     * layers and sprites together to avoid a partially updated frame. */
+    Test2SetCinematicBars(sTest2BarHeight);
+    Task_Test2_ShowRunningSprites(taskId);
+    gTasks[taskId].func = Task_Test2_Opening;
 }
 
 void Task_Scene1_Load(u8 taskId)
@@ -2146,6 +2174,8 @@ static void Task_Test1_Show(u8 taskId)
         | DISPCNT_OBJ_ON
     );
 
+    m4aSongNumStart(MUS_NEW_INTRO);
+
     gTasks[taskId].func = Task_Test1_Water;
 }
 
@@ -2198,6 +2228,23 @@ s32 cameraY = flatY;
 
 if (line < 0 || line >= DISPLAY_HEIGHT)
 return;
+
+/*
+ * During the horizon movement, force scanline 0 to the requested sky
+ * color. HBlank runs for the previous scanline, so line 0 is prepared
+ * at the end of the preceding frame; restore the normal (possibly
+ * palette-faded) backdrop as soon as scanline 0 has finished.
+ */
+if (line == 0 && gIntroFrameCounter > TEST1_CAMERA_PAN_END)
+{
+    *(u16 *)PLTT = RGB(21, 24, 31); // Approximation of #AEC1FF in RGB555.
+    REG_DISPCNT &= ~DISPCNT_BG2_ON;
+    return;
+}
+else if (line == 1)
+{
+    *(u16 *)PLTT = gPlttBufferFaded[0];
+}
 
 // Smoothly blend from a completely flat affine background to the
 // receding-plane projection. This keeps the opening frames undistorted.
@@ -4567,6 +4614,17 @@ static void Task_Test3_Legend(u8 taskId)
 
     case 5: /* hold image 1 before fading to white */
         SetGpuReg(REG_OFFSET_BG0HOFS, 0);
+
+        if (data[1] == 0 && IsSpeciesEnabled(SPECIES_RAITHEOS))
+        {
+            PlayCryInternal(
+                SPECIES_RAITHEOS,
+                0,
+                100,
+                CRY_PRIORITY_NORMAL,
+                CRY_MODE_NORMAL
+            );
+        }
 
         if (++data[1] >= 30)
         {

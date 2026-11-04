@@ -2434,6 +2434,9 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
     if (!IsOnPlayerSide(battler)) // Always the front sprite for the opponent.
     {
         DecompressTrainerFrontPic(trainerPicId, battler);
+
+        if (trainerPicId == TRAINER_PIC_BRENDAN || trainerPicId == TRAINER_PIC_MAY)
+            DynPal_LoadPaletteByTag(sDynPalPlayerBattleFront, GetTrainerPicTag(trainerPicId, TRUE));
         SetMultiuseSpriteTemplateToTrainerFront(trainerPicId, GetBattlerPosition(battler));
         if (subpriority == -1)
             subpriority = GetBattlerSpriteSubpriority(battler);
@@ -2452,6 +2455,9 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
         if (isFrontPic)
         {
             DecompressTrainerFrontPic(trainerPicId, battler);
+
+            if (trainerPicId == TRAINER_PIC_BRENDAN || trainerPicId == TRAINER_PIC_MAY)
+                DynPal_LoadPaletteByTag(sDynPalPlayerBattleFront, GetTrainerPicTag(trainerPicId, TRUE));
             SetMultiuseSpriteTemplateToTrainerFront(trainerPicId, GetBattlerPosition(battler));
             if (subpriority == -1)
                 subpriority = GetBattlerSpriteSubpriority(battler);
@@ -2524,7 +2530,20 @@ void BtlController_HandleTrainerSlide(enum BattlerId battler, enum TrainerPicID 
     else
     {
         DecompressTrainerFrontPic(trainerPicId, battler);
-        SetMultiuseSpriteTemplateToTrainerFront(trainerPicId, GetBattlerPosition(battler));
+
+        if (trainerPicId == TRAINER_PIC_BRENDAN
+         || trainerPicId == TRAINER_PIC_MAY)
+        {
+            DynPal_LoadPaletteByTag(
+                sDynPalPlayerBattleFront,
+                GetTrainerPicTag(trainerPicId, TRUE)
+            );
+        }
+
+        SetMultiuseSpriteTemplateToTrainerFront(
+            trainerPicId,
+            GetBattlerPosition(battler)
+        );
         gBattleStruct->trainerSlideSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, 176, 40, 0);
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.affineParam = trainerPicId;
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(GetTrainerPicTag(trainerPicId, TRUE));
