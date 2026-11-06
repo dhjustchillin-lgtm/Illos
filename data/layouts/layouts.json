@@ -9359,10 +9359,10 @@
     {
       "id": "LAYOUT_KYMA_ROUTE",
       "name": "KymaRoute_Layout",
-      "width": 20,
-      "height": 20,
+      "width": 28,
+      "height": 35,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_Petalburg",
+      "secondary_tileset": "gTileset_Farm",
       "border_filepath": "data/layouts/KymaRoute/border.bin",
       "blockdata_filepath": "data/layouts/KymaRoute/map.bin"
     },
