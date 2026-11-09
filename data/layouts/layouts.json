@@ -9376,6 +9376,16 @@
       "border_filepath": "data/layouts/Shed/border.bin",
       "blockdata_filepath": "data/layouts/Shed/map.bin",
       "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_KYMA_TOWN",
+      "name": "KymaTown_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Farm",
+      "border_filepath": "data/layouts/KymaTown/border.bin",
+      "blockdata_filepath": "data/layouts/KymaTown/map.bin"
     }
   ]
 }

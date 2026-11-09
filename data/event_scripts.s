@@ -1756,3 +1756,5 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/KymaRoute/scripts.inc"
 
 	.include "data/maps/Shed/scripts.inc"
+
+	.include "data/maps/KymaTown/scripts.inc"
