@@ -9359,7 +9359,7 @@
     {
       "id": "LAYOUT_KYMA_ROUTE",
       "name": "KymaRoute_Layout",
-      "width": 28,
+      "width": 29,
       "height": 35,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Farm",
