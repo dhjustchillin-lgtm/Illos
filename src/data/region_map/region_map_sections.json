@@ -94,7 +94,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_105",
-      "name": "ROUTE 105"
+      "name": "Ploas Route"
     },
     {
       "id": "MAPSEC_ROUTE_106",
@@ -848,7 +848,8 @@
       "name": "TRAINER HILL"
     },
     {
-      "id": "MAPSEC_"
+      "id": "MAPSEC_",
+      "name": "Ploas Route"
     }
   ]
 }

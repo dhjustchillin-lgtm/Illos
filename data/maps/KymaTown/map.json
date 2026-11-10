@@ -17,6 +17,11 @@
       "map": "MAP_KYMA_ROUTE",
       "offset": 0,
       "direction": "left"
+    },
+    {
+      "map": "MAP_PLOAS_ROUTE",
+      "offset": 0,
+      "direction": "up"
     }
   ],
   "object_events": [],

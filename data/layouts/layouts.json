@@ -9386,6 +9386,16 @@
       "secondary_tileset": "gTileset_Farm",
       "border_filepath": "data/layouts/KymaTown/border.bin",
       "blockdata_filepath": "data/layouts/KymaTown/map.bin"
+    },
+    {
+      "id": "LAYOUT_PLOAS_ROUTE",
+      "name": "PloasRoute_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Rustboro",
+      "border_filepath": "data/layouts/PloasRoute/border.bin",
+      "blockdata_filepath": "data/layouts/PloasRoute/map.bin"
     }
   ]
 }
