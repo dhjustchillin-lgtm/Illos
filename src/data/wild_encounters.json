@@ -36577,6 +36577,75 @@
               }
             ]
           }
+        },
+        {
+          "map": "MAP_KYMA_ROUTE",
+          "base_label": "gKymaRoute",
+          "land_mons": {
+            "encounter_rate": 7,
+            "mons": [
+              {
+                "min_level": 5,
+                "max_level": 8,
+                "species": "SPECIES_LAMBIGUOUS"
+              },
+              {
+                "min_level": 5,
+                "max_level": 8,
+                "species": "SPECIES_LAMBIGUOUS"
+              },
+              {
+                "min_level": 5,
+                "max_level": 8,
+                "species": "SPECIES_LAMBIGUOUS"
+              },
+              {
+                "min_level": 5,
+                "max_level": 8,
+                "species": "SPECIES_LAMBIGUOUS"
+              },
+              {
+                "min_level": 5,
+                "max_level": 8,
+                "species": "SPECIES_LAMBIGUOUS"
+              },
+              {
+                "min_level": 5,
+                "max_level": 8,
+                "species": "SPECIES_LAMBIGUOUS"
+              },
+              {
+                "min_level": 5,
+                "max_level": 8,
+                "species": "SPECIES_LAMBIGUOUS"
+              },
+              {
+                "min_level": 5,
+                "max_level": 8,
+                "species": "SPECIES_LAMBIGUOUS"
+              },
+              {
+                "min_level": 5,
+                "max_level": 8,
+                "species": "SPECIES_LAMBIGUOUS"
+              },
+              {
+                "min_level": 5,
+                "max_level": 8,
+                "species": "SPECIES_LAMBIGUOUS"
+              },
+              {
+                "min_level": 5,
+                "max_level": 8,
+                "species": "SPECIES_LAMBIGUOUS"
+              },
+              {
+                "min_level": 5,
+                "max_level": 8,
+                "species": "SPECIES_LAMBIGUOUS"
+              }
+            ]
+          }
         }
       ]
     },
